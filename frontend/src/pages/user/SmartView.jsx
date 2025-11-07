@@ -12,38 +12,73 @@ export const SmartView = () => {
     }
   }, []);
 
-  // Mock seat data with different types and statuses
+  // Mock seat data with different types and statuses - Compact layout
   const mockSeats = [
-    // Row 1 - Lounge Chairs
-    { id: 1, number: 'LC01', type: 'Lounge Chair', status: 'available', x: 10, y: 15 },
-    { id: 2, number: 'LC02', type: 'Lounge Chair', status: 'occupied', x: 20, y: 15 },
-    { id: 3, number: 'LC03', type: 'Lounge Chair', status: 'available', x: 30, y: 15 },
-    { id: 4, number: 'LC04', type: 'Lounge Chair', status: 'occupied', x: 40, y: 15 },
-    { id: 5, number: 'LC05', type: 'Lounge Chair', status: 'reserved', x: 50, y: 15 },
-    { id: 6, number: 'LC06', type: 'Lounge Chair', status: 'available', x: 60, y: 15 },
-    { id: 7, number: 'LC07', type: 'Lounge Chair', status: 'occupied', x: 70, y: 15 },
-    { id: 8, number: 'LC08', type: 'Lounge Chair', status: 'available', x: 80, y: 15 },
+    // Row 1 - Lounge Chairs (closer together)
+    { id: 1, number: 'LC01', type: 'Lounge Chair', status: 'available', x: 8, y: 25 },
+    { id: 2, number: 'LC02', type: 'Lounge Chair', status: 'occupied', x: 14, y: 25 },
+    { id: 3, number: 'LC03', type: 'Lounge Chair', status: 'available', x: 20, y: 25 },
+    { id: 4, number: 'LC04', type: 'Lounge Chair', status: 'occupied', x: 26, y: 25 },
+    { id: 5, number: 'LC05', type: 'Lounge Chair', status: 'reserved', x: 32, y: 25 },
+    { id: 6, number: 'LC06', type: 'Lounge Chair', status: 'available', x: 38, y: 25 },
+    { id: 7, number: 'LC07', type: 'Lounge Chair', status: 'occupied', x: 44, y: 25 },
+    { id: 8, number: 'LC08', type: 'Lounge Chair', status: 'available', x: 50, y: 25 },
+    { id: 9, number: 'LC09', type: 'Lounge Chair', status: 'available', x: 56, y: 25 },
+    { id: 10, number: 'LC10', type: 'Lounge Chair', status: 'occupied', x: 62, y: 25 },
+    { id: 11, number: 'LC11', type: 'Lounge Chair', status: 'available', x: 68, y: 25 },
+    { id: 12, number: 'LC12', type: 'Lounge Chair', status: 'reserved', x: 74, y: 25 },
+    { id: 13, number: 'LC13', type: 'Lounge Chair', status: 'available', x: 80, y: 25 },
+    { id: 14, number: 'LC14', type: 'Lounge Chair', status: 'occupied', x: 86, y: 25 },
+    { id: 15, number: 'LC15', type: 'Lounge Chair', status: 'available', x: 92, y: 25 },
 
     // Row 2 - Lounge Chairs
-    { id: 9, number: 'LC09', type: 'Lounge Chair', status: 'available', x: 10, y: 35 },
-    { id: 10, number: 'LC10', type: 'Lounge Chair', status: 'occupied', x: 20, y: 35 },
-    { id: 11, number: 'LC11', type: 'Lounge Chair', status: 'available', x: 30, y: 35 },
-    { id: 12, number: 'LC12', type: 'Lounge Chair', status: 'reserved', x: 40, y: 35 },
-    { id: 13, number: 'LC13', type: 'Lounge Chair', status: 'available', x: 50, y: 35 },
-    { id: 14, number: 'LC14', type: 'Lounge Chair', status: 'occupied', x: 60, y: 35 },
-    { id: 15, number: 'LC15', type: 'Lounge Chair', status: 'available', x: 70, y: 35 },
-    { id: 16, number: 'LC16', type: 'Lounge Chair', status: 'available', x: 80, y: 35 },
+    { id: 16, number: 'LC16', type: 'Lounge Chair', status: 'available', x: 8, y: 35 },
+    { id: 17, number: 'LC17', type: 'Lounge Chair', status: 'occupied', x: 14, y: 35 },
+    { id: 18, number: 'LC18', type: 'Lounge Chair', status: 'available', x: 20, y: 35 },
+    { id: 19, number: 'LC19', type: 'Lounge Chair', status: 'reserved', x: 26, y: 35 },
+    { id: 20, number: 'LC20', type: 'Lounge Chair', status: 'available', x: 32, y: 35 },
+    { id: 21, number: 'LC21', type: 'Lounge Chair', status: 'occupied', x: 38, y: 35 },
+    { id: 22, number: 'LC22', type: 'Lounge Chair', status: 'available', x: 44, y: 35 },
+    { id: 23, number: 'LC23', type: 'Lounge Chair', status: 'available', x: 50, y: 35 },
+    { id: 24, number: 'LC24', type: 'Lounge Chair', status: 'occupied', x: 56, y: 35 },
+    { id: 25, number: 'LC25', type: 'Lounge Chair', status: 'available', x: 62, y: 35 },
+    { id: 26, number: 'LC26', type: 'Lounge Chair', status: 'reserved', x: 68, y: 35 },
+    { id: 27, number: 'LC27', type: 'Lounge Chair', status: 'available', x: 74, y: 35 },
+    { id: 28, number: 'LC28', type: 'Lounge Chair', status: 'occupied', x: 80, y: 35 },
+    { id: 29, number: 'LC29', type: 'Lounge Chair', status: 'available', x: 86, y: 35 },
+    { id: 30, number: 'LC30', type: 'Lounge Chair', status: 'available', x: 92, y: 35 },
 
-    // Row 3 - Umbrellas with chairs
-    { id: 17, number: 'U01', type: 'Umbrella Set', status: 'occupied', x: 15, y: 60 },
-    { id: 18, number: 'U02', type: 'Umbrella Set', status: 'available', x: 35, y: 60 },
-    { id: 19, number: 'U03', type: 'Umbrella Set', status: 'reserved', x: 55, y: 60 },
-    { id: 20, number: 'U04', type: 'Umbrella Set', status: 'occupied', x: 75, y: 60 },
+    // Row 3 - Lounge Chairs
+    { id: 31, number: 'LC31', type: 'Lounge Chair', status: 'available', x: 8, y: 45 },
+    { id: 32, number: 'LC32', type: 'Lounge Chair', status: 'occupied', x: 14, y: 45 },
+    { id: 33, number: 'LC33', type: 'Lounge Chair', status: 'available', x: 20, y: 45 },
+    { id: 34, number: 'LC34', type: 'Lounge Chair', status: 'occupied', x: 26, y: 45 },
+    { id: 35, number: 'LC35', type: 'Lounge Chair', status: 'reserved', x: 32, y: 45 },
+    { id: 36, number: 'LC36', type: 'Lounge Chair', status: 'available', x: 38, y: 45 },
+    { id: 37, number: 'LC37', type: 'Lounge Chair', status: 'occupied', x: 44, y: 45 },
+    { id: 38, number: 'LC38', type: 'Lounge Chair', status: 'available', x: 50, y: 45 },
+    { id: 39, number: 'LC39', type: 'Lounge Chair', status: 'available', x: 56, y: 45 },
+    { id: 40, number: 'LC40', type: 'Lounge Chair', status: 'occupied', x: 62, y: 45 },
+    { id: 41, number: 'LC41', type: 'Lounge Chair', status: 'available', x: 68, y: 45 },
+    { id: 42, number: 'LC42', type: 'Lounge Chair', status: 'reserved', x: 74, y: 45 },
+    { id: 43, number: 'LC43', type: 'Lounge Chair', status: 'available', x: 80, y: 45 },
+    { id: 44, number: 'LC44', type: 'Lounge Chair', status: 'occupied', x: 86, y: 45 },
+    { id: 45, number: 'LC45', type: 'Lounge Chair', status: 'available', x: 92, y: 45 },
 
-    // Row 4 - Cabanas
-    { id: 21, number: 'CB01', type: 'Cabana', status: 'reserved', x: 20, y: 80 },
-    { id: 22, number: 'CB02', type: 'Cabana', status: 'occupied', x: 50, y: 80 },
-    { id: 23, number: 'CB03', type: 'Cabana', status: 'available', x: 80, y: 80 },
+    // Row 4 - Umbrellas with chairs
+    { id: 46, number: 'U01', type: 'Umbrella Set', status: 'occupied', x: 12, y: 60 },
+    { id: 47, number: 'U02', type: 'Umbrella Set', status: 'available', x: 24, y: 60 },
+    { id: 48, number: 'U03', type: 'Umbrella Set', status: 'reserved', x: 36, y: 60 },
+    { id: 49, number: 'U04', type: 'Umbrella Set', status: 'occupied', x: 48, y: 60 },
+    { id: 50, number: 'U05', type: 'Umbrella Set', status: 'available', x: 60, y: 60 },
+    { id: 51, number: 'U06', type: 'Umbrella Set', status: 'reserved', x: 72, y: 60 },
+    { id: 52, number: 'U07', type: 'Umbrella Set', status: 'occupied', x: 84, y: 60 },
+
+    // Row 5 - Cabanas (premium, more space)
+    { id: 53, number: 'CB01', type: 'Cabana', status: 'reserved', x: 15, y: 80 },
+    { id: 54, number: 'CB02', type: 'Cabana', status: 'occupied', x: 35, y: 80 },
+    { id: 55, number: 'CB03', type: 'Cabana', status: 'available', x: 55, y: 80 },
+    { id: 56, number: 'CB04', type: 'Cabana', status: 'occupied', x: 75, y: 80 },
   ];
 
   const getStatusColor = (status) => {
