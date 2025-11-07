@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { mockOrganisations, mockCountries, mockStates, mockCities, getStatesByCountry, getCitiesByState } from '../../mockAdmin';
+import { getStatesByCountry, getCitiesByState } from '../../mockAdmin';
 
 export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
   const [formData, setFormData] = useState({
@@ -35,6 +35,19 @@ export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
 
   const [availableStates, setAvailableStates] = useState([]);
   const [availableCities, setAvailableCities] = useState([]);
+
+  // Get data from localStorage
+  const getStoredData = (key) => {
+    try {
+      const stored = localStorage.getItem(key);
+      return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+      return [];
+    }
+  };
+
+  const organisations = getStoredData('smartflags_organisations');
+  const countries = getStoredData('smartflags_countries');
 
   useEffect(() => {
     if (property) {
