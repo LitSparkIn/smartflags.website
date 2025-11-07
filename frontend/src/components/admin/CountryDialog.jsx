@@ -80,11 +80,11 @@ export const CountryDialog = ({ open, onOpenChange, country, onSave }) => {
                 value={formData.code}
                 onChange={handleChange}
                 required
-                maxLength={2}
-                placeholder="e.g., US"
+                maxLength={5}
+                placeholder="e.g., US, +1, +312"
                 className="uppercase"
               />
-              <p className="text-xs text-slate-500">2-letter ISO code</p>
+              <p className="text-xs text-slate-500">Country code (up to 5 characters)</p>
             </div>
           </div>
 
