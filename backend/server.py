@@ -77,6 +77,13 @@ class VerifyOTPResponse(BaseModel):
     token: Optional[str] = None
     user: Optional[dict] = None
 
+class RequestOTPRequest(BaseModel):
+    email: EmailStr
+
+class RequestOTPResponse(BaseModel):
+    success: bool
+    message: str
+
 # Helper Functions
 def generate_otp() -> str:
     """Generate a 6-digit OTP"""
