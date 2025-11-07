@@ -16,6 +16,7 @@ import { Roles } from './pages/admin/Roles';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Toaster } from './components/ui/sonner';
+import { Toaster as ShadcnToaster } from './components/ui/toaster';
 
 // User Admin Pages
 import { Dashboard as UserDashboard } from './pages/user/Dashboard';
