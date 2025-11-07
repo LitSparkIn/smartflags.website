@@ -104,6 +104,29 @@ class SeatTypeUpdate(BaseModel):
     name: Optional[str] = None
     icon: Optional[str] = None
 
+# Seat Models
+class Seat(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    propertyId: str
+    seatTypeId: str
+    seatNumber: str
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class SeatBulkCreate(BaseModel):
+    propertyId: str
+    seatTypeId: str
+    prefix: Optional[str] = ""
+    suffix: Optional[str] = ""
+    startNumber: int
+    endNumber: int
+
+class SeatUpdate(BaseModel):
+    seatTypeId: Optional[str] = None
+    seatNumber: Optional[str] = None
+
 # Helper Functions
 def generate_otp() -> str:
     """Generate a 6-digit OTP"""
