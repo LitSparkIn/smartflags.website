@@ -17,7 +17,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { mockCountries } from '../../mockAdmin';
 
 export const StateDialog = ({ open, onOpenChange, state, onSave }) => {
   const [formData, setFormData] = useState({
@@ -25,6 +24,18 @@ export const StateDialog = ({ open, onOpenChange, state, onSave }) => {
     name: '',
     code: ''
   });
+
+  // Get countries from localStorage
+  const getCountries = () => {
+    try {
+      const stored = localStorage.getItem('smartflags_countries');
+      return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+      return [];
+    }
+  };
+
+  const countries = getCountries();
 
   useEffect(() => {
     if (state) {
