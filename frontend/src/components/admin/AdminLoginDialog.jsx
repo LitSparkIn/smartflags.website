@@ -122,10 +122,10 @@ export const AdminLoginDialog = ({ open, onOpenChange, entityType, entityName, o
               {loading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                  Sending OTP...
+                  Adding Admin...
                 </>
               ) : (
-                'Send OTP'
+                'Add Admin'
               )}
             </Button>
           </DialogFooter>
