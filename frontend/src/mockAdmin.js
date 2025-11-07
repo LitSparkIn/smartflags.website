@@ -15,43 +15,7 @@ export const mockProperties = [];
 export const mockCountries = [];
 
 // Master Data - States
-export const mockStates = [
-  {
-    id: 'state-1',
-    name: 'California',
-    countryId: 'country-1',
-    code: 'CA',
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'state-2',
-    name: 'Florida',
-    countryId: 'country-1',
-    code: 'FL',
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'state-3',
-    name: 'New York',
-    countryId: 'country-1',
-    code: 'NY',
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'state-4',
-    name: 'Maharashtra',
-    countryId: 'country-3',
-    code: 'MH',
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'state-5',
-    name: 'Karnataka',
-    countryId: 'country-3',
-    code: 'KA',
-    createdAt: '2024-01-01T00:00:00Z'
-  }
-];
+export const mockStates = [];
 
 // Master Data - Cities
 export const mockCities = [
