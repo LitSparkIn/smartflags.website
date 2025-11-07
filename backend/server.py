@@ -42,6 +42,41 @@ class StatusCheck(BaseModel):
 class StatusCheckCreate(BaseModel):
     client_name: str
 
+# Admin Login Models
+class CreateAdminRequest(BaseModel):
+    name: str
+    email: EmailStr
+    entityType: str  # "organisation" or "property"
+    entityId: str
+
+class CreateAdminResponse(BaseModel):
+    success: bool
+    message: str
+    email: str
+
+class AdminOTP(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    email: str
+    otp: str
+    name: str
+    entityType: str
+    entityId: str
+    expiresAt: datetime
+    used: bool = False
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class VerifyOTPRequest(BaseModel):
+    email: EmailStr
+    otp: str
+
+class VerifyOTPResponse(BaseModel):
+    success: bool
+    message: str
+    token: Optional[str] = None
+    user: Optional[dict] = None
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
