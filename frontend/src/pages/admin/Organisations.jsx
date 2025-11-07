@@ -7,6 +7,7 @@ import { mockOrganisations as initialOrganisations } from '../../mockAdmin';
 import { OrganisationDialog } from '../../components/admin/OrganisationDialog';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +21,7 @@ import {
 
 export const Organisations = () => {
   const navigate = useNavigate();
-  const [organisations, setOrganisations] = useState(initialOrganisations);
+  const [organisations, setOrganisations] = useLocalStorage('smartflags_organisations', initialOrganisations);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingOrg, setEditingOrg] = useState(null);
