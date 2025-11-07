@@ -26,7 +26,7 @@ import {
 } from '../../components/ui/select';
 
 export const States = () => {
-  const [states, setStates] = useState(initialStates);
+  const [states, setStates] = useLocalStorage('smartflags_states', initialStates);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCountryId, setFilterCountryId] = useState('all');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
