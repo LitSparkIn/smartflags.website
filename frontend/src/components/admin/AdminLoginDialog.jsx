@@ -74,12 +74,12 @@ export const AdminLoginDialog = ({ open, onOpenChange, entityType, entityName, e
         <DialogHeader>
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-lg flex items-center justify-center">
-              <Lock className="w-6 h-6 text-white" />
+              <User className="w-6 h-6 text-white" />
             </div>
             <div>
-              <DialogTitle>Create Admin Login</DialogTitle>
+              <DialogTitle>Add Admin</DialogTitle>
               <DialogDescription>
-                Create admin access for {entityType}: {entityName}
+                Add admin user to {entityType}: {entityName}
               </DialogDescription>
             </div>
           </div>
@@ -90,7 +90,7 @@ export const AdminLoginDialog = ({ open, onOpenChange, entityType, entityName, e
             {/* Info Box */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <p className="text-sm text-blue-800">
-                A confirmation email will be sent with login instructions. The user can login at <strong>/user/login</strong> using their email to receive OTP.
+                The user will receive a welcome email and can login at <strong>/user/login</strong> using their email to receive a one-time OTP.
               </p>
             </div>
 
