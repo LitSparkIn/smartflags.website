@@ -91,7 +91,7 @@ class SeatType(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     propertyId: str
     name: str
-    icon: str  # Base64 encoded SVG
+    icon: str  # Base64 encoded PNG image
     createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
