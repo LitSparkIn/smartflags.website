@@ -20,6 +20,18 @@ export const OrganisationDetails = () => {
   const [properties, setProperties] = useState([]);
   const [admins, setAdmins] = useState([]);
 
+  // Fetch admins for this organisation
+  const fetchAdmins = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/admin/list/organisation/${id}`);
+      if (response.data.success) {
+        setAdmins(response.data.admins);
+      }
+    } catch (error) {
+      console.error('Error fetching admins:', error);
+    }
+  };
+
   // Get organisation and properties from localStorage
   useEffect(() => {
     try {
@@ -31,6 +43,8 @@ export const OrganisationDetails = () => {
       if (foundOrg) {
         const orgProperties = getPropertiesByOrganisation(id);
         setProperties(orgProperties);
+        // Fetch admins for this organisation
+        fetchAdmins();
       }
     } catch (error) {
       console.error('Error loading organisation:', error);
