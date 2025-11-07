@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AdminLayout } from '../../components/admin/AdminLayout';
 import { ArrowLeft, Building2, Mail, Phone, MapPin, Calendar, Pencil, Home, UserPlus } from 'lucide-react';
 import { Button } from '../../components/ui/button';
-import { mockOrganisations, getPropertiesByOrganisation } from '../../mockAdmin';
+import { getPropertiesByOrganisation } from '../../mockAdmin';
 import { OrganisationDialog } from '../../components/admin/OrganisationDialog';
 import { AdminLoginDialog } from '../../components/admin/AdminLoginDialog';
 import { toast } from 'sonner';
@@ -13,9 +13,25 @@ export const OrganisationDetails = () => {
   const navigate = useNavigate();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isAdminLoginDialogOpen, setIsAdminLoginDialogOpen] = useState(false);
-  
-  const organisation = mockOrganisations.find(org => org.id === id);
-  const properties = getPropertiesByOrganisation(id);
+  const [organisation, setOrganisation] = useState(null);
+  const [properties, setProperties] = useState([]);
+
+  // Get organisation and properties from localStorage
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('smartflags_organisations');
+      const organisations = stored ? JSON.parse(stored) : [];
+      const foundOrg = organisations.find(org => org.id === id);
+      setOrganisation(foundOrg);
+      
+      if (foundOrg) {
+        const orgProperties = getPropertiesByOrganisation(id);
+        setProperties(orgProperties);
+      }
+    } catch (error) {
+      console.error('Error loading organisation:', error);
+    }
+  }, [id]);
 
   if (!organisation) {
     return (
