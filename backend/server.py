@@ -437,6 +437,91 @@ async def get_entity_admins(entity_type: str, entity_id: str):
         logger.error(f"Error fetching admins: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+# Seat Type CRUD Endpoints
+@api_router.post("/seat-types", response_model=SeatType)
+async def create_seat_type(seat_type: SeatTypeCreate):
+    """Create a new seat type"""
+    try:
+        seat_type_obj = SeatType(**seat_type.model_dump())
+        
+        # Convert to dict and serialize datetime
+        doc = seat_type_obj.model_dump()
+        doc['createdAt'] = doc['createdAt'].isoformat()
+        doc['updatedAt'] = doc['updatedAt'].isoformat()
+        
+        await db.seat_types.insert_one(doc)
+        
+        logger.info(f"Seat type created: {seat_type_obj.id}")
+        return seat_type_obj
+        
+    except Exception as e:
+        logger.error(f"Error creating seat type: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.get("/seat-types/{property_id}")
+async def get_seat_types(property_id: str):
+    """Get all seat types for a property"""
+    try:
+        seat_types = await db.seat_types.find(
+            {"propertyId": property_id},
+            {"_id": 0}
+        ).to_list(1000)
+        
+        return {"success": True, "seatTypes": seat_types}
+        
+    except Exception as e:
+        logger.error(f"Error fetching seat types: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.put("/seat-types/{seat_type_id}")
+async def update_seat_type(seat_type_id: str, update_data: SeatTypeUpdate):
+    """Update a seat type"""
+    try:
+        update_dict = {k: v for k, v in update_data.model_dump().items() if v is not None}
+        
+        if not update_dict:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        update_dict['updatedAt'] = datetime.now(timezone.utc).isoformat()
+        
+        result = await db.seat_types.update_one(
+            {"id": seat_type_id},
+            {"$set": update_dict}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Seat type not found")
+        
+        # Get updated seat type
+        updated_seat_type = await db.seat_types.find_one({"id": seat_type_id}, {"_id": 0})
+        
+        logger.info(f"Seat type updated: {seat_type_id}")
+        return {"success": True, "seatType": updated_seat_type}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating seat type: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/seat-types/{seat_type_id}")
+async def delete_seat_type(seat_type_id: str):
+    """Delete a seat type"""
+    try:
+        result = await db.seat_types.delete_one({"id": seat_type_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Seat type not found")
+        
+        logger.info(f"Seat type deleted: {seat_type_id}")
+        return {"success": True, "message": "Seat type deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting seat type: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 @api_router.post("/user/login", response_model=VerifyOTPResponse)
 async def verify_otp_login(request: VerifyOTPRequest):
     """
