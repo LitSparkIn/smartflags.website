@@ -21,7 +21,50 @@ export const mockStates = [];
 export const mockCities = [];
 
 // Master Data - Roles
-export const mockRoles = [];
+export const mockRoles = [
+  {
+    id: 'role-1',
+    name: 'Org Admin',
+    description: 'Will be able to see an org, all properties under it and all the reporting later on.',
+    permissions: ['org.view', 'org.edit', 'properties.view', 'properties.manage', 'reports.view', 'users.manage'],
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'role-2',
+    name: 'Property Admin',
+    description: 'Will be able to see all the details of the associated property.',
+    permissions: ['property.view', 'property.edit', 'staff.view', 'reports.view'],
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'role-3',
+    name: 'Pool and Beach Manager',
+    description: 'Will be able to manage Pool and Beach Attendants of the associated property.',
+    permissions: ['pool.manage', 'beach.manage', 'attendants.manage', 'attendants.view'],
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'role-4',
+    name: 'Food and Beverage Manager',
+    description: 'Will be able to manage Servers of the associated property.',
+    permissions: ['fnb.manage', 'servers.manage', 'servers.view', 'orders.view'],
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'role-5',
+    name: 'Pool and Beach Attendants',
+    description: 'Will be able to view Guest Dashboard',
+    permissions: ['guest.dashboard.view', 'calls.view', 'calls.respond'],
+    createdAt: new Date().toISOString()
+  },
+  {
+    id: 'role-6',
+    name: 'Servers',
+    description: 'Will be able to view Guest Dashboard',
+    permissions: ['guest.dashboard.view', 'orders.view', 'orders.respond'],
+    createdAt: new Date().toISOString()
+  }
+];
 
 // Helper functions that read from localStorage
 const getStoredData = (key, defaultValue) => {
