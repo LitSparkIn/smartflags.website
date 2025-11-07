@@ -145,19 +145,44 @@ export const UserLogin = () => {
               <Label htmlFor="email" className="text-slate-700 font-medium">
                 Email Address *
               </Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  placeholder="admin@example.com"
-                  className="pl-11 h-12 text-base"
-                />
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    placeholder="admin@example.com"
+                    className="pl-11 h-12 text-base"
+                    disabled={otpSent}
+                  />
+                </div>
+                <Button
+                  type="button"
+                  onClick={handleSendOTP}
+                  disabled={sendingOtp || otpSent}
+                  className="h-12 px-6 bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700"
+                >
+                  {sendingOtp ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                      Sending...
+                    </>
+                  ) : otpSent ? (
+                    '✓ Sent'
+                  ) : (
+                    'Send OTP'
+                  )}
+                </Button>
               </div>
+              {otpSent && (
+                <p className="text-xs text-green-600 font-medium">
+                  ✓ OTP has been sent to your email
+                </p>
+              )}
             </div>
 
             {/* OTP Field */}
@@ -178,18 +203,33 @@ export const UserLogin = () => {
                   maxLength="6"
                   pattern="[0-9]{6}"
                   className="pl-11 h-12 text-base tracking-widest"
+                  disabled={!otpSent}
                 />
               </div>
-              <p className="text-xs text-slate-500">
-                The OTP is valid for 15 minutes
-              </p>
+              <div className="flex justify-between items-center">
+                <p className="text-xs text-slate-500">
+                  The OTP is valid for 15 minutes
+                </p>
+                {otpSent && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOtpSent(false);
+                      setFormData({ ...formData, otp: '' });
+                    }}
+                    className="text-xs text-teal-600 hover:text-teal-700 font-medium"
+                  >
+                    Resend OTP
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Submit Button */}
             <Button
               type="submit"
-              disabled={loading}
-              className="w-full h-12 text-base font-semibold bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 shadow-lg hover:shadow-xl transition-all"
+              disabled={loading || !otpSent}
+              className="w-full h-12 text-base font-semibold bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
             >
               {loading ? (
                 <>
