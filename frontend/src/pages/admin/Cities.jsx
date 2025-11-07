@@ -3,7 +3,7 @@ import { AdminLayout } from '../../components/admin/AdminLayout';
 import { Plus, Pencil, Trash2, Search, MapPin, Map } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { mockCities as initialCities, mockStates, getStateById } from '../../mockAdmin';
+import { mockCities as initialCities, getStateById } from '../../mockAdmin';
 import { CityDialog } from '../../components/admin/CityDialog';
 import { toast } from 'sonner';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
