@@ -128,7 +128,7 @@ export const AdminLoginDialog = ({ open, onOpenChange, entityType, entityName, e
                 />
               </div>
               <p className="text-xs text-slate-500">
-                OTP will be sent to this email address
+                A welcome email will be sent to this address
               </p>
             </div>
           </div>
