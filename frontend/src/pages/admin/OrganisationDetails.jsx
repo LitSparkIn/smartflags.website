@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AdminLayout } from '../../components/admin/AdminLayout';
-import { ArrowLeft, Building2, Mail, Phone, MapPin, Calendar, Pencil, Home, UserPlus } from 'lucide-react';
+import { ArrowLeft, Building2, Mail, Phone, MapPin, Calendar, Pencil, Home, UserPlus, Users } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { getPropertiesByOrganisation } from '../../mockAdmin';
 import { OrganisationDialog } from '../../components/admin/OrganisationDialog';
 import { AdminLoginDialog } from '../../components/admin/AdminLoginDialog';
 import { toast } from 'sonner';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
 export const OrganisationDetails = () => {
   const { id } = useParams();
@@ -15,6 +18,7 @@ export const OrganisationDetails = () => {
   const [isAdminLoginDialogOpen, setIsAdminLoginDialogOpen] = useState(false);
   const [organisation, setOrganisation] = useState(null);
   const [properties, setProperties] = useState([]);
+  const [admins, setAdmins] = useState([]);
 
   // Get organisation and properties from localStorage
   useEffect(() => {
