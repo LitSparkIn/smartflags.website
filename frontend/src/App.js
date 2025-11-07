@@ -133,6 +133,7 @@ function App() {
           </Routes>
         </BrowserRouter>
         <Toaster position="top-right" />
+        <ShadcnToaster />
       </div>
     </AuthProvider>
   );
