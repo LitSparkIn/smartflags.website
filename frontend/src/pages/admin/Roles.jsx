@@ -154,7 +154,7 @@ export const Roles = () => {
                         {role.permissions.slice(0, 3).map((permission, index) => (
                           <span
                             key={index}
-                            className="inline-flex items-center px-2 py-1 bg-amber-50 text-amber-700 text-xs rounded-md font-medium"
+                            className="inline-flex items-center px-2 py-1 bg-emerald-50 text-emerald-700 text-xs rounded-md font-medium"
                           >
                             {permission}
                           </span>
