@@ -217,6 +217,15 @@ export const PropertyDetails = () => {
         property={property}
         onSave={handleSave}
       />
+
+      {/* Admin Login Dialog */}
+      <AdminLoginDialog
+        open={isAdminLoginDialogOpen}
+        onOpenChange={setIsAdminLoginDialogOpen}
+        entityType="Property"
+        entityName={property.name}
+        onSend={handleSendOTP}
+      />
     </AdminLayout>
   );
 };
