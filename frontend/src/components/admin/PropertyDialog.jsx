@@ -186,14 +186,32 @@ export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
             {/* Phone */}
             <div className="space-y-2">
               <Label htmlFor="phone">Phone Number</Label>
-              <Input
-                id="phone"
-                name="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="+1 555 000 0000"
-              />
+              <div className="flex gap-2">
+                <Select
+                  value={formData.phoneCountryCode}
+                  onValueChange={(value) => setFormData({ ...formData, phoneCountryCode: value })}
+                >
+                  <SelectTrigger className="w-32">
+                    <SelectValue placeholder="Code" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {mockCountries.map((country) => (
+                      <SelectItem key={country.id} value={country.code}>
+                        {country.code}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="555 000 0000"
+                  className="flex-1"
+                />
+              </div>
             </div>
 
             {/* Location Section */}
