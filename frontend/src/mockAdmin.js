@@ -21,36 +21,7 @@ export const mockStates = [];
 export const mockCities = [];
 
 // Master Data - Roles
-export const mockRoles = [
-  {
-    id: 'role-1',
-    name: 'Super Admin',
-    description: 'Full system access with all permissions',
-    permissions: ['all'],
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'role-2',
-    name: 'Manager',
-    description: 'Manage properties and staff within organisation',
-    permissions: ['properties.view', 'properties.edit', 'staff.manage'],
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'role-3',
-    name: 'Staff',
-    description: 'Handle guest requests and service calls',
-    permissions: ['calls.view', 'calls.respond', 'orders.view'],
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'role-4',
-    name: 'Viewer',
-    description: 'Read-only access to dashboard and reports',
-    permissions: ['dashboard.view', 'reports.view'],
-    createdAt: '2024-01-01T00:00:00Z'
-  }
-];
+export const mockRoles = [];
 
 // Helper function to get organisation by ID
 export const getOrganisationById = (id) => {
