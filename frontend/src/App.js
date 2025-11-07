@@ -118,6 +118,17 @@ function App() {
             
             {/* Redirect /admin to dashboard */}
             <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+            
+            {/* User Admin Routes (for Organisation and Property Admins) */}
+            <Route path="/user/dashboard" element={<UserDashboard />} />
+            <Route path="/user/properties" element={<UserProperties />} />
+            <Route path="/user/staff" element={<Staff />} />
+            <Route path="/user/seat-types" element={<SeatTypes />} />
+            <Route path="/user/seats" element={<Seats />} />
+            <Route path="/user/groups" element={<Groups />} />
+            
+            {/* Redirect /user to dashboard */}
+            <Route path="/user" element={<Navigate to="/user/dashboard" replace />} />
           </Routes>
         </BrowserRouter>
         <Toaster position="top-right" />
