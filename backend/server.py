@@ -392,6 +392,31 @@ async def request_otp(request: RequestOTPRequest):
         logger.error(f"Error requesting OTP: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+@api_router.get("/admin/list/{entity_type}/{entity_id}")
+async def get_entity_admins(entity_type: str, entity_id: str):
+    """
+    Get all admins for a specific entity (organisation or property)
+    """
+    try:
+        # Find all admins for this entity
+        admins = await db.admins.find(
+            {
+                "entityType": entity_type,
+                "entityId": entity_id,
+                "active": True
+            },
+            {"_id": 0}
+        ).to_list(100)
+        
+        return {
+            "success": True,
+            "admins": admins
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching admins: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 @api_router.post("/user/login", response_model=VerifyOTPResponse)
 async def verify_otp_login(request: VerifyOTPRequest):
     """
