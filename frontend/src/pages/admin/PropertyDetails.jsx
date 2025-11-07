@@ -41,6 +41,14 @@ export const PropertyDetails = () => {
     setIsEditDialogOpen(false);
   };
 
+  const handleSendOTP = (adminData) => {
+    // Mock OTP sending - in real app, this would call backend API
+    toast.success(`OTP sent successfully to ${adminData.email}!`, {
+      description: 'Admin login credentials have been emailed.'
+    });
+    setIsAdminLoginDialogOpen(false);
+  };
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
