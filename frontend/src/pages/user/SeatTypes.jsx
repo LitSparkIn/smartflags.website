@@ -202,10 +202,13 @@ export const SeatTypes = () => {
                 className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-6 border border-slate-200"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div 
-                    className="w-16 h-16 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg flex items-center justify-center border border-green-200"
-                    dangerouslySetInnerHTML={{ __html: seatType.icon }}
-                  />
+                  <div className="w-16 h-16 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg flex items-center justify-center border border-green-200 p-2">
+                    <img 
+                      src={seatType.icon} 
+                      alt={seatType.name}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
                   <div className="flex space-x-2">
                     <Button
                       size="sm"
