@@ -433,8 +433,8 @@ async def verify_otp_login(request: VerifyOTPRequest):
             "email": request.email,
             "name": otp_doc['name'],
             "token": token,
-            "entityType": otp_doc['entityType'],
-            "entityId": otp_doc['entityId'],
+            "entityType": otp_doc.get('entityType', ''),
+            "entityId": otp_doc.get('entityId', ''),
             "createdAt": datetime.now(timezone.utc).isoformat()
         }
         
@@ -449,8 +449,8 @@ async def verify_otp_login(request: VerifyOTPRequest):
             user={
                 "email": request.email,
                 "name": otp_doc['name'],
-                "entityType": otp_doc['entityType'],
-                "entityId": otp_doc['entityId']
+                "entityType": otp_doc.get('entityType', ''),
+                "entityId": otp_doc.get('entityId', '')
             }
         )
         
