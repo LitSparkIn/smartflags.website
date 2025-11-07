@@ -5,7 +5,9 @@ import { Home } from './pages/Home';
 import { Login } from './pages/admin/Login';
 import { Dashboard } from './pages/admin/Dashboard';
 import { Organisations } from './pages/admin/Organisations';
+import { OrganisationDetails } from './pages/admin/OrganisationDetails';
 import { Properties } from './pages/admin/Properties';
+import { PropertyDetails } from './pages/admin/PropertyDetails';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Toaster } from './components/ui/sonner';
@@ -40,10 +42,26 @@ function App() {
               }
             />
             <Route
+              path="/admin/organisations/:id"
+              element={
+                <ProtectedRoute>
+                  <OrganisationDetails />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/admin/properties"
               element={
                 <ProtectedRoute>
                   <Properties />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/properties/:id"
+              element={
+                <ProtectedRoute>
+                  <PropertyDetails />
                 </ProtectedRoute>
               }
             />
