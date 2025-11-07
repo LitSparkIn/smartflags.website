@@ -136,7 +136,7 @@ export const RoleDialog = ({ open, onOpenChange, role, onSave }) => {
                   {formData.permissions.map((permission, index) => (
                     <span
                       key={index}
-                      className="inline-flex items-center gap-1 px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-sm"
+                      className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm"
                     >
                       {permission}
                       <button
