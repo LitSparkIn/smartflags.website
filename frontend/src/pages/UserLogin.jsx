@@ -97,9 +97,9 @@ export const UserLogin = () => {
           variant: "default"
         });
 
-        // Redirect to admin dashboard
+        // Redirect to user dashboard (not admin dashboard)
         setTimeout(() => {
-          navigate('/admin/dashboard');
+          navigate('/user/dashboard');
         }, 1000);
       }
     } catch (error) {
