@@ -25,6 +25,13 @@ export const Roles = () => {
   const [editingRole, setEditingRole] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
 
+  // Initialize roles if localStorage is empty but initialRoles has data
+  React.useEffect(() => {
+    if (roles.length === 0 && initialRoles.length > 0) {
+      setRoles(initialRoles);
+    }
+  }, []);
+
   const filteredRoles = roles.filter((role) =>
     role.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     role.description.toLowerCase().includes(searchTerm.toLowerCase())
