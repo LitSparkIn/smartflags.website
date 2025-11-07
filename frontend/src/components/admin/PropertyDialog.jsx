@@ -35,19 +35,23 @@ export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
 
   const [availableStates, setAvailableStates] = useState([]);
   const [availableCities, setAvailableCities] = useState([]);
+  const [organisations, setOrganisations] = useState([]);
+  const [countries, setCountries] = useState([]);
 
-  // Get data from localStorage
-  const getStoredData = (key) => {
-    try {
-      const stored = localStorage.getItem(key);
-      return stored ? JSON.parse(stored) : [];
-    } catch (error) {
-      return [];
+  // Load organisations and countries when dialog opens
+  useEffect(() => {
+    if (open) {
+      try {
+        const storedOrgs = localStorage.getItem('smartflags_organisations');
+        const storedCountries = localStorage.getItem('smartflags_countries');
+        setOrganisations(storedOrgs ? JSON.parse(storedOrgs) : []);
+        setCountries(storedCountries ? JSON.parse(storedCountries) : []);
+      } catch (error) {
+        setOrganisations([]);
+        setCountries([]);
+      }
     }
-  };
-
-  const organisations = getStoredData('smartflags_organisations');
-  const countries = getStoredData('smartflags_countries');
+  }, [open]);
 
   useEffect(() => {
     if (property) {
