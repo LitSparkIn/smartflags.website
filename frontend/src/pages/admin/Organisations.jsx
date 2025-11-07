@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AdminLayout } from '../../components/admin/AdminLayout';
 import { Plus, Pencil, Trash2, Search, Building2, Mail, Phone, MapPin, Eye } from 'lucide-react';
 import { Button } from '../../components/ui/button';
@@ -7,7 +7,6 @@ import { mockOrganisations as initialOrganisations } from '../../mockAdmin';
 import { OrganisationDialog } from '../../components/admin/OrganisationDialog';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { getMockData, saveMockData } from '../../utils/mockStorage';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,7 +20,7 @@ import {
 
 export const Organisations = () => {
   const navigate = useNavigate();
-  const [organisations, setOrganisations] = useState(() => getMockData('organisations', initialOrganisations));
+  const [organisations, setOrganisations] = useState(initialOrganisations);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingOrg, setEditingOrg] = useState(null);
