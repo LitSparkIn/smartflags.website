@@ -8,6 +8,10 @@ import { Organisations } from './pages/admin/Organisations';
 import { OrganisationDetails } from './pages/admin/OrganisationDetails';
 import { Properties } from './pages/admin/Properties';
 import { PropertyDetails } from './pages/admin/PropertyDetails';
+import { Countries } from './pages/admin/Countries';
+import { States } from './pages/admin/States';
+import { Cities } from './pages/admin/Cities';
+import { Roles } from './pages/admin/Roles';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Toaster } from './components/ui/sonner';
@@ -62,6 +66,40 @@ function App() {
               element={
                 <ProtectedRoute>
                   <PropertyDetails />
+                </ProtectedRoute>
+              }
+            />
+            
+            {/* Master Data Routes */}
+            <Route
+              path="/admin/master-data/countries"
+              element={
+                <ProtectedRoute>
+                  <Countries />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/master-data/states"
+              element={
+                <ProtectedRoute>
+                  <States />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/master-data/cities"
+              element={
+                <ProtectedRoute>
+                  <Cities />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/master-data/roles"
+              element={
+                <ProtectedRoute>
+                  <Roles />
                 </ProtectedRoute>
               }
             />
