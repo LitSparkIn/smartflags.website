@@ -242,6 +242,46 @@ export const PropertyDetails = () => {
             </div>
           </div>
         </div>
+
+        {/* Admins Section */}
+        <div className="mt-8 bg-white rounded-xl shadow-lg border border-slate-100 p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900">Property Admins</h2>
+              <p className="text-slate-600">Users who can manage this property</p>
+            </div>
+          </div>
+
+          {admins.length === 0 ? (
+            <div className="text-center py-12">
+              <Users className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+              <p className="text-slate-500 mb-4">No admins added yet</p>
+              <p className="text-sm text-slate-400">Click "Add Admin" button above to add your first admin</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {admins.map((admin) => (
+                <div
+                  key={admin.id}
+                  className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg p-5 border border-blue-100"
+                >
+                  <div className="flex items-start space-x-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <UserPlus className="w-6 h-6 text-white" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-bold text-slate-900 mb-1 truncate">{admin.name}</h3>
+                      <p className="text-sm text-slate-600 truncate">{admin.email}</p>
+                      <p className="text-xs text-blue-600 mt-2">
+                        Added {new Date(admin.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Edit Dialog */}
@@ -255,7 +295,13 @@ export const PropertyDetails = () => {
       {/* Admin Login Dialog */}
       <AdminLoginDialog
         open={isAdminLoginDialogOpen}
-        onOpenChange={setIsAdminLoginDialogOpen}
+        onOpenChange={(open) => {
+          setIsAdminLoginDialogOpen(open);
+          // Refresh admins list when dialog closes
+          if (!open) {
+            fetchAdmins();
+          }
+        }}
         entityType="property"
         entityName={property.name}
         entityId={property.id}
