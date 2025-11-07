@@ -197,20 +197,24 @@ export const SmartView = () => {
           <div className="p-6 border-b border-slate-200">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold text-slate-800">Beach Layout</h2>
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-green-500 rounded border border-green-600"></div>
-                  <span className="text-sm text-slate-600">Available</span>
+              {seatTypes.length > 0 ? (
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 bg-green-500 rounded border border-green-600"></div>
+                    <span className="text-sm text-slate-600">Available</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 bg-red-500 rounded border border-red-600"></div>
+                    <span className="text-sm text-slate-600">Occupied</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 bg-yellow-500 rounded border border-yellow-600"></div>
+                    <span className="text-sm text-slate-600">Reserved</span>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-red-500 rounded border border-red-600"></div>
-                  <span className="text-sm text-slate-600">Occupied</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-yellow-500 rounded border border-yellow-600"></div>
-                  <span className="text-sm text-slate-600">Reserved</span>
-                </div>
-              </div>
+              ) : (
+                <p className="text-sm text-orange-600">⚠️ Please create seat types first</p>
+              )}
             </div>
           </div>
           
