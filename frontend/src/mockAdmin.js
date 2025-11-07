@@ -9,60 +9,7 @@ export const mockAdmin = {
 
 export const mockOrganisations = [];
 
-export const mockProperties = [
-  {
-    id: 'prop-1',
-    organisationId: 'org-1',
-    name: 'Paradise Beach Resort',
-    email: 'beach@paradiseresorts.com',
-    phoneCountryCode: 'US',
-    phone: '555 100 1001',
-    address: '789 Beach Road, Miami Beach, FL 33140',
-    countryId: 'country-1',
-    stateId: 'state-2',
-    cityId: 'city-3',
-    createdAt: '2024-01-16T10:00:00Z'
-  },
-  {
-    id: 'prop-2',
-    organisationId: 'org-1',
-    name: 'Paradise Pool Club',
-    email: 'pool@paradiseresorts.com',
-    phoneCountryCode: 'US',
-    phone: '555 100 1002',
-    address: '321 Poolside Ave, Miami, FL 33141',
-    countryId: 'country-1',
-    stateId: 'state-2',
-    cityId: 'city-3',
-    createdAt: '2024-01-17T10:00:00Z'
-  },
-  {
-    id: 'prop-3',
-    organisationId: 'org-2',
-    name: 'Azure Bay Resort',
-    email: 'bay@azurehospitality.com',
-    phoneCountryCode: 'MV',
-    phone: '555 200 2001',
-    address: '456 Azure Bay, Maldives',
-    countryId: 'country-5',
-    stateId: '',
-    cityId: '',
-    createdAt: '2024-02-21T11:30:00Z'
-  },
-  {
-    id: 'prop-4',
-    organisationId: 'org-3',
-    name: 'Sunset Beach Main',
-    email: 'main@sunsetbeach.com',
-    phoneCountryCode: 'US',
-    phone: '555 300 3001',
-    address: '789 Sunset Boulevard, California 90211',
-    countryId: 'country-1',
-    stateId: 'state-1',
-    cityId: 'city-1',
-    createdAt: '2024-03-11T09:15:00Z'
-  }
-];
+export const mockProperties = [];
 
 // Master Data - Countries
 export const mockCountries = [
