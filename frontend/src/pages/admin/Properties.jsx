@@ -28,7 +28,7 @@ import {
 
 export const Properties = () => {
   const navigate = useNavigate();
-  const [properties, setProperties] = useState(initialProperties);
+  const [properties, setProperties] = useLocalStorage('smartflags_properties', initialProperties);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterOrgId, setFilterOrgId] = useState('all');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
