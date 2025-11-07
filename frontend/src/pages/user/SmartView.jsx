@@ -250,15 +250,23 @@ export const SmartView = () => {
                   }}
                 >
                   {/* Seat Icon */}
-                  <div className={`${getSeatSize(seat.type)} ${getStatusColor(seat.status)} rounded-lg shadow-lg border-2 flex items-center justify-center transition-all`}>
-                    <Armchair className="w-4 h-4 text-white" />
+                  <div className={`w-8 h-8 ${getStatusColor(seat.status)} rounded-lg shadow-lg border-2 flex items-center justify-center transition-all p-1`}>
+                    {seat.seatType.icon ? (
+                      <img 
+                        src={seat.seatType.icon} 
+                        alt={seat.seatType.name}
+                        className="w-full h-full object-contain"
+                      />
+                    ) : (
+                      <Armchair className="w-4 h-4 text-white" />
+                    )}
                   </div>
                   
                   {/* Tooltip on Hover */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
                     <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap shadow-xl">
                       <p className="font-bold">{seat.number}</p>
-                      <p className="text-slate-300">{seat.type}</p>
+                      <p className="text-slate-300">{seat.seatType.name}</p>
                       <p className={`font-semibold ${
                         seat.status === 'available' ? 'text-green-400' :
                         seat.status === 'occupied' ? 'text-red-400' :
