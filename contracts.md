@@ -225,6 +225,155 @@ When implementing backend:
 
 ---
 
+## Admin Login Creation Feature
+
+### Frontend Implementation
+- "Create Admin Login" button added to Organisation and Property details pages
+- AdminLoginDialog component collects Name and Email
+- Sends OTP via email for secure first-time login
+
+### Backend Implementation Required
+
+#### New API Endpoint
+**POST /api/auth/create-admin-login**
+- Request Body:
+  ```json
+  {
+    "name": "Admin Name",
+    "email": "admin@example.com",
+    "entityType": "organisation" | "property",
+    "entityId": "org-1"
+  }
+  ```
+- Functionality:
+  1. Generate random 6-digit OTP
+  2. Store OTP in database with expiry (15 minutes)
+  3. Send email with OTP
+  4. Return success response
+
+#### Email Configuration (.env)
+```
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=litsparkmail@gmail.com
+SMTP_PASSWORD=exni qmky efci medc
+SMTP_FROM_EMAIL=litsparkmail@gmail.com
+SMTP_FROM_NAME=SmartFlags Admin
+```
+
+#### Email Template
+**Subject:** Your SmartFlags Admin Login OTP
+
+**Body:**
+```
+Hello {name},
+
+Welcome to SmartFlags! An admin account has been created for you.
+
+Your one-time password (OTP) is: {otp}
+
+This OTP will expire in 15 minutes.
+
+Use this OTP to log in to your account:
+{login_url}
+
+Best regards,
+SmartFlags Team
+```
+
+#### Database Schema
+**admin_otps Collection:**
+```javascript
+{
+  _id: ObjectId,
+  email: String,
+  otp: String,
+  name: String,
+  entityType: String, // "organisation" or "property"
+  entityId: String,
+  expiresAt: Date,
+  used: Boolean,
+  createdAt: Date
+}
+```
+
+#### Python Email Sending Code (FastAPI)
+```python
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import random
+import string
+from datetime import datetime, timedelta
+
+async def send_otp_email(name: str, email: str, otp: str):
+    # Email configuration
+    smtp_server = os.environ.get('SMTP_HOST')
+    smtp_port = int(os.environ.get('SMTP_PORT', 587))
+    smtp_user = os.environ.get('SMTP_USER')
+    smtp_password = os.environ.get('SMTP_PASSWORD')
+    from_email = os.environ.get('SMTP_FROM_EMAIL')
+    
+    # Create message
+    message = MIMEMultipart('alternative')
+    message['Subject'] = 'Your SmartFlags Admin Login OTP'
+    message['From'] = f"SmartFlags Admin <{from_email}>"
+    message['To'] = email
+    
+    # Email body
+    text = f"""
+    Hello {name},
+    
+    Welcome to SmartFlags! An admin account has been created for you.
+    
+    Your one-time password (OTP) is: {otp}
+    
+    This OTP will expire in 15 minutes.
+    
+    Best regards,
+    SmartFlags Team
+    """
+    
+    html = f"""
+    <html>
+      <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h2 style="color: #14b8a6;">Welcome to SmartFlags!</h2>
+          <p>Hello {name},</p>
+          <p>An admin account has been created for you.</p>
+          <div style="background-color: #f0fdfa; border-left: 4px solid #14b8a6; padding: 15px; margin: 20px 0;">
+            <p style="margin: 0; font-size: 14px;">Your one-time password (OTP):</p>
+            <p style="font-size: 32px; font-weight: bold; color: #14b8a6; margin: 10px 0; letter-spacing: 5px;">{otp}</p>
+          </div>
+          <p style="color: #ef4444; font-size: 14px;">⏰ This OTP will expire in 15 minutes.</p>
+          <p style="margin-top: 30px;">Best regards,<br>SmartFlags Team</p>
+        </div>
+      </body>
+    </html>
+    """
+    
+    part1 = MIMEText(text, 'plain')
+    part2 = MIMEText(html, 'html')
+    message.attach(part1)
+    message.attach(part2)
+    
+    # Send email
+    try:
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(smtp_user, smtp_password)
+            server.send_message(message)
+        return True
+    except Exception as e:
+        logger.error(f"Failed to send email: {str(e)}")
+        return False
+
+def generate_otp():
+    return ''.join(random.choices(string.digits, k=6))
+```
+
+---
+
 ## Next Steps
 1. ✅ Create contracts.md (this file)
 2. Build frontend with mock data
