@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { AdminLayout } from '../../components/admin/AdminLayout';
-import { Plus, Pencil, Trash2, Search, Home, Building2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, Home, Building2, Mail, Phone, MapPin, Eye } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { mockProperties as initialProperties, mockOrganisations, getOrganisationById } from '../../mockAdmin';
 import { PropertyDialog } from '../../components/admin/PropertyDialog';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,6 +26,7 @@ import {
 } from '../../components/ui/select';
 
 export const Properties = () => {
+  const navigate = useNavigate();
   const [properties, setProperties] = useState(initialProperties);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterOrgId, setFilterOrgId] = useState('all');
@@ -45,9 +47,14 @@ export const Properties = () => {
     setIsDialogOpen(true);
   };
 
-  const handleEdit = (property) => {
+  const handleEdit = (property, e) => {
+    e.stopPropagation();
     setEditingProperty(property);
     setIsDialogOpen(true);
+  };
+
+  const handleView = (propertyId) => {
+    navigate(`/admin/properties/${propertyId}`);
   };
 
   const handleSave = (propertyData) => {
@@ -122,88 +129,97 @@ export const Properties = () => {
           </Select>
         </div>
 
-        {/* Table */}
-        <div className="bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-slate-50 border-b border-slate-200">
-                <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Property</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Organisation</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Contact</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Address</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200">
-                {filteredProperties.length === 0 ? (
-                  <tr>
-                    <td colSpan="5" className="px-6 py-12 text-center">
-                      <Home className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                      <p className="text-slate-500">No properties found</p>
-                    </td>
-                  </tr>
-                ) : (
-                  filteredProperties.map((property) => {
-                    const organisation = getOrganisationById(property.organisationId);
-                    return (
-                      <tr key={property.id} className="hover:bg-slate-50 transition-colors">
-                        <td className="px-6 py-4">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
-                              <Home className="w-5 h-5 text-white" />
-                            </div>
-                            <div>
-                              <p className="font-semibold text-slate-900">{property.name}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center space-x-2">
-                            <Building2 className="w-4 h-4 text-teal-600" />
-                            <span className="text-sm text-slate-700">{organisation?.name || 'N/A'}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <p className="text-sm text-slate-900">{property.email}</p>
-                          <p className="text-sm text-slate-500">{property.phone}</p>
-                        </td>
-                        <td className="px-6 py-4">
-                          <p className="text-sm text-slate-600 max-w-xs truncate">{property.address}</p>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleEdit(property)}
-                              className="border-slate-200 hover:bg-slate-50"
-                            >
-                              <Pencil className="w-4 h-4" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => setDeleteId(property.id)}
-                              className="border-red-200 text-red-600 hover:bg-red-50"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-              </tbody>
-            </table>
+        {/* Grid View */}
+        {filteredProperties.length === 0 ? (
+          <div className="bg-white rounded-xl shadow-lg border border-slate-100 p-12 text-center">
+            <Home className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <p className="text-slate-500 text-lg">No properties found</p>
           </div>
-        </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProperties.map((property) => {
+                const organisation = getOrganisationById(property.organisationId);
+                return (
+                  <div
+                    key={property.id}
+                    onClick={() => handleView(property.id)}
+                    className="bg-white rounded-xl shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer group overflow-hidden"
+                  >
+                    {/* Header with Icon */}
+                    <div className="bg-gradient-to-br from-cyan-500 to-blue-600 p-6">
+                      <div className="flex items-center justify-between">
+                        <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                          <Home className="w-7 h-7 text-white" />
+                        </div>
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={(e) => handleEdit(property, e)}
+                            className="w-9 h-9 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg flex items-center justify-center transition-colors"
+                          >
+                            <Pencil className="w-4 h-4 text-white" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setDeleteId(property.id);
+                            }}
+                            className="w-9 h-9 bg-white/20 hover:bg-red-500 backdrop-blur-sm rounded-lg flex items-center justify-center transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4 text-white" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
 
-        {/* Stats */}
-        <div className="mt-6 text-sm text-slate-500">
-          Showing {filteredProperties.length} of {properties.length} properties
-        </div>
+                    {/* Content */}
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-cyan-600 transition-colors">
+                        {property.name}
+                      </h3>
+                      
+                      {/* Organisation Badge */}
+                      <div className="inline-flex items-center space-x-2 bg-teal-50 px-3 py-1 rounded-full mb-4">
+                        <Building2 className="w-3 h-3 text-teal-600" />
+                        <span className="text-xs font-medium text-teal-700">{organisation?.name || 'N/A'}</span>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div className="flex items-start space-x-3">
+                          <Mail className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                          <p className="text-sm text-slate-600 break-all">{property.email}</p>
+                        </div>
+                        
+                        <div className="flex items-start space-x-3">
+                          <Phone className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                          <p className="text-sm text-slate-600">{property.phone || 'N/A'}</p>
+                        </div>
+                        
+                        <div className="flex items-start space-x-3">
+                          <MapPin className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                          <p className="text-sm text-slate-600 line-clamp-2">{property.address || 'N/A'}</p>
+                        </div>
+                      </div>
+
+                      {/* View Details Link */}
+                      <div className="mt-6 pt-4 border-t border-slate-100">
+                        <div className="flex items-center justify-between text-cyan-600 group-hover:text-cyan-700">
+                          <span className="text-sm font-medium">View Details</span>
+                          <Eye className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Stats */}
+            <div className="mt-6 text-sm text-slate-500">
+              Showing {filteredProperties.length} of {properties.length} properties
+            </div>
+          </>
+        )}
       </div>
 
       {/* Create/Edit Dialog */}

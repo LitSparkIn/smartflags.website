@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { AdminLayout } from '../../components/admin/AdminLayout';
-import { Plus, Pencil, Trash2, Search, Building2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, Building2, Mail, Phone, MapPin, Eye } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { mockOrganisations as initialOrganisations } from '../../mockAdmin';
 import { OrganisationDialog } from '../../components/admin/OrganisationDialog';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,6 +19,7 @@ import {
 } from '../../components/ui/alert-dialog';
 
 export const Organisations = () => {
+  const navigate = useNavigate();
   const [organisations, setOrganisations] = useState(initialOrganisations);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -34,9 +36,14 @@ export const Organisations = () => {
     setIsDialogOpen(true);
   };
 
-  const handleEdit = (org) => {
+  const handleEdit = (org, e) => {
+    e.stopPropagation();
     setEditingOrg(org);
     setIsDialogOpen(true);
+  };
+
+  const handleView = (orgId) => {
+    navigate(`/admin/organisations/${orgId}`);
   };
 
   const handleSave = (orgData) => {
@@ -98,78 +105,88 @@ export const Organisations = () => {
           </div>
         </div>
 
-        {/* Table */}
-        <div className="bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-slate-50 border-b border-slate-200">
-                <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Organisation</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Contact</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Address</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200">
-                {filteredOrganisations.length === 0 ? (
-                  <tr>
-                    <td colSpan="4" className="px-6 py-12 text-center">
-                      <Building2 className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                      <p className="text-slate-500">No organisations found</p>
-                    </td>
-                  </tr>
-                ) : (
-                  filteredOrganisations.map((org) => (
-                    <tr key={org.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-lg flex items-center justify-center">
-                            <Building2 className="w-5 h-5 text-white" />
-                          </div>
-                          <div>
-                            <p className="font-semibold text-slate-900">{org.name}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <p className="text-sm text-slate-900">{org.email}</p>
-                        <p className="text-sm text-slate-500">{org.phone}</p>
-                      </td>
-                      <td className="px-6 py-4">
-                        <p className="text-sm text-slate-600 max-w-xs truncate">{org.address}</p>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center space-x-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleEdit(org)}
-                            className="border-slate-200 hover:bg-slate-50"
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => setDeleteId(org.id)}
-                            className="border-red-200 text-red-600 hover:bg-red-50"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+        {/* Grid View */}
+        {filteredOrganisations.length === 0 ? (
+          <div className="bg-white rounded-xl shadow-lg border border-slate-100 p-12 text-center">
+            <Building2 className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <p className="text-slate-500 text-lg">No organisations found</p>
           </div>
-        </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredOrganisations.map((org) => (
+                <div
+                  key={org.id}
+                  onClick={() => handleView(org.id)}
+                  className="bg-white rounded-xl shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer group overflow-hidden"
+                >
+                  {/* Header with Icon */}
+                  <div className="bg-gradient-to-br from-teal-500 to-cyan-600 p-6">
+                    <div className="flex items-center justify-between">
+                      <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                        <Building2 className="w-7 h-7 text-white" />
+                      </div>
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={(e) => handleEdit(org, e)}
+                          className="w-9 h-9 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg flex items-center justify-center transition-colors"
+                        >
+                          <Pencil className="w-4 h-4 text-white" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDeleteId(org.id);
+                          }}
+                          className="w-9 h-9 bg-white/20 hover:bg-red-500 backdrop-blur-sm rounded-lg flex items-center justify-center transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4 text-white" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
 
-        {/* Stats */}
-        <div className="mt-6 text-sm text-slate-500">
-          Showing {filteredOrganisations.length} of {organisations.length} organisations
-        </div>
+                  {/* Content */}
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-slate-900 mb-4 group-hover:text-teal-600 transition-colors">
+                      {org.name}
+                    </h3>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-start space-x-3">
+                        <Mail className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                        <p className="text-sm text-slate-600 break-all">{org.email}</p>
+                      </div>
+                      
+                      <div className="flex items-start space-x-3">
+                        <Phone className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                        <p className="text-sm text-slate-600">{org.phone || 'N/A'}</p>
+                      </div>
+                      
+                      <div className="flex items-start space-x-3">
+                        <MapPin className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                        <p className="text-sm text-slate-600 line-clamp-2">{org.address || 'N/A'}</p>
+                      </div>
+                    </div>
+
+                    {/* View Details Link */}
+                    <div className="mt-6 pt-4 border-t border-slate-100">
+                      <div className="flex items-center justify-between text-teal-600 group-hover:text-teal-700">
+                        <span className="text-sm font-medium">View Details</span>
+                        <Eye className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Stats */}
+            <div className="mt-6 text-sm text-slate-500">
+              Showing {filteredOrganisations.length} of {organisations.length} organisations
+            </div>
+          </>
+        )}
       </div>
 
       {/* Create/Edit Dialog */}
