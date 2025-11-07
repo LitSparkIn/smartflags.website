@@ -84,6 +84,26 @@ class RequestOTPResponse(BaseModel):
     success: bool
     message: str
 
+# Seat Type Models
+class SeatType(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    propertyId: str
+    name: str
+    icon: str  # Base64 encoded SVG
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class SeatTypeCreate(BaseModel):
+    propertyId: str
+    name: str
+    icon: str
+
+class SeatTypeUpdate(BaseModel):
+    name: Optional[str] = None
+    icon: Optional[str] = None
+
 # Helper Functions
 def generate_otp() -> str:
     """Generate a 6-digit OTP"""
