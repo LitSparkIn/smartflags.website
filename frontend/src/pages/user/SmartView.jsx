@@ -1,16 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { UserLayout } from '../../components/user/UserLayout';
 import { Eye, Armchair } from 'lucide-react';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
 export const SmartView = () => {
   const [user, setUser] = useState(null);
+  const [seatTypes, setSeatTypes] = useState([]);
 
   useEffect(() => {
     const userData = localStorage.getItem('userData');
     if (userData) {
-      setUser(JSON.parse(userData));
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+      fetchSeatTypes(parsedUser.entityId);
     }
   }, []);
+
+  const fetchSeatTypes = async (propertyId) => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/seat-types/${propertyId}`);
+      if (response.data.success) {
+        setSeatTypes(response.data.seatTypes);
+      }
+    } catch (error) {
+      console.error('Error fetching seat types:', error);
+    }
+  };
 
   // Mock seat data with different types and statuses - Compact layout
   const mockSeats = [
