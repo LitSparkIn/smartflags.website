@@ -18,50 +18,7 @@ export const mockCountries = [];
 export const mockStates = [];
 
 // Master Data - Cities
-export const mockCities = [
-  {
-    id: 'city-1',
-    name: 'Los Angeles',
-    stateId: 'state-1',
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'city-2',
-    name: 'San Francisco',
-    stateId: 'state-1',
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'city-3',
-    name: 'Miami',
-    stateId: 'state-2',
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'city-4',
-    name: 'Orlando',
-    stateId: 'state-2',
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'city-5',
-    name: 'New York City',
-    stateId: 'state-3',
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'city-6',
-    name: 'Mumbai',
-    stateId: 'state-4',
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'city-7',
-    name: 'Bangalore',
-    stateId: 'state-5',
-    createdAt: '2024-01-01T00:00:00Z'
-  }
-];
+export const mockCities = [];
 
 // Master Data - Roles
 export const mockRoles = [
