@@ -17,13 +17,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { mockStates } from '../../mockAdmin';
 
 export const CityDialog = ({ open, onOpenChange, city, onSave }) => {
   const [formData, setFormData] = useState({
     stateId: '',
     name: ''
   });
+
+  // Get states from localStorage
+  const getStates = () => {
+    try {
+      const stored = localStorage.getItem('smartflags_states');
+      return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+      return [];
+    }
+  };
+
+  const states = getStates();
 
   useEffect(() => {
     if (city) {
