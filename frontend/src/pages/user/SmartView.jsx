@@ -225,8 +225,8 @@ export const SmartView = () => {
               ))}
             </div>
 
-            {/* Water Indicator */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-blue-500/30 to-transparent h-20 flex items-end justify-center pb-2">
+            {/* Water Indicator - Top */}
+            <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-blue-500/30 to-transparent h-20 flex items-start justify-center pt-2">
               <span className="text-white font-semibold text-sm bg-blue-600/80 px-4 py-1 rounded-full backdrop-blur-sm">
                 🌊 Water
               </span>
