@@ -112,7 +112,7 @@ export const Roles = () => {
                   className="bg-white rounded-xl shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group overflow-hidden"
                 >
                   {/* Header */}
-                  <div className="bg-gradient-to-br from-amber-500 to-orange-600 p-6">
+                  <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-6">
                     <div className="flex items-center justify-between">
                       <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
                         <Shield className="w-7 h-7 text-white" />
