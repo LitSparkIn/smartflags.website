@@ -74,15 +74,22 @@ export const Dashboard = () => {
           <div className="bg-white rounded-xl shadow-lg p-6 border border-slate-100">
             <h2 className="text-xl font-bold text-slate-900 mb-4">Recent Organisations</h2>
             <div className="space-y-3">
-              {mockOrganisations.slice(0, 3).map((org) => (
-                <div key={org.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
-                  <div>
-                    <p className="font-semibold text-slate-900">{org.name}</p>
-                    <p className="text-sm text-slate-600">{org.email}</p>
+              {mockOrganisations.length > 0 ? (
+                mockOrganisations.slice(0, 3).map((org) => (
+                  <div key={org.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                    <div>
+                      <p className="font-semibold text-slate-900">{org.name}</p>
+                      <p className="text-sm text-slate-600">{org.email}</p>
+                    </div>
+                    <Building2 className="w-5 h-5 text-teal-600" />
                   </div>
-                  <Building2 className="w-5 h-5 text-teal-600" />
+                ))
+              ) : (
+                <div className="text-center py-8 text-slate-500">
+                  <Building2 className="w-8 h-8 mx-auto mb-2 text-slate-300" />
+                  <p className="text-sm">No organisations yet</p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
 
@@ -90,15 +97,22 @@ export const Dashboard = () => {
           <div className="bg-white rounded-xl shadow-lg p-6 border border-slate-100">
             <h2 className="text-xl font-bold text-slate-900 mb-4">Recent Properties</h2>
             <div className="space-y-3">
-              {mockProperties.slice(0, 3).map((prop) => (
-                <div key={prop.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
-                  <div>
-                    <p className="font-semibold text-slate-900">{prop.name}</p>
-                    <p className="text-sm text-slate-600">{prop.email}</p>
+              {mockProperties.length > 0 ? (
+                mockProperties.slice(0, 3).map((prop) => (
+                  <div key={prop.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
+                    <div>
+                      <p className="font-semibold text-slate-900">{prop.name}</p>
+                      <p className="text-sm text-slate-600">{prop.email}</p>
+                    </div>
+                    <Home className="w-5 h-5 text-cyan-600" />
                   </div>
-                  <Home className="w-5 h-5 text-cyan-600" />
+                ))
+              ) : (
+                <div className="text-center py-8 text-slate-500">
+                  <Home className="w-8 h-8 mx-auto mb-2 text-slate-300" />
+                  <p className="text-sm">No properties yet</p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
