@@ -89,8 +89,16 @@ export const AdminLoginDialog = ({ open, onOpenChange, entityType, entityName, e
           <div className="space-y-4 py-4">
             {/* Info Box */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <p className="text-sm text-blue-800 font-semibold mb-2">
+                Role: {entityType === 'organisation' ? '🏢 Organisation Admin' : '🏖️ Property Admin'}
+              </p>
               <p className="text-sm text-blue-800">
                 The user will receive a welcome email and can login at <strong>/user/login</strong> using their email to receive a one-time OTP.
+              </p>
+              <p className="text-xs text-blue-600 mt-2">
+                {entityType === 'organisation' 
+                  ? '✓ Can manage all properties under this organisation'
+                  : '✓ Can manage staff, seats, and groups for this property'}
               </p>
             </div>
 
