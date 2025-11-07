@@ -11,13 +11,18 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Mail, User, Lock } from 'lucide-react';
+import axios from 'axios';
+import { useToast } from '../../hooks/use-toast';
 
-export const AdminLoginDialog = ({ open, onOpenChange, entityType, entityName, onSend }) => {
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+
+export const AdminLoginDialog = ({ open, onOpenChange, entityType, entityName, entityId }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: ''
   });
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   const handleChange = (e) => {
     setFormData({
@@ -30,14 +35,37 @@ export const AdminLoginDialog = ({ open, onOpenChange, entityType, entityName, o
     e.preventDefault();
     setLoading(true);
     
-    // Mock delay to simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    onSend(formData);
-    setLoading(false);
-    
-    // Reset form
-    setFormData({ name: '', email: '' });
+    try {
+      const response = await axios.post(`${BACKEND_URL}/api/admin/create`, {
+        name: formData.name,
+        email: formData.email,
+        entityType: entityType,
+        entityId: entityId
+      });
+
+      if (response.data.success) {
+        toast({
+          title: "Success!",
+          description: response.data.message,
+          variant: "default"
+        });
+        
+        // Reset form and close dialog
+        setFormData({ name: '', email: '' });
+        onOpenChange(false);
+      }
+    } catch (error) {
+      console.error('Error creating admin:', error);
+      const errorMessage = error.response?.data?.detail || 'Failed to create admin. Please try again.';
+      
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
