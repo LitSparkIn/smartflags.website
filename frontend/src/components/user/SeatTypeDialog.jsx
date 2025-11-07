@@ -48,20 +48,20 @@ export const SeatTypeDialog = ({ open, onOpenChange, seatType, onSave, propertyI
     if (!file) return;
     
     // Validate file type
-    if (file.type !== 'image/svg+xml') {
+    if (!file.type.startsWith('image/png')) {
       toast({
         title: "Invalid File Type",
-        description: "Please upload an SVG file",
+        description: "Please upload a PNG image file",
         variant: "destructive"
       });
       return;
     }
 
-    // Validate file size (max 100KB)
-    if (file.size > 100 * 1024) {
+    // Validate file size (max 500KB)
+    if (file.size > 500 * 1024) {
       toast({
         title: "File Too Large",
-        description: "SVG file should be less than 100KB",
+        description: "PNG file should be less than 500KB",
         variant: "destructive"
       });
       return;
@@ -69,11 +69,11 @@ export const SeatTypeDialog = ({ open, onOpenChange, seatType, onSave, propertyI
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      const svgContent = event.target.result;
-      setFormData({ ...formData, icon: svgContent });
-      setIconPreview(svgContent);
+      const base64Image = event.target.result;
+      setFormData({ ...formData, icon: base64Image });
+      setIconPreview(base64Image);
     };
-    reader.readAsText(file);
+    reader.readAsDataURL(file);
   };
 
   const removeIcon = () => {
