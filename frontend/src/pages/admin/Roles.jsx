@@ -19,7 +19,7 @@ import {
 } from '../../components/ui/alert-dialog';
 
 export const Roles = () => {
-  const [roles, setRoles] = useState(initialRoles);
+  const [roles, setRoles] = useLocalStorage('smartflags_roles', initialRoles);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingRole, setEditingRole] = useState(null);
