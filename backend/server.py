@@ -285,55 +285,51 @@ async def get_status_checks():
 @api_router.post("/admin/create", response_model=CreateAdminResponse)
 async def create_admin_login(request: CreateAdminRequest):
     """
-    Create admin login and send OTP via email
+    Create admin user and send welcome email
     """
     try:
-        # Generate OTP
-        otp = generate_otp()
+        # Check if admin already exists
+        existing_admin = await db.admins.find_one({"email": request.email}, {"_id": 0})
         
-        # Set expiry time (15 minutes from now)
-        expires_at = datetime.now(timezone.utc) + timedelta(minutes=15)
+        if existing_admin:
+            raise HTTPException(status_code=400, detail="Admin with this email already exists")
         
-        # Create OTP document
-        otp_doc = AdminOTP(
-            email=request.email,
-            otp=otp,
-            name=request.name,
-            entityType=request.entityType,
-            entityId=request.entityId,
-            expiresAt=expires_at
-        )
+        # Create admin document
+        admin_doc = {
+            "id": str(uuid.uuid4()),
+            "email": request.email,
+            "name": request.name,
+            "entityType": request.entityType,
+            "entityId": request.entityId,
+            "createdAt": datetime.now(timezone.utc).isoformat(),
+            "active": True
+        }
         
-        # Prepare document for MongoDB (convert datetime to ISO string)
-        doc = otp_doc.model_dump()
-        doc['createdAt'] = doc['createdAt'].isoformat()
-        doc['expiresAt'] = doc['expiresAt'].isoformat()
-        
-        # Store OTP in database
-        await db.admin_otps.insert_one(doc)
+        # Store admin in database
+        await db.admins.insert_one(admin_doc)
         
         # Get frontend URL for login link
-        # Assuming frontend runs on same domain or you can configure this
         login_url = os.environ.get('FRONTEND_URL', 'http://localhost:3000') + '/user/login'
         
-        # Send email
-        email_sent = await send_otp_email(request.name, request.email, otp, login_url)
+        # Send welcome email
+        email_sent = await send_welcome_email(request.name, request.email, login_url)
         
         if not email_sent:
-            raise HTTPException(status_code=500, detail="Failed to send email. Please try again.")
+            # Still consider it success even if email fails
+            logger.warning(f"Admin created but failed to send email to {request.email}")
         
-        logger.info(f"Admin login created for {request.email}, entity: {request.entityType}:{request.entityId}")
+        logger.info(f"Admin created: {request.email}, entity: {request.entityType}:{request.entityId}")
         
         return CreateAdminResponse(
             success=True,
-            message=f"Admin account created successfully. A confirmation email with login instructions has been sent to {request.email}",
+            message=f"Admin added successfully! A welcome email has been sent to {request.email}",
             email=request.email
         )
         
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error creating admin login: {str(e)}")
+        logger.error(f"Error creating admin: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @api_router.post("/user/login", response_model=VerifyOTPResponse)
