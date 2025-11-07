@@ -33,6 +33,18 @@ export const States = () => {
   const [editingState, setEditingState] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
 
+  // Get countries from localStorage
+  const getCountries = () => {
+    try {
+      const stored = localStorage.getItem('smartflags_countries');
+      return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+      return [];
+    }
+  };
+
+  const countries = getCountries();
+
   const filteredStates = states.filter((state) => {
     const matchesSearch = state.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       state.code.toLowerCase().includes(searchTerm.toLowerCase());
