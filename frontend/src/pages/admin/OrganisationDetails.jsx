@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AdminLayout } from '../../components/admin/AdminLayout';
-import { ArrowLeft, Building2, Mail, Phone, MapPin, Calendar, Pencil, Home } from 'lucide-react';
+import { ArrowLeft, Building2, Mail, Phone, MapPin, Calendar, Pencil, Home, UserPlus } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { mockOrganisations, getPropertiesByOrganisation } from '../../mockAdmin';
 import { OrganisationDialog } from '../../components/admin/OrganisationDialog';
+import { AdminLoginDialog } from '../../components/admin/AdminLoginDialog';
 import { toast } from 'sonner';
 
 export const OrganisationDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isAdminLoginDialogOpen, setIsAdminLoginDialogOpen] = useState(false);
   
   const organisation = mockOrganisations.find(org => org.id === id);
   const properties = getPropertiesByOrganisation(id);
@@ -37,6 +39,14 @@ export const OrganisationDetails = () => {
     // Mock update - in real app, this would update the backend
     toast.success('Organisation updated successfully!');
     setIsEditDialogOpen(false);
+  };
+
+  const handleSendOTP = (adminData) => {
+    // Mock OTP sending - in real app, this would call backend API
+    toast.success(`OTP sent successfully to ${adminData.email}!`, {
+      description: 'Admin login credentials have been emailed.'
+    });
+    setIsAdminLoginDialogOpen(false);
   };
 
   const formatDate = (dateString) => {
@@ -75,13 +85,22 @@ export const OrganisationDetails = () => {
                 </div>
               </div>
             </div>
-            <Button
-              onClick={() => setIsEditDialogOpen(true)}
-              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm border-white/30 text-white"
-            >
-              <Pencil className="w-4 h-4 mr-2" />
-              Edit Organisation
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => setIsAdminLoginDialogOpen(true)}
+                className="bg-white/20 hover:bg-white/30 backdrop-blur-sm border-white/30 text-white"
+              >
+                <UserPlus className="w-4 h-4 mr-2" />
+                Create Admin Login
+              </Button>
+              <Button
+                onClick={() => setIsEditDialogOpen(true)}
+                className="bg-white/20 hover:bg-white/30 backdrop-blur-sm border-white/30 text-white"
+              >
+                <Pencil className="w-4 h-4 mr-2" />
+                Edit Organisation
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -108,7 +127,10 @@ export const OrganisationDetails = () => {
                   </div>
                   <div>
                     <p className="text-sm text-slate-500 mb-1">Phone Number</p>
-                    <p className="text-lg font-semibold text-slate-900">{organisation.phone || 'Not provided'}</p>
+                    <p className="text-lg font-semibold text-slate-900">
+                      {organisation.phoneCountryCode && `+${organisation.phoneCountryCode} `}
+                      {organisation.phone || 'Not provided'}
+                    </p>
                   </div>
                 </div>
 
@@ -193,6 +215,15 @@ export const OrganisationDetails = () => {
         onOpenChange={setIsEditDialogOpen}
         organisation={organisation}
         onSave={handleSave}
+      />
+
+      {/* Admin Login Dialog */}
+      <AdminLoginDialog
+        open={isAdminLoginDialogOpen}
+        onOpenChange={setIsAdminLoginDialogOpen}
+        entityType="Organisation"
+        entityName={organisation.name}
+        onSend={handleSendOTP}
       />
     </AdminLayout>
   );
