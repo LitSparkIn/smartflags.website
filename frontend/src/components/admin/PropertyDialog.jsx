@@ -215,7 +215,7 @@ export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
                     <SelectValue placeholder="Code" />
                   </SelectTrigger>
                   <SelectContent>
-                    {mockCountries.map((country) => (
+                    {countries.map((country) => (
                       <SelectItem key={country.id} value={country.code}>
                         {country.code}
                       </SelectItem>
