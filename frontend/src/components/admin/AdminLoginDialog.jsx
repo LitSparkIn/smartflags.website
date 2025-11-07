@@ -62,7 +62,7 @@ export const AdminLoginDialog = ({ open, onOpenChange, entityType, entityName, o
             {/* Info Box */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <p className="text-sm text-blue-800">
-                A one-time password (OTP) will be sent to the provided email address for secure login.
+                A confirmation email will be sent with login instructions. The user can login at <strong>/user/login</strong> using their email to receive OTP.
               </p>
             </div>
 
