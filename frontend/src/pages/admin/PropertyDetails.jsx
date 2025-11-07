@@ -85,13 +85,22 @@ export const PropertyDetails = () => {
                 </div>
               </div>
             </div>
-            <Button
-              onClick={() => setIsEditDialogOpen(true)}
-              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm border-white/30 text-white"
-            >
-              <Pencil className="w-4 h-4 mr-2" />
-              Edit Property
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => setIsAdminLoginDialogOpen(true)}
+                className="bg-white/20 hover:bg-white/30 backdrop-blur-sm border-white/30 text-white"
+              >
+                <UserPlus className="w-4 h-4 mr-2" />
+                Create Admin Login
+              </Button>
+              <Button
+                onClick={() => setIsEditDialogOpen(true)}
+                className="bg-white/20 hover:bg-white/30 backdrop-blur-sm border-white/30 text-white"
+              >
+                <Pencil className="w-4 h-4 mr-2" />
+                Edit Property
+              </Button>
+            </div>
           </div>
         </div>
 
