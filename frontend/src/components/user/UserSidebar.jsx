@@ -15,6 +15,7 @@ export const UserSidebar = ({ user }) => {
   
   // Menu items for Property Admin
   const propertyAdminMenu = [
+    { name: 'SmartView', path: '/user/smartview', icon: Eye },
     { name: 'Dashboard', path: '/user/dashboard', icon: LayoutDashboard },
     { name: 'Staff', path: '/user/staff', icon: Users },
     { name: 'Seat Types', path: '/user/seat-types', icon: Grid3x3 },
