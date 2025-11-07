@@ -339,6 +339,57 @@ async def create_admin_login(request: CreateAdminRequest):
         logger.error(f"Error creating admin: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+@api_router.post("/user/request-otp", response_model=RequestOTPResponse)
+async def request_otp(request: RequestOTPRequest):
+    """
+    Request OTP for login - generates and sends OTP to user's email
+    """
+    try:
+        # Check if admin exists
+        admin = await db.admins.find_one({"email": request.email, "active": True}, {"_id": 0})
+        
+        if not admin:
+            raise HTTPException(status_code=404, detail="No admin account found with this email address")
+        
+        # Generate OTP
+        otp = generate_otp()
+        
+        # Set expiry time (15 minutes from now)
+        expires_at = datetime.now(timezone.utc) + timedelta(minutes=15)
+        
+        # Create OTP document
+        otp_doc = {
+            "id": str(uuid.uuid4()),
+            "email": request.email,
+            "otp": otp,
+            "name": admin['name'],
+            "expiresAt": expires_at.isoformat(),
+            "used": False,
+            "createdAt": datetime.now(timezone.utc).isoformat()
+        }
+        
+        # Store OTP in database
+        await db.admin_otps.insert_one(otp_doc)
+        
+        # Send OTP email
+        email_sent = await send_otp_email(admin['name'], request.email, otp)
+        
+        if not email_sent:
+            raise HTTPException(status_code=500, detail="Failed to send OTP email. Please try again.")
+        
+        logger.info(f"OTP requested and sent to {request.email}")
+        
+        return RequestOTPResponse(
+            success=True,
+            message=f"OTP has been sent to {request.email}. Please check your email."
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error requesting OTP: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 @api_router.post("/user/login", response_model=VerifyOTPResponse)
 async def verify_otp_login(request: VerifyOTPRequest):
     """
