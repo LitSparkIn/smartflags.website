@@ -24,17 +24,19 @@ export const CityDialog = ({ open, onOpenChange, city, onSave }) => {
     name: ''
   });
 
-  // Get states from localStorage
-  const getStates = () => {
-    try {
-      const stored = localStorage.getItem('smartflags_states');
-      return stored ? JSON.parse(stored) : [];
-    } catch (error) {
-      return [];
-    }
-  };
+  // Get states from localStorage - called each time dialog opens
+  const [states, setStates] = useState([]);
 
-  const states = getStates();
+  useEffect(() => {
+    if (open) {
+      try {
+        const stored = localStorage.getItem('smartflags_states');
+        setStates(stored ? JSON.parse(stored) : []);
+      } catch (error) {
+        setStates([]);
+      }
+    }
+  }, [open]);
 
   useEffect(() => {
     if (city) {
