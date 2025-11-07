@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { mockOrganisations } from '../../mockAdmin';
+import { mockOrganisations, mockCountries, mockStates, mockCities, getStatesByCountry, getCitiesByState } from '../../mockAdmin';
 
 export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
   const [formData, setFormData] = useState({
@@ -26,8 +26,14 @@ export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
     name: '',
     email: '',
     phone: '',
-    address: ''
+    address: '',
+    countryId: '',
+    stateId: '',
+    cityId: ''
   });
+
+  const [availableStates, setAvailableStates] = useState([]);
+  const [availableCities, setAvailableCities] = useState([]);
 
   useEffect(() => {
     if (property) {
@@ -36,16 +42,32 @@ export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
         name: property.name || '',
         email: property.email || '',
         phone: property.phone || '',
-        address: property.address || ''
+        address: property.address || '',
+        countryId: property.countryId || '',
+        stateId: property.stateId || '',
+        cityId: property.cityId || ''
       });
+      
+      // Load states and cities for existing property
+      if (property.countryId) {
+        setAvailableStates(getStatesByCountry(property.countryId));
+      }
+      if (property.stateId) {
+        setAvailableCities(getCitiesByState(property.stateId));
+      }
     } else {
       setFormData({
         organisationId: '',
         name: '',
         email: '',
         phone: '',
-        address: ''
+        address: '',
+        countryId: '',
+        stateId: '',
+        cityId: ''
       });
+      setAvailableStates([]);
+      setAvailableCities([]);
     }
   }, [property, open]);
 
@@ -63,6 +85,35 @@ export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
     });
   };
 
+  const handleCountryChange = (value) => {
+    const states = getStatesByCountry(value);
+    setAvailableStates(states);
+    setAvailableCities([]);
+    setFormData({
+      ...formData,
+      countryId: value,
+      stateId: '',
+      cityId: ''
+    });
+  };
+
+  const handleStateChange = (value) => {
+    const cities = getCitiesByState(value);
+    setAvailableCities(cities);
+    setFormData({
+      ...formData,
+      stateId: value,
+      cityId: ''
+    });
+  };
+
+  const handleCityChange = (value) => {
+    setFormData({
+      ...formData,
+      cityId: value
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(formData);
@@ -70,7 +121,7 @@ export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {property ? 'Edit Property' : 'Create Property'}
@@ -143,6 +194,75 @@ export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
                 onChange={handleChange}
                 placeholder="+1 555 000 0000"
               />
+            </div>
+
+            {/* Location Section */}
+            <div className="pt-4 border-t">
+              <h3 className="text-sm font-semibold text-slate-900 mb-4">Location</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Country */}
+                <div className="space-y-2">
+                  <Label htmlFor="countryId">Country</Label>
+                  <Select
+                    value={formData.countryId}
+                    onValueChange={handleCountryChange}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select country" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {mockCountries.map((country) => (
+                        <SelectItem key={country.id} value={country.id}>
+                          {country.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* State */}
+                <div className="space-y-2">
+                  <Label htmlFor="stateId">State</Label>
+                  <Select
+                    value={formData.stateId}
+                    onValueChange={handleStateChange}
+                    disabled={!formData.countryId}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select state" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableStates.map((state) => (
+                        <SelectItem key={state.id} value={state.id}>
+                          {state.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* City */}
+                <div className="space-y-2">
+                  <Label htmlFor="cityId">City</Label>
+                  <Select
+                    value={formData.cityId}
+                    onValueChange={handleCityChange}
+                    disabled={!formData.stateId}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select city" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableCities.map((city) => (
+                        <SelectItem key={city.id} value={city.id}>
+                          {city.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
             </div>
 
             {/* Address */}
