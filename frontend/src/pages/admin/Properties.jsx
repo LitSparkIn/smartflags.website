@@ -35,6 +35,18 @@ export const Properties = () => {
   const [editingProperty, setEditingProperty] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
 
+  // Get organisations from localStorage
+  const getOrganisations = () => {
+    try {
+      const stored = localStorage.getItem('smartflags_organisations');
+      return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+      return [];
+    }
+  };
+
+  const organisations = getOrganisations();
+
   const filteredProperties = properties.filter((prop) => {
     const matchesSearch =
       prop.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
