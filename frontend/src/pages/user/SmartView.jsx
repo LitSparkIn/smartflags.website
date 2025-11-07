@@ -29,74 +29,106 @@ export const SmartView = () => {
     }
   };
 
-  // Mock seat data with different types and statuses - Compact layout
-  const mockSeats = [
-    // Row 1 - Lounge Chairs (closer together)
-    { id: 1, number: 'LC01', type: 'Lounge Chair', status: 'available', x: 8, y: 25 },
-    { id: 2, number: 'LC02', type: 'Lounge Chair', status: 'occupied', x: 14, y: 25 },
-    { id: 3, number: 'LC03', type: 'Lounge Chair', status: 'available', x: 20, y: 25 },
-    { id: 4, number: 'LC04', type: 'Lounge Chair', status: 'occupied', x: 26, y: 25 },
-    { id: 5, number: 'LC05', type: 'Lounge Chair', status: 'reserved', x: 32, y: 25 },
-    { id: 6, number: 'LC06', type: 'Lounge Chair', status: 'available', x: 38, y: 25 },
-    { id: 7, number: 'LC07', type: 'Lounge Chair', status: 'occupied', x: 44, y: 25 },
-    { id: 8, number: 'LC08', type: 'Lounge Chair', status: 'available', x: 50, y: 25 },
-    { id: 9, number: 'LC09', type: 'Lounge Chair', status: 'available', x: 56, y: 25 },
-    { id: 10, number: 'LC10', type: 'Lounge Chair', status: 'occupied', x: 62, y: 25 },
-    { id: 11, number: 'LC11', type: 'Lounge Chair', status: 'available', x: 68, y: 25 },
-    { id: 12, number: 'LC12', type: 'Lounge Chair', status: 'reserved', x: 74, y: 25 },
-    { id: 13, number: 'LC13', type: 'Lounge Chair', status: 'available', x: 80, y: 25 },
-    { id: 14, number: 'LC14', type: 'Lounge Chair', status: 'occupied', x: 86, y: 25 },
-    { id: 15, number: 'LC15', type: 'Lounge Chair', status: 'available', x: 92, y: 25 },
+  // Generate random seat type assignment
+  const getRandomSeatType = () => {
+    if (seatTypes.length === 0) return { name: 'Seat', icon: null, id: null };
+    const randomIndex = Math.floor(Math.random() * seatTypes.length);
+    return seatTypes[randomIndex];
+  };
 
-    // Row 2 - Lounge Chairs
-    { id: 16, number: 'LC16', type: 'Lounge Chair', status: 'available', x: 8, y: 35 },
-    { id: 17, number: 'LC17', type: 'Lounge Chair', status: 'occupied', x: 14, y: 35 },
-    { id: 18, number: 'LC18', type: 'Lounge Chair', status: 'available', x: 20, y: 35 },
-    { id: 19, number: 'LC19', type: 'Lounge Chair', status: 'reserved', x: 26, y: 35 },
-    { id: 20, number: 'LC20', type: 'Lounge Chair', status: 'available', x: 32, y: 35 },
-    { id: 21, number: 'LC21', type: 'Lounge Chair', status: 'occupied', x: 38, y: 35 },
-    { id: 22, number: 'LC22', type: 'Lounge Chair', status: 'available', x: 44, y: 35 },
-    { id: 23, number: 'LC23', type: 'Lounge Chair', status: 'available', x: 50, y: 35 },
-    { id: 24, number: 'LC24', type: 'Lounge Chair', status: 'occupied', x: 56, y: 35 },
-    { id: 25, number: 'LC25', type: 'Lounge Chair', status: 'available', x: 62, y: 35 },
-    { id: 26, number: 'LC26', type: 'Lounge Chair', status: 'reserved', x: 68, y: 35 },
-    { id: 27, number: 'LC27', type: 'Lounge Chair', status: 'available', x: 74, y: 35 },
-    { id: 28, number: 'LC28', type: 'Lounge Chair', status: 'occupied', x: 80, y: 35 },
-    { id: 29, number: 'LC29', type: 'Lounge Chair', status: 'available', x: 86, y: 35 },
-    { id: 30, number: 'LC30', type: 'Lounge Chair', status: 'available', x: 92, y: 35 },
+  // Generate random status
+  const getRandomStatus = () => {
+    const statuses = ['available', 'available', 'available', 'occupied', 'occupied', 'reserved'];
+    return statuses[Math.floor(Math.random() * statuses.length)];
+  };
 
-    // Row 3 - Lounge Chairs
-    { id: 31, number: 'LC31', type: 'Lounge Chair', status: 'available', x: 8, y: 45 },
-    { id: 32, number: 'LC32', type: 'Lounge Chair', status: 'occupied', x: 14, y: 45 },
-    { id: 33, number: 'LC33', type: 'Lounge Chair', status: 'available', x: 20, y: 45 },
-    { id: 34, number: 'LC34', type: 'Lounge Chair', status: 'occupied', x: 26, y: 45 },
-    { id: 35, number: 'LC35', type: 'Lounge Chair', status: 'reserved', x: 32, y: 45 },
-    { id: 36, number: 'LC36', type: 'Lounge Chair', status: 'available', x: 38, y: 45 },
-    { id: 37, number: 'LC37', type: 'Lounge Chair', status: 'occupied', x: 44, y: 45 },
-    { id: 38, number: 'LC38', type: 'Lounge Chair', status: 'available', x: 50, y: 45 },
-    { id: 39, number: 'LC39', type: 'Lounge Chair', status: 'available', x: 56, y: 45 },
-    { id: 40, number: 'LC40', type: 'Lounge Chair', status: 'occupied', x: 62, y: 45 },
-    { id: 41, number: 'LC41', type: 'Lounge Chair', status: 'available', x: 68, y: 45 },
-    { id: 42, number: 'LC42', type: 'Lounge Chair', status: 'reserved', x: 74, y: 45 },
-    { id: 43, number: 'LC43', type: 'Lounge Chair', status: 'available', x: 80, y: 45 },
-    { id: 44, number: 'LC44', type: 'Lounge Chair', status: 'occupied', x: 86, y: 45 },
-    { id: 45, number: 'LC45', type: 'Lounge Chair', status: 'available', x: 92, y: 45 },
+  // Mock seat data with random types - Compact layout
+  const mockSeats = seatTypes.length > 0 ? [
+    // Row 1 - 15 seats
+    { id: 1, number: 'S01', seatType: getRandomSeatType(), status: getRandomStatus(), x: 8, y: 25 },
+    { id: 2, number: 'S02', seatType: getRandomSeatType(), status: getRandomStatus(), x: 14, y: 25 },
+    { id: 3, number: 'S03', seatType: getRandomSeatType(), status: getRandomStatus(), x: 20, y: 25 },
+    { id: 4, number: 'S04', seatType: getRandomSeatType(), status: getRandomStatus(), x: 26, y: 25 },
+    { id: 5, number: 'S05', seatType: getRandomSeatType(), status: getRandomStatus(), x: 32, y: 25 },
+    { id: 6, number: 'S06', seatType: getRandomSeatType(), status: getRandomStatus(), x: 38, y: 25 },
+    { id: 7, number: 'S07', seatType: getRandomSeatType(), status: getRandomStatus(), x: 44, y: 25 },
+    { id: 8, number: 'S08', seatType: getRandomSeatType(), status: getRandomStatus(), x: 50, y: 25 },
+    { id: 9, number: 'S09', seatType: getRandomSeatType(), status: getRandomStatus(), x: 56, y: 25 },
+    { id: 10, number: 'S10', seatType: getRandomSeatType(), status: getRandomStatus(), x: 62, y: 25 },
+    { id: 11, number: 'S11', seatType: getRandomSeatType(), status: getRandomStatus(), x: 68, y: 25 },
+    { id: 12, number: 'S12', seatType: getRandomSeatType(), status: getRandomStatus(), x: 74, y: 25 },
+    { id: 13, number: 'S13', seatType: getRandomSeatType(), status: getRandomStatus(), x: 80, y: 25 },
+    { id: 14, number: 'S14', seatType: getRandomSeatType(), status: getRandomStatus(), x: 86, y: 25 },
+    { id: 15, number: 'S15', seatType: getRandomSeatType(), status: getRandomStatus(), x: 92, y: 25 },
 
-    // Row 4 - Umbrellas with chairs
-    { id: 46, number: 'U01', type: 'Umbrella Set', status: 'occupied', x: 12, y: 60 },
-    { id: 47, number: 'U02', type: 'Umbrella Set', status: 'available', x: 24, y: 60 },
-    { id: 48, number: 'U03', type: 'Umbrella Set', status: 'reserved', x: 36, y: 60 },
-    { id: 49, number: 'U04', type: 'Umbrella Set', status: 'occupied', x: 48, y: 60 },
-    { id: 50, number: 'U05', type: 'Umbrella Set', status: 'available', x: 60, y: 60 },
-    { id: 51, number: 'U06', type: 'Umbrella Set', status: 'reserved', x: 72, y: 60 },
-    { id: 52, number: 'U07', type: 'Umbrella Set', status: 'occupied', x: 84, y: 60 },
+    // Row 2 - 15 seats
+    { id: 16, number: 'S16', seatType: getRandomSeatType(), status: getRandomStatus(), x: 8, y: 35 },
+    { id: 17, number: 'S17', seatType: getRandomSeatType(), status: getRandomStatus(), x: 14, y: 35 },
+    { id: 18, number: 'S18', seatType: getRandomSeatType(), status: getRandomStatus(), x: 20, y: 35 },
+    { id: 19, number: 'S19', seatType: getRandomSeatType(), status: getRandomStatus(), x: 26, y: 35 },
+    { id: 20, number: 'S20', seatType: getRandomSeatType(), status: getRandomStatus(), x: 32, y: 35 },
+    { id: 21, number: 'S21', seatType: getRandomSeatType(), status: getRandomStatus(), x: 38, y: 35 },
+    { id: 22, number: 'S22', seatType: getRandomSeatType(), status: getRandomStatus(), x: 44, y: 35 },
+    { id: 23, number: 'S23', seatType: getRandomSeatType(), status: getRandomStatus(), x: 50, y: 35 },
+    { id: 24, number: 'S24', seatType: getRandomSeatType(), status: getRandomStatus(), x: 56, y: 35 },
+    { id: 25, number: 'S25', seatType: getRandomSeatType(), status: getRandomStatus(), x: 62, y: 35 },
+    { id: 26, number: 'S26', seatType: getRandomSeatType(), status: getRandomStatus(), x: 68, y: 35 },
+    { id: 27, number: 'S27', seatType: getRandomSeatType(), status: getRandomStatus(), x: 74, y: 35 },
+    { id: 28, number: 'S28', seatType: getRandomSeatType(), status: getRandomStatus(), x: 80, y: 35 },
+    { id: 29, number: 'S29', seatType: getRandomSeatType(), status: getRandomStatus(), x: 86, y: 35 },
+    { id: 30, number: 'S30', seatType: getRandomSeatType(), status: getRandomStatus(), x: 92, y: 35 },
 
-    // Row 5 - Cabanas (premium, more space)
-    { id: 53, number: 'CB01', type: 'Cabana', status: 'reserved', x: 15, y: 80 },
-    { id: 54, number: 'CB02', type: 'Cabana', status: 'occupied', x: 35, y: 80 },
-    { id: 55, number: 'CB03', type: 'Cabana', status: 'available', x: 55, y: 80 },
-    { id: 56, number: 'CB04', type: 'Cabana', status: 'occupied', x: 75, y: 80 },
-  ];
+    // Row 3 - 15 seats
+    { id: 31, number: 'S31', seatType: getRandomSeatType(), status: getRandomStatus(), x: 8, y: 45 },
+    { id: 32, number: 'S32', seatType: getRandomSeatType(), status: getRandomStatus(), x: 14, y: 45 },
+    { id: 33, number: 'S33', seatType: getRandomSeatType(), status: getRandomStatus(), x: 20, y: 45 },
+    { id: 34, number: 'S34', seatType: getRandomSeatType(), status: getRandomStatus(), x: 26, y: 45 },
+    { id: 35, number: 'S35', seatType: getRandomSeatType(), status: getRandomStatus(), x: 32, y: 45 },
+    { id: 36, number: 'S36', seatType: getRandomSeatType(), status: getRandomStatus(), x: 38, y: 45 },
+    { id: 37, number: 'S37', seatType: getRandomSeatType(), status: getRandomStatus(), x: 44, y: 45 },
+    { id: 38, number: 'S38', seatType: getRandomSeatType(), status: getRandomStatus(), x: 50, y: 45 },
+    { id: 39, number: 'S39', seatType: getRandomSeatType(), status: getRandomStatus(), x: 56, y: 45 },
+    { id: 40, number: 'S40', seatType: getRandomSeatType(), status: getRandomStatus(), x: 62, y: 45 },
+    { id: 41, number: 'S41', seatType: getRandomSeatType(), status: getRandomStatus(), x: 68, y: 45 },
+    { id: 42, number: 'S42', seatType: getRandomSeatType(), status: getRandomStatus(), x: 74, y: 45 },
+    { id: 43, number: 'S43', seatType: getRandomSeatType(), status: getRandomStatus(), x: 80, y: 45 },
+    { id: 44, number: 'S44', seatType: getRandomSeatType(), status: getRandomStatus(), x: 86, y: 45 },
+    { id: 45, number: 'S45', seatType: getRandomSeatType(), status: getRandomStatus(), x: 92, y: 45 },
+
+    // Row 4 - 15 seats
+    { id: 46, number: 'S46', seatType: getRandomSeatType(), status: getRandomStatus(), x: 8, y: 60 },
+    { id: 47, number: 'S47', seatType: getRandomSeatType(), status: getRandomStatus(), x: 14, y: 60 },
+    { id: 48, number: 'S48', seatType: getRandomSeatType(), status: getRandomStatus(), x: 20, y: 60 },
+    { id: 49, number: 'S49', seatType: getRandomSeatType(), status: getRandomStatus(), x: 26, y: 60 },
+    { id: 50, number: 'S50', seatType: getRandomSeatType(), status: getRandomStatus(), x: 32, y: 60 },
+    { id: 51, number: 'S51', seatType: getRandomSeatType(), status: getRandomStatus(), x: 38, y: 60 },
+    { id: 52, number: 'S52', seatType: getRandomSeatType(), status: getRandomStatus(), x: 44, y: 60 },
+    { id: 53, number: 'S53', seatType: getRandomSeatType(), status: getRandomStatus(), x: 50, y: 60 },
+    { id: 54, number: 'S54', seatType: getRandomSeatType(), status: getRandomStatus(), x: 56, y: 60 },
+    { id: 55, number: 'S55', seatType: getRandomSeatType(), status: getRandomStatus(), x: 62, y: 60 },
+    { id: 56, number: 'S56', seatType: getRandomSeatType(), status: getRandomStatus(), x: 68, y: 60 },
+    { id: 57, number: 'S57', seatType: getRandomSeatType(), status: getRandomStatus(), x: 74, y: 60 },
+    { id: 58, number: 'S58', seatType: getRandomSeatType(), status: getRandomStatus(), x: 80, y: 60 },
+    { id: 59, number: 'S59', seatType: getRandomSeatType(), status: getRandomStatus(), x: 86, y: 60 },
+    { id: 60, number: 'S60', seatType: getRandomSeatType(), status: getRandomStatus(), x: 92, y: 60 },
+
+    // Row 5 - 15 seats
+    { id: 61, number: 'S61', seatType: getRandomSeatType(), status: getRandomStatus(), x: 8, y: 80 },
+    { id: 62, number: 'S62', seatType: getRandomSeatType(), status: getRandomStatus(), x: 14, y: 80 },
+    { id: 63, number: 'S63', seatType: getRandomSeatType(), status: getRandomStatus(), x: 20, y: 80 },
+    { id: 64, number: 'S64', seatType: getRandomSeatType(), status: getRandomStatus(), x: 26, y: 80 },
+    { id: 65, number: 'S65', seatType: getRandomSeatType(), status: getRandomStatus(), x: 32, y: 80 },
+    { id: 66, number: 'S66', seatType: getRandomSeatType(), status: getRandomStatus(), x: 38, y: 80 },
+    { id: 67, number: 'S67', seatType: getRandomSeatType(), status: getRandomStatus(), x: 44, y: 80 },
+    { id: 68, number: 'S68', seatType: getRandomSeatType(), status: getRandomStatus(), x: 50, y: 80 },
+    { id: 69, number: 'S69', seatType: getRandomSeatType(), status: getRandomStatus(), x: 56, y: 80 },
+    { id: 70, number: 'S70', seatType: getRandomSeatType(), status: getRandomStatus(), x: 62, y: 80 },
+    { id: 71, number: 'S71', seatType: getRandomSeatType(), status: getRandomStatus(), x: 68, y: 80 },
+    { id: 72, number: 'S72', seatType: getRandomSeatType(), status: getRandomStatus(), x: 74, y: 80 },
+    { id: 73, number: 'S73', seatType: getRandomSeatType(), status: getRandomStatus(), x: 80, y: 80 },
+    { id: 74, number: 'S74', seatType: getRandomSeatType(), status: getRandomStatus(), x: 86, y: 80 },
+    { id: 75, number: 'S75', seatType: getRandomSeatType(), status: getRandomStatus(), x: 92, y: 80 },
+  ] : [];
 
   const getStatusColor = (status) => {
     switch (status) {
