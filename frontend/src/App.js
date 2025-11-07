@@ -3,6 +3,7 @@ import './App.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { Login } from './pages/admin/Login';
+import { UserLogin } from './pages/UserLogin';
 import { Dashboard } from './pages/admin/Dashboard';
 import { Organisations } from './pages/admin/Organisations';
 import { OrganisationDetails } from './pages/admin/OrganisationDetails';
@@ -27,6 +28,9 @@ function App() {
             
             {/* Admin Login */}
             <Route path="/admin/login" element={<Login />} />
+            
+            {/* User Login (OTP-based) */}
+            <Route path="/user/login" element={<UserLogin />} />
             
             {/* Protected Admin Routes */}
             <Route
