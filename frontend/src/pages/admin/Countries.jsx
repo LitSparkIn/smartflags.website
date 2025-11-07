@@ -19,7 +19,7 @@ import {
 } from '../../components/ui/alert-dialog';
 
 export const Countries = () => {
-  const [countries, setCountries] = useState(initialCountries);
+  const [countries, setCountries] = useLocalStorage('smartflags_countries', initialCountries);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCountry, setEditingCountry] = useState(null);
