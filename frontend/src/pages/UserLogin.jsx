@@ -15,6 +15,8 @@ export const UserLogin = () => {
     otp: ''
   });
   const [loading, setLoading] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [sendingOtp, setSendingOtp] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -25,8 +27,57 @@ export const UserLogin = () => {
     });
   };
 
+  const handleSendOTP = async () => {
+    if (!formData.email) {
+      toast({
+        title: "Email Required",
+        description: "Please enter your email address first",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setSendingOtp(true);
+
+    try {
+      const response = await axios.post(`${BACKEND_URL}/api/user/request-otp`, {
+        email: formData.email
+      });
+
+      if (response.data.success) {
+        setOtpSent(true);
+        toast({
+          title: "OTP Sent!",
+          description: response.data.message,
+          variant: "default"
+        });
+      }
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+      const errorMessage = error.response?.data?.detail || 'Failed to send OTP. Please try again.';
+      
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive"
+      });
+    } finally {
+      setSendingOtp(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!otpSent) {
+      toast({
+        title: "OTP Required",
+        description: "Please request an OTP first by clicking 'Send OTP'",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
