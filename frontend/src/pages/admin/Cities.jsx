@@ -6,6 +6,7 @@ import { Input } from '../../components/ui/input';
 import { mockCities as initialCities, mockStates, getStateById } from '../../mockAdmin';
 import { CityDialog } from '../../components/admin/CityDialog';
 import { toast } from 'sonner';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,7 +26,7 @@ import {
 } from '../../components/ui/select';
 
 export const Cities = () => {
-  const [cities, setCities] = useState(initialCities);
+  const [cities, setCities] = useLocalStorage('smartflags_cities', initialCities);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStateId, setFilterStateId] = useState('all');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
