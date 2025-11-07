@@ -269,7 +269,12 @@ export const OrganisationDetails = () => {
                       <UserPlus className="w-6 h-6 text-white" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-slate-900 mb-1 truncate">{admin.name}</h3>
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-bold text-slate-900 truncate">{admin.name}</h3>
+                        <span className="bg-teal-600 text-white text-xs px-2 py-0.5 rounded-full font-semibold whitespace-nowrap">
+                          Org Admin
+                        </span>
+                      </div>
                       <p className="text-sm text-slate-600 truncate">{admin.email}</p>
                       <p className="text-xs text-teal-600 mt-2">
                         Added {new Date(admin.createdAt).toLocaleDateString()}
