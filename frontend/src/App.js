@@ -17,6 +17,14 @@ import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Toaster } from './components/ui/sonner';
 
+// User Admin Pages
+import { Dashboard as UserDashboard } from './pages/user/Dashboard';
+import { Properties as UserProperties } from './pages/user/Properties';
+import { Staff } from './pages/user/Staff';
+import { SeatTypes } from './pages/user/SeatTypes';
+import { Seats } from './pages/user/Seats';
+import { Groups } from './pages/user/Groups';
+
 function App() {
   return (
     <AuthProvider>
