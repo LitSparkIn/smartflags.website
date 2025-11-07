@@ -127,7 +127,7 @@ export const OrganisationDialog = ({ open, onOpenChange, organisation, onSave })
                     <SelectValue placeholder="Code" />
                   </SelectTrigger>
                   <SelectContent>
-                    {mockCountries.map((country) => (
+                    {countries.map((country) => (
                       <SelectItem key={country.id} value={country.code}>
                         {country.code}
                       </SelectItem>
