@@ -141,18 +141,19 @@ export const SeatTypeDialog = ({ open, onOpenChange, seatType, onSave, propertyI
               />
             </div>
 
-            {/* SVG Icon Upload */}
+            {/* PNG Icon Upload */}
             <div className="space-y-2">
               <Label className="text-slate-700 font-medium">
-                Icon (SVG) *
+                Icon (PNG) *
               </Label>
               
               {iconPreview ? (
                 <div className="relative">
                   <div className="border-2 border-slate-200 rounded-lg p-6 bg-slate-50 flex items-center justify-center">
-                    <div 
-                      className="w-24 h-24"
-                      dangerouslySetInnerHTML={{ __html: iconPreview }}
+                    <img 
+                      src={iconPreview} 
+                      alt="Icon preview"
+                      className="w-24 h-24 object-contain"
                     />
                   </div>
                   <Button
@@ -169,7 +170,7 @@ export const SeatTypeDialog = ({ open, onOpenChange, seatType, onSave, propertyI
                 <div className="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-slate-400 transition-colors">
                   <input
                     type="file"
-                    accept=".svg,image/svg+xml"
+                    accept="image/png"
                     onChange={handleFileUpload}
                     className="hidden"
                     id="icon-upload"
@@ -177,16 +178,16 @@ export const SeatTypeDialog = ({ open, onOpenChange, seatType, onSave, propertyI
                   <label htmlFor="icon-upload" className="cursor-pointer">
                     <Upload className="w-12 h-12 text-slate-400 mx-auto mb-3" />
                     <p className="text-sm text-slate-600 font-medium mb-1">
-                      Click to upload SVG icon
+                      Click to upload PNG icon
                     </p>
                     <p className="text-xs text-slate-500">
-                      Max file size: 100KB
+                      Max file size: 500KB
                     </p>
                   </label>
                 </div>
               )}
               <p className="text-xs text-slate-500">
-                Upload an SVG icon to represent this seat type
+                Upload a PNG icon to represent this seat type (transparent background recommended)
               </p>
             </div>
           </div>
