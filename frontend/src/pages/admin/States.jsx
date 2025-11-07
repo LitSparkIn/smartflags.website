@@ -124,7 +124,7 @@ export const States = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Countries</SelectItem>
-              {mockCountries.map((country) => (
+              {countries.map((country) => (
                 <SelectItem key={country.id} value={country.id}>
                   {country.name}
                 </SelectItem>
