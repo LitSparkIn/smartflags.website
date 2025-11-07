@@ -74,7 +74,7 @@ export const Dashboard = () => {
     { label: 'Active Groups', value: stats.totalGroups.toString(), icon: Users, color: 'from-orange-500 to-orange-600' }
   ];
 
-  const stats = user?.entityType === 'organisation' ? orgStats : propertyStats;
+  const displayStats = user?.entityType === 'organisation' ? orgStats : propertyStats;
 
   return (
     <UserLayout>
