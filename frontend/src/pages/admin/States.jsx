@@ -169,7 +169,7 @@ export const States = () => {
                       </h3>
                       
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="inline-flex items-center space-x-2 bg-blue-50 px-3 py-1 rounded-full">
+                        <div className="inline-flex items-center space-x-2 bg-emerald-50 px-3 py-1 rounded-full">
                           <span className="text-xs font-mono font-bold text-blue-700">Code: {state.code}</span>
                         </div>
                       </div>
