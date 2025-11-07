@@ -193,6 +193,129 @@ async def get_status_checks():
     
     return status_checks
 
+# Admin Login Creation Endpoints
+@api_router.post("/admin/create", response_model=CreateAdminResponse)
+async def create_admin_login(request: CreateAdminRequest):
+    """
+    Create admin login and send OTP via email
+    """
+    try:
+        # Generate OTP
+        otp = generate_otp()
+        
+        # Set expiry time (15 minutes from now)
+        expires_at = datetime.now(timezone.utc) + timedelta(minutes=15)
+        
+        # Create OTP document
+        otp_doc = AdminOTP(
+            email=request.email,
+            otp=otp,
+            name=request.name,
+            entityType=request.entityType,
+            entityId=request.entityId,
+            expiresAt=expires_at
+        )
+        
+        # Prepare document for MongoDB (convert datetime to ISO string)
+        doc = otp_doc.model_dump()
+        doc['createdAt'] = doc['createdAt'].isoformat()
+        doc['expiresAt'] = doc['expiresAt'].isoformat()
+        
+        # Store OTP in database
+        await db.admin_otps.insert_one(doc)
+        
+        # Get frontend URL for login link
+        # Assuming frontend runs on same domain or you can configure this
+        login_url = os.environ.get('FRONTEND_URL', 'http://localhost:3000') + '/user/login'
+        
+        # Send email
+        email_sent = await send_otp_email(request.name, request.email, otp, login_url)
+        
+        if not email_sent:
+            raise HTTPException(status_code=500, detail="Failed to send email. Please try again.")
+        
+        logger.info(f"Admin login created for {request.email}, entity: {request.entityType}:{request.entityId}")
+        
+        return CreateAdminResponse(
+            success=True,
+            message=f"Admin account created successfully. A confirmation email with login instructions has been sent to {request.email}",
+            email=request.email
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating admin login: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.post("/user/login", response_model=VerifyOTPResponse)
+async def verify_otp_login(request: VerifyOTPRequest):
+    """
+    Verify OTP and log in user
+    """
+    try:
+        # Find the OTP document
+        otp_doc = await db.admin_otps.find_one(
+            {
+                "email": request.email,
+                "otp": request.otp,
+                "used": False
+            },
+            {"_id": 0}
+        )
+        
+        if not otp_doc:
+            raise HTTPException(status_code=401, detail="Invalid OTP or email")
+        
+        # Parse expiry time
+        expires_at = datetime.fromisoformat(otp_doc['expiresAt'])
+        
+        # Check if OTP has expired
+        if datetime.now(timezone.utc) > expires_at:
+            raise HTTPException(status_code=401, detail="OTP has expired. Please request a new one.")
+        
+        # Mark OTP as used
+        await db.admin_otps.update_one(
+            {"id": otp_doc['id']},
+            {"$set": {"used": True}}
+        )
+        
+        # Create a simple token (in production, use JWT with proper secret)
+        token = str(uuid.uuid4())
+        
+        # Store admin session (you can create an admins collection for this)
+        admin_session = {
+            "id": str(uuid.uuid4()),
+            "email": request.email,
+            "name": otp_doc['name'],
+            "token": token,
+            "entityType": otp_doc['entityType'],
+            "entityId": otp_doc['entityId'],
+            "createdAt": datetime.now(timezone.utc).isoformat()
+        }
+        
+        await db.admin_sessions.insert_one(admin_session)
+        
+        logger.info(f"User {request.email} logged in successfully")
+        
+        return VerifyOTPResponse(
+            success=True,
+            message="Login successful",
+            token=token,
+            user={
+                "email": request.email,
+                "name": otp_doc['name'],
+                "entityType": otp_doc['entityType'],
+                "entityId": otp_doc['entityId']
+            }
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error verifying OTP: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 
