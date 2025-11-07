@@ -60,7 +60,7 @@ export const Dashboard = () => {
 
   // Stats for Organisation Admin
   const orgStats = [
-    { label: 'Total Properties', value: stats.totalProperties.toString(), icon: Building2, color: 'from-blue-500 to-blue-600' },
+    { label: 'Total Properties', value: (stats.totalProperties || 0).toString(), icon: Building2, color: 'from-blue-500 to-blue-600' },
     { label: 'Active Staff', value: '0', icon: Users, color: 'from-green-500 to-green-600' },
     { label: 'Total Seats', value: '0', icon: Armchair, color: 'from-purple-500 to-purple-600' },
     { label: 'Growth Rate', value: '0%', icon: TrendingUp, color: 'from-orange-500 to-orange-600' }
@@ -68,10 +68,10 @@ export const Dashboard = () => {
 
   // Stats for Property Admin
   const propertyStats = [
-    { label: 'Total Staff', value: stats.totalStaff.toString(), icon: Users, color: 'from-blue-500 to-blue-600' },
-    { label: 'Seat Types', value: stats.totalSeatTypes.toString(), icon: Armchair, color: 'from-green-500 to-green-600' },
-    { label: 'Total Seats', value: stats.totalSeats.toString(), icon: Armchair, color: 'from-purple-500 to-purple-600' },
-    { label: 'Active Groups', value: stats.totalGroups.toString(), icon: Users, color: 'from-orange-500 to-orange-600' }
+    { label: 'Total Staff', value: (stats.totalStaff || 0).toString(), icon: Users, color: 'from-blue-500 to-blue-600' },
+    { label: 'Seat Types', value: (stats.totalSeatTypes || 0).toString(), icon: Armchair, color: 'from-green-500 to-green-600' },
+    { label: 'Total Seats', value: (stats.totalSeats || 0).toString(), icon: Armchair, color: 'from-purple-500 to-purple-600' },
+    { label: 'Active Groups', value: (stats.totalGroups || 0).toString(), icon: Users, color: 'from-orange-500 to-orange-600' }
   ];
 
   const displayStats = user?.entityType === 'organisation' ? orgStats : propertyStats;
