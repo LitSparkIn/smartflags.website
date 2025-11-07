@@ -82,8 +82,8 @@ def generate_otp() -> str:
     """Generate a 6-digit OTP"""
     return ''.join(random.choices(string.digits, k=6))
 
-async def send_otp_email(name: str, email: str, otp: str, login_url: str) -> bool:
-    """Send OTP email to the user"""
+async def send_welcome_email(name: str, email: str, login_url: str) -> bool:
+    """Send welcome email to the new admin user"""
     try:
         smtp_server = os.environ.get('SMTP_HOST')
         smtp_port = int(os.environ.get('SMTP_PORT', 587))
@@ -94,7 +94,7 @@ async def send_otp_email(name: str, email: str, otp: str, login_url: str) -> boo
         
         # Create message
         message = MIMEMultipart('alternative')
-        message['Subject'] = 'Your SmartFlags Admin Login OTP'
+        message['Subject'] = 'Welcome to SmartFlags - Admin Access Granted'
         message['From'] = f"{from_name} <{from_email}>"
         message['To'] = email
         
@@ -102,13 +102,18 @@ async def send_otp_email(name: str, email: str, otp: str, login_url: str) -> boo
         text = f"""
 Hello {name},
 
-Welcome to SmartFlags! An admin account has been created for you.
+Welcome to SmartFlags! You have been added as an admin user.
 
-Your one-time password (OTP) is: {otp}
+You can now access the SmartFlags admin panel by visiting:
+{login_url}
 
-This OTP will expire in 15 minutes.
+To log in:
+1. Visit the login page
+2. Enter your email address
+3. Click "Send OTP" to receive a one-time password
+4. Enter the OTP to access your account
 
-Use this OTP to log in at: {login_url}
+If you have any questions or didn't expect this email, please contact support.
 
 Best regards,
 SmartFlags Team
@@ -122,21 +127,104 @@ SmartFlags Team
       <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
         <h2 style="color: #14b8a6; margin-top: 0;">Welcome to SmartFlags!</h2>
         <p>Hello <strong>{name}</strong>,</p>
-        <p>An admin account has been created for you. You can now access the SmartFlags admin panel.</p>
+        <p>Great news! You have been added as an admin user to the SmartFlags platform.</p>
         
         <div style="background-color: #f0fdfa; border-left: 4px solid #14b8a6; padding: 20px; margin: 25px 0; border-radius: 5px;">
-          <p style="margin: 0; font-size: 14px; color: #115e59;">Your one-time password (OTP):</p>
+          <p style="margin: 0; font-size: 16px; color: #115e59; font-weight: 600;">🎉 Admin Access Granted</p>
+          <p style="margin: 10px 0 0 0; font-size: 14px; color: #0f766e;">You can now manage and access the SmartFlags admin panel.</p>
+        </div>
+        
+        <div style="background-color: #f8fafc; border-radius: 8px; padding: 20px; margin: 25px 0;">
+          <h3 style="margin-top: 0; color: #334155; font-size: 16px;">How to Log In:</h3>
+          <ol style="margin: 10px 0; padding-left: 20px; color: #475569;">
+            <li style="margin-bottom: 8px;">Visit the login page</li>
+            <li style="margin-bottom: 8px;">Enter your email address: <strong>{email}</strong></li>
+            <li style="margin-bottom: 8px;">Click "Send OTP" to receive a one-time password</li>
+            <li style="margin-bottom: 8px;">Enter the OTP to access your account</li>
+          </ol>
+        </div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="{login_url}" style="background-color: #14b8a6; color: white; padding: 14px 35px; text-decoration: none; border-radius: 8px; display: inline-block; font-weight: 600; font-size: 16px;">Access Admin Panel</a>
+        </div>
+        
+        <p style="font-size: 13px; color: #64748b; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+          If you didn't expect this email or have any questions, please contact our support team.
+        </p>
+        
+        <p style="margin-top: 30px; color: #64748b;">Best regards,<br><strong>SmartFlags Team</strong></p>
+      </div>
+    </div>
+  </body>
+</html>
+        """
+        
+        part1 = MIMEText(text, 'plain')
+        part2 = MIMEText(html, 'html')
+        message.attach(part1)
+        message.attach(part2)
+        
+        # Send email
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(smtp_user, smtp_password)
+            server.send_message(message)
+        
+        logger.info(f"Welcome email sent successfully to {email}")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Failed to send email to {email}: {str(e)}")
+        return False
+
+async def send_otp_email(name: str, email: str, otp: str) -> bool:
+    """Send OTP email when user requests to login"""
+    try:
+        smtp_server = os.environ.get('SMTP_HOST')
+        smtp_port = int(os.environ.get('SMTP_PORT', 587))
+        smtp_user = os.environ.get('SMTP_USER')
+        smtp_password = os.environ.get('SMTP_PASSWORD')
+        from_email = os.environ.get('SMTP_FROM_EMAIL')
+        from_name = os.environ.get('SMTP_FROM_NAME', 'SmartFlags Admin')
+        
+        # Create message
+        message = MIMEMultipart('alternative')
+        message['Subject'] = 'Your SmartFlags Login OTP'
+        message['From'] = f"{from_name} <{from_email}>"
+        message['To'] = email
+        
+        # Email body - plain text
+        text = f"""
+Hello {name},
+
+Your one-time password (OTP) for SmartFlags login is: {otp}
+
+This OTP will expire in 15 minutes.
+
+If you didn't request this OTP, please ignore this email.
+
+Best regards,
+SmartFlags Team
+        """
+        
+        # Email body - HTML
+        html = f"""
+<html>
+  <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9fafb;">
+      <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h2 style="color: #14b8a6; margin-top: 0;">Your Login OTP</h2>
+        <p>Hello <strong>{name}</strong>,</p>
+        <p>You requested to log in to your SmartFlags admin account. Use the OTP below to complete your login:</p>
+        
+        <div style="background-color: #f0fdfa; border-left: 4px solid #14b8a6; padding: 20px; margin: 25px 0; border-radius: 5px;">
+          <p style="margin: 0; font-size: 14px; color: #115e59;">Your one-time password:</p>
           <p style="font-size: 36px; font-weight: bold; color: #14b8a6; margin: 15px 0 10px 0; letter-spacing: 8px; text-align: center;">{otp}</p>
           <p style="margin: 0; font-size: 13px; color: #ef4444; text-align: center;">⏰ Expires in 15 minutes</p>
         </div>
         
-        <p>Click the link below to log in:</p>
-        <div style="text-align: center; margin: 25px 0;">
-          <a href="{login_url}" style="background-color: #14b8a6; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: 600;">Login to SmartFlags</a>
-        </div>
-        
         <p style="font-size: 13px; color: #64748b; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-          If you didn't request this account, please ignore this email.
+          If you didn't request this OTP, please ignore this email or contact support if you have concerns.
         </p>
         
         <p style="margin-top: 30px; color: #64748b;">Best regards,<br><strong>SmartFlags Team</strong></p>
@@ -161,7 +249,7 @@ SmartFlags Team
         return True
         
     except Exception as e:
-        logger.error(f"Failed to send email to {email}: {str(e)}")
+        logger.error(f"Failed to send OTP email to {email}: {str(e)}")
         return False
 
 # Add your routes to the router instead of directly to app
