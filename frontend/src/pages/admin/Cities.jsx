@@ -27,23 +27,12 @@ import {
 
 export const Cities = () => {
   const [cities, setCities] = useLocalStorage('smartflags_cities', initialCities);
+  const [states] = useLocalStorage('smartflags_states', []);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStateId, setFilterStateId] = useState('all');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCity, setEditingCity] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
-
-  // Get states from localStorage
-  const getStates = () => {
-    try {
-      const stored = localStorage.getItem('smartflags_states');
-      return stored ? JSON.parse(stored) : [];
-    } catch (error) {
-      return [];
-    }
-  };
-
-  const states = getStates();
 
   const filteredCities = cities.filter((city) => {
     const matchesSearch = city.name.toLowerCase().includes(searchTerm.toLowerCase());
