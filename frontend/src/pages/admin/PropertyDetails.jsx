@@ -127,7 +127,10 @@ export const PropertyDetails = () => {
                   </div>
                   <div>
                     <p className="text-sm text-slate-500 mb-1">Phone Number</p>
-                    <p className="text-lg font-semibold text-slate-900">{property.phone || 'Not provided'}</p>
+                    <p className="text-lg font-semibold text-slate-900">
+                      {property.phoneCountryCode && `+${property.phoneCountryCode} `}
+                      {property.phone || 'Not provided'}
+                    </p>
                   </div>
                 </div>
 
