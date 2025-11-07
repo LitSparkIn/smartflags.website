@@ -163,7 +163,7 @@ export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
                   <SelectValue placeholder="Select an organisation" />
                 </SelectTrigger>
                 <SelectContent>
-                  {mockOrganisations.map((org) => (
+                  {organisations.map((org) => (
                     <SelectItem key={org.id} value={org.id}>
                       {org.name}
                     </SelectItem>
