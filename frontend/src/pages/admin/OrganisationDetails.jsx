@@ -237,9 +237,9 @@ export const OrganisationDetails = () => {
       <AdminLoginDialog
         open={isAdminLoginDialogOpen}
         onOpenChange={setIsAdminLoginDialogOpen}
-        entityType="Organisation"
+        entityType="organisation"
         entityName={organisation.name}
-        onSend={handleSendOTP}
+        entityId={organisation.id}
       />
     </AdminLayout>
   );
