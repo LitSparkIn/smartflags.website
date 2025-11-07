@@ -139,7 +139,7 @@ export const Roles = () => {
 
                   {/* Content */}
                   <div className="p-6">
-                    <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-amber-600 transition-colors">
+                    <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors">
                       {role.name}
                     </h3>
                     
