@@ -294,7 +294,13 @@ export const OrganisationDetails = () => {
       {/* Admin Login Dialog */}
       <AdminLoginDialog
         open={isAdminLoginDialogOpen}
-        onOpenChange={setIsAdminLoginDialogOpen}
+        onOpenChange={(open) => {
+          setIsAdminLoginDialogOpen(open);
+          // Refresh admins list when dialog closes
+          if (!open) {
+            fetchAdmins();
+          }
+        }}
         entityType="organisation"
         entityName={organisation.name}
         entityId={organisation.id}
