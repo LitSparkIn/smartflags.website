@@ -6,6 +6,7 @@ import { Input } from '../../components/ui/input';
 import { mockRoles as initialRoles } from '../../mockAdmin';
 import { RoleDialog } from '../../components/admin/RoleDialog';
 import { toast } from 'sonner';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 import {
   AlertDialog,
   AlertDialogAction,
