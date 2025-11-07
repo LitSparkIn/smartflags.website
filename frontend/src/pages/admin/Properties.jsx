@@ -29,23 +29,12 @@ import {
 export const Properties = () => {
   const navigate = useNavigate();
   const [properties, setProperties] = useLocalStorage('smartflags_properties', initialProperties);
+  const [organisations] = useLocalStorage('smartflags_organisations', []);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterOrgId, setFilterOrgId] = useState('all');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProperty, setEditingProperty] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
-
-  // Get organisations from localStorage
-  const getOrganisations = () => {
-    try {
-      const stored = localStorage.getItem('smartflags_organisations');
-      return stored ? JSON.parse(stored) : [];
-    } catch (error) {
-      return [];
-    }
-  };
-
-  const organisations = getOrganisations();
 
   const filteredProperties = properties.filter((prop) => {
     const matchesSearch =
