@@ -4,17 +4,63 @@ import { Building2, Users, Armchair, TrendingUp } from 'lucide-react';
 
 export const Dashboard = () => {
   const [user, setUser] = useState(null);
+  const [stats, setStats] = useState({
+    totalProperties: 0,
+    totalStaff: 0,
+    totalSeats: 0,
+    totalSeatTypes: 0,
+    totalGroups: 0
+  });
 
   useEffect(() => {
     const userData = localStorage.getItem('userData');
     if (userData) {
-      setUser(JSON.parse(userData));
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+      
+      // Fetch stats based on user type
+      if (parsedUser.entityType === 'organisation') {
+        fetchOrganisationStats(parsedUser.entityId);
+      } else if (parsedUser.entityType === 'property') {
+        fetchPropertyStats(parsedUser.entityId);
+      }
     }
   }, []);
 
+  const fetchOrganisationStats = (orgId) => {
+    try {
+      // Get properties for this organisation
+      const storedProperties = localStorage.getItem('smartflags_properties');
+      const allProperties = storedProperties ? JSON.parse(storedProperties) : [];
+      const orgProperties = allProperties.filter(prop => prop.organisationId === orgId);
+      
+      setStats(prev => ({
+        ...prev,
+        totalProperties: orgProperties.length
+      }));
+    } catch (error) {
+      console.error('Error fetching organisation stats:', error);
+    }
+  };
+
+  const fetchPropertyStats = (propertyId) => {
+    try {
+      // In future, fetch actual staff, seats, etc. for this property
+      // For now, keeping as 0 until those features are implemented
+      setStats({
+        totalStaff: 0,
+        totalSeatTypes: 0,
+        totalSeats: 0,
+        totalGroups: 0
+      });
+    } catch (error) {
+      console.error('Error fetching property stats:', error);
+    }
+  };
+
   // Stats for Organisation Admin
   const orgStats = [
-    { label: 'Total Properties', value: '0', icon: Building2, color: 'from-blue-500 to-blue-600' },
+    { label: 'Total Properties', value: stats.totalProperties.toString(), icon: Building2, color: 'from-blue-500 to-blue-600' },
     { label: 'Active Staff', value: '0', icon: Users, color: 'from-green-500 to-green-600' },
     { label: 'Total Seats', value: '0', icon: Armchair, color: 'from-purple-500 to-purple-600' },
     { label: 'Growth Rate', value: '0%', icon: TrendingUp, color: 'from-orange-500 to-orange-600' }
@@ -22,10 +68,10 @@ export const Dashboard = () => {
 
   // Stats for Property Admin
   const propertyStats = [
-    { label: 'Total Staff', value: '0', icon: Users, color: 'from-blue-500 to-blue-600' },
-    { label: 'Seat Types', value: '0', icon: Armchair, color: 'from-green-500 to-green-600' },
-    { label: 'Total Seats', value: '0', icon: Armchair, color: 'from-purple-500 to-purple-600' },
-    { label: 'Active Groups', value: '0', icon: Users, color: 'from-orange-500 to-orange-600' }
+    { label: 'Total Staff', value: stats.totalStaff.toString(), icon: Users, color: 'from-blue-500 to-blue-600' },
+    { label: 'Seat Types', value: stats.totalSeatTypes.toString(), icon: Armchair, color: 'from-green-500 to-green-600' },
+    { label: 'Total Seats', value: stats.totalSeats.toString(), icon: Armchair, color: 'from-purple-500 to-purple-600' },
+    { label: 'Active Groups', value: stats.totalGroups.toString(), icon: Users, color: 'from-orange-500 to-orange-600' }
   ];
 
   const stats = user?.entityType === 'organisation' ? orgStats : propertyStats;
