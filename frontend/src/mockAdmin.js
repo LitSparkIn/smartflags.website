@@ -12,7 +12,8 @@ export const mockOrganisations = [
     id: 'org-1',
     name: 'Paradise Resorts Group',
     email: 'contact@paradiseresorts.com',
-    phone: '+1 555 100 0001',
+    phoneCountryCode: 'US',
+    phone: '555 100 0001',
     address: '123 Resort Boulevard, Miami, FL 33139',
     createdAt: '2024-01-15T10:00:00Z'
   },
@@ -20,7 +21,8 @@ export const mockOrganisations = [
     id: 'org-2',
     name: 'Azure Hospitality',
     email: 'info@azurehospitality.com',
-    phone: '+1 555 200 0002',
+    phoneCountryCode: 'MV',
+    phone: '555 200 0002',
     address: '456 Ocean Drive, Maldives',
     createdAt: '2024-02-20T11:30:00Z'
   },
@@ -28,7 +30,8 @@ export const mockOrganisations = [
     id: 'org-3',
     name: 'Sunset Beach Club',
     email: 'contact@sunsetbeach.com',
-    phone: '+1 555 300 0003',
+    phoneCountryCode: 'US',
+    phone: '555 300 0003',
     address: '789 Coastal Highway, California 90210',
     createdAt: '2024-03-10T09:15:00Z'
   }
