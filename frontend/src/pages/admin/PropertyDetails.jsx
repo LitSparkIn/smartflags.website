@@ -238,9 +238,9 @@ export const PropertyDetails = () => {
       <AdminLoginDialog
         open={isAdminLoginDialogOpen}
         onOpenChange={setIsAdminLoginDialogOpen}
-        entityType="Property"
+        entityType="property"
         entityName={property.name}
-        onSend={handleSendOTP}
+        entityId={property.id}
       />
     </AdminLayout>
   );
