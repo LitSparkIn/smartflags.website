@@ -545,6 +545,120 @@ async def delete_seat_type(seat_type_id: str):
         logger.error(f"Error deleting seat type: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+# Seat CRUD Endpoints
+@api_router.post("/seats/bulk")
+async def create_seats_bulk(seat_data: SeatBulkCreate):
+    """Create multiple seats based on range"""
+    try:
+        if seat_data.startNumber > seat_data.endNumber:
+            raise HTTPException(status_code=400, detail="Start number must be less than or equal to end number")
+        
+        if seat_data.endNumber - seat_data.startNumber > 1000:
+            raise HTTPException(status_code=400, detail="Cannot create more than 1000 seats at once")
+        
+        # Determine padding length based on end number
+        padding_length = len(str(seat_data.endNumber))
+        
+        # Generate seats
+        seats = []
+        for num in range(seat_data.startNumber, seat_data.endNumber + 1):
+            # Format number with zero padding
+            formatted_num = str(num).zfill(padding_length)
+            seat_number = f"{seat_data.prefix}{formatted_num}{seat_data.suffix}"
+            
+            seat = Seat(
+                propertyId=seat_data.propertyId,
+                seatTypeId=seat_data.seatTypeId,
+                seatNumber=seat_number
+            )
+            
+            # Convert to dict and serialize datetime
+            seat_doc = seat.model_dump()
+            seat_doc['createdAt'] = seat_doc['createdAt'].isoformat()
+            seat_doc['updatedAt'] = seat_doc['updatedAt'].isoformat()
+            
+            seats.append(seat_doc)
+        
+        # Insert all seats
+        await db.seats.insert_many(seats)
+        
+        logger.info(f"Created {len(seats)} seats for property {seat_data.propertyId}")
+        return {
+            "success": True,
+            "message": f"Successfully created {len(seats)} seats",
+            "count": len(seats)
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating seats: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.get("/seats/{property_id}")
+async def get_seats(property_id: str):
+    """Get all seats for a property"""
+    try:
+        seats = await db.seats.find(
+            {"propertyId": property_id},
+            {"_id": 0}
+        ).to_list(10000)
+        
+        return {"success": True, "seats": seats}
+        
+    except Exception as e:
+        logger.error(f"Error fetching seats: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.put("/seats/{seat_id}")
+async def update_seat(seat_id: str, update_data: SeatUpdate):
+    """Update a seat"""
+    try:
+        update_dict = {k: v for k, v in update_data.model_dump().items() if v is not None}
+        
+        if not update_dict:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        update_dict['updatedAt'] = datetime.now(timezone.utc).isoformat()
+        
+        result = await db.seats.update_one(
+            {"id": seat_id},
+            {"$set": update_dict}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Seat not found")
+        
+        # Get updated seat
+        updated_seat = await db.seats.find_one({"id": seat_id}, {"_id": 0})
+        
+        logger.info(f"Seat updated: {seat_id}")
+        return {"success": True, "seat": updated_seat}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating seat: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/seats/{seat_id}")
+async def delete_seat(seat_id: str):
+    """Delete a seat"""
+    try:
+        result = await db.seats.delete_one({"id": seat_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Seat not found")
+        
+        logger.info(f"Seat deleted: {seat_id}")
+        return {"success": True, "message": "Seat deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting seat: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 @api_router.post("/user/login", response_model=VerifyOTPResponse)
 async def verify_otp_login(request: VerifyOTPRequest):
     """
