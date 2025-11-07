@@ -142,7 +142,7 @@ export const RoleDialog = ({ open, onOpenChange, role, onSave }) => {
                       <button
                         type="button"
                         onClick={() => handleRemovePermission(index)}
-                        className="hover:text-amber-900"
+                        className="hover:text-emerald-900"
                       >
                         ×
                       </button>
