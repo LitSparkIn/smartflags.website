@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AdminLayout } from '../../components/admin/AdminLayout';
-import { ArrowLeft, Home, Mail, Phone, MapPin, Calendar, Pencil, Building2 } from 'lucide-react';
+import { ArrowLeft, Home, Mail, Phone, MapPin, Calendar, Pencil, Building2, UserPlus } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { mockProperties, getOrganisationById } from '../../mockAdmin';
 import { PropertyDialog } from '../../components/admin/PropertyDialog';
+import { AdminLoginDialog } from '../../components/admin/AdminLoginDialog';
 import { toast } from 'sonner';
 
 export const PropertyDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isAdminLoginDialogOpen, setIsAdminLoginDialogOpen] = useState(false);
   
   const property = mockProperties.find(prop => prop.id === id);
   const organisation = property ? getOrganisationById(property.organisationId) : null;
