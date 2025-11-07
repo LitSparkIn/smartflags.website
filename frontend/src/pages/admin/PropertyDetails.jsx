@@ -107,7 +107,7 @@ export const PropertyDetails = () => {
                 className="bg-white/20 hover:bg-white/30 backdrop-blur-sm border-white/30 text-white"
               >
                 <UserPlus className="w-4 h-4 mr-2" />
-                Create Admin Login
+                Add Admin
               </Button>
               <Button
                 onClick={() => setIsEditDialogOpen(true)}
