@@ -357,12 +357,14 @@ async def request_otp(request: RequestOTPRequest):
         # Set expiry time (15 minutes from now)
         expires_at = datetime.now(timezone.utc) + timedelta(minutes=15)
         
-        # Create OTP document
+        # Create OTP document - include all admin data for later use
         otp_doc = {
             "id": str(uuid.uuid4()),
             "email": request.email,
             "otp": otp,
             "name": admin['name'],
+            "entityType": admin.get('entityType', ''),
+            "entityId": admin.get('entityId', ''),
             "expiresAt": expires_at.isoformat(),
             "used": False,
             "createdAt": datetime.now(timezone.utc).isoformat()
