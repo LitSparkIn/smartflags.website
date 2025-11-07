@@ -25,17 +25,19 @@ export const StateDialog = ({ open, onOpenChange, state, onSave }) => {
     code: ''
   });
 
-  // Get countries from localStorage
-  const getCountries = () => {
-    try {
-      const stored = localStorage.getItem('smartflags_countries');
-      return stored ? JSON.parse(stored) : [];
-    } catch (error) {
-      return [];
-    }
-  };
+  // Get countries from localStorage - called each time dialog opens
+  const [countries, setCountries] = useState([]);
 
-  const countries = getCountries();
+  useEffect(() => {
+    if (open) {
+      try {
+        const stored = localStorage.getItem('smartflags_countries');
+        setCountries(stored ? JSON.parse(stored) : []);
+      } catch (error) {
+        setCountries([]);
+      }
+    }
+  }, [open]);
 
   useEffect(() => {
     if (state) {
