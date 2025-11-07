@@ -42,6 +42,9 @@ export const mockProperties = [
     email: 'beach@paradiseresorts.com',
     phone: '+1 555 100 1001',
     address: '789 Beach Road, Miami Beach, FL 33140',
+    countryId: 'country-1',
+    stateId: 'state-2',
+    cityId: 'city-3',
     createdAt: '2024-01-16T10:00:00Z'
   },
   {
@@ -51,6 +54,9 @@ export const mockProperties = [
     email: 'pool@paradiseresorts.com',
     phone: '+1 555 100 1002',
     address: '321 Poolside Ave, Miami, FL 33141',
+    countryId: 'country-1',
+    stateId: 'state-2',
+    cityId: 'city-3',
     createdAt: '2024-01-17T10:00:00Z'
   },
   {
@@ -60,6 +66,9 @@ export const mockProperties = [
     email: 'bay@azurehospitality.com',
     phone: '+1 555 200 2001',
     address: '456 Azure Bay, Maldives',
+    countryId: 'country-5',
+    stateId: '',
+    cityId: '',
     createdAt: '2024-02-21T11:30:00Z'
   },
   {
@@ -69,6 +78,9 @@ export const mockProperties = [
     email: 'main@sunsetbeach.com',
     phone: '+1 555 300 3001',
     address: '789 Sunset Boulevard, California 90211',
+    countryId: 'country-1',
+    stateId: 'state-1',
+    cityId: 'city-1',
     createdAt: '2024-03-11T09:15:00Z'
   }
 ];
