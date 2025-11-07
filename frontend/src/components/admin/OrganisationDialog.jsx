@@ -11,11 +11,20 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
+import { mockCountries } from '../../mockAdmin';
 
 export const OrganisationDialog = ({ open, onOpenChange, organisation, onSave }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phoneCountryCode: '',
     phone: '',
     address: ''
   });
@@ -25,6 +34,7 @@ export const OrganisationDialog = ({ open, onOpenChange, organisation, onSave })
       setFormData({
         name: organisation.name || '',
         email: organisation.email || '',
+        phoneCountryCode: organisation.phoneCountryCode || '',
         phone: organisation.phone || '',
         address: organisation.address || ''
       });
@@ -32,6 +42,7 @@ export const OrganisationDialog = ({ open, onOpenChange, organisation, onSave })
       setFormData({
         name: '',
         email: '',
+        phoneCountryCode: '',
         phone: '',
         address: ''
       });
