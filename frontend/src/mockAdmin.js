@@ -23,32 +23,48 @@ export const mockCities = [];
 // Master Data - Roles
 export const mockRoles = [];
 
+// Helper functions that read from localStorage
+const getStoredData = (key, defaultValue) => {
+  try {
+    const item = window.localStorage.getItem(key);
+    return item ? JSON.parse(item) : defaultValue;
+  } catch (error) {
+    return defaultValue;
+  }
+};
+
 // Helper function to get organisation by ID
 export const getOrganisationById = (id) => {
-  return mockOrganisations.find(org => org.id === id);
+  const orgs = getStoredData('smartflags_organisations', mockOrganisations);
+  return orgs.find(org => org.id === id);
 };
 
 // Helper function to get properties by organisation ID
 export const getPropertiesByOrganisation = (orgId) => {
-  return mockProperties.filter(prop => prop.organisationId === orgId);
+  const props = getStoredData('smartflags_properties', mockProperties);
+  return props.filter(prop => prop.organisationId === orgId);
 };
 
 // Helper function to get country by ID
 export const getCountryById = (id) => {
-  return mockCountries.find(country => country.id === id);
+  const countries = getStoredData('smartflags_countries', mockCountries);
+  return countries.find(country => country.id === id);
 };
 
 // Helper function to get state by ID
 export const getStateById = (id) => {
-  return mockStates.find(state => state.id === id);
+  const states = getStoredData('smartflags_states', mockStates);
+  return states.find(state => state.id === id);
 };
 
 // Helper function to get states by country ID
 export const getStatesByCountry = (countryId) => {
-  return mockStates.filter(state => state.countryId === countryId);
+  const states = getStoredData('smartflags_states', mockStates);
+  return states.filter(state => state.countryId === countryId);
 };
 
 // Helper function to get cities by state ID
 export const getCitiesByState = (stateId) => {
-  return mockCities.filter(city => city.stateId === stateId);
+  const cities = getStoredData('smartflags_cities', mockCities);
+  return cities.filter(city => city.stateId === stateId);
 };
