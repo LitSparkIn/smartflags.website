@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Building2, Users, Armchair, Grid3x3, UsersRound, Waves } from 'lucide-react';
+import { LayoutDashboard, Building2, Users, Armchair, Grid3x3, UsersRound, Waves, Eye } from 'lucide-react';
 
 export const UserSidebar = ({ user }) => {
   const location = useLocation();
