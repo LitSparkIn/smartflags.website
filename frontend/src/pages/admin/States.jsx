@@ -164,7 +164,7 @@ export const States = () => {
 
                     {/* Content */}
                     <div className="p-6">
-                      <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
+                      <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors">
                         {state.name}
                       </h3>
                       
