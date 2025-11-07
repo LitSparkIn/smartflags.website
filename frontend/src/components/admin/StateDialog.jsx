@@ -100,7 +100,7 @@ export const StateDialog = ({ open, onOpenChange, state, onSave }) => {
                   <SelectValue placeholder="Select a country" />
                 </SelectTrigger>
                 <SelectContent>
-                  {mockCountries.map((country) => (
+                  {countries.map((country) => (
                     <SelectItem key={country.id} value={country.id}>
                       {country.name}
                     </SelectItem>
