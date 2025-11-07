@@ -143,17 +143,6 @@ export const SmartView = () => {
     }
   };
 
-  const getSeatSize = (type) => {
-    switch (type) {
-      case 'Cabana':
-        return 'w-12 h-12';
-      case 'Umbrella Set':
-        return 'w-10 h-10';
-      default:
-        return 'w-8 h-8';
-    }
-  };
-
   const stats = {
     total: mockSeats.length,
     available: mockSeats.filter(s => s.status === 'available').length,
