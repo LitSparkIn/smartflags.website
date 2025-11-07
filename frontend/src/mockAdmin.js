@@ -12,38 +12,7 @@ export const mockOrganisations = [];
 export const mockProperties = [];
 
 // Master Data - Countries
-export const mockCountries = [
-  {
-    id: 'country-1',
-    name: 'United States',
-    code: 'US',
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'country-2',
-    name: 'United Kingdom',
-    code: 'GB',
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'country-3',
-    name: 'India',
-    code: 'IN',
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'country-4',
-    name: 'Australia',
-    code: 'AU',
-    createdAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'country-5',
-    name: 'Maldives',
-    code: 'MV',
-    createdAt: '2024-01-01T00:00:00Z'
-  }
-];
+export const mockCountries = [];
 
 // Master Data - States
 export const mockStates = [
