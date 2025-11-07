@@ -123,7 +123,7 @@ export const Cities = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All States</SelectItem>
-              {mockStates.map((state) => (
+              {states.map((state) => (
                 <SelectItem key={state.id} value={state.id}>
                   {state.name}
                 </SelectItem>
