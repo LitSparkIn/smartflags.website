@@ -7,7 +7,7 @@ export const Dashboard = () => {
   const stats = [
     {
       label: 'Total Organisations',
-      value: mockOrganisations.length,
+      value: mockOrganisations.length || 0,
       icon: Building2,
       color: 'from-teal-500 to-cyan-600',
       bgColor: 'bg-teal-50',
@@ -15,7 +15,7 @@ export const Dashboard = () => {
     },
     {
       label: 'Total Properties',
-      value: mockProperties.length,
+      value: mockProperties.length || 0,
       icon: Home,
       color: 'from-cyan-500 to-blue-600',
       bgColor: 'bg-cyan-50',
@@ -23,7 +23,7 @@ export const Dashboard = () => {
     },
     {
       label: 'Active Users',
-      value: '50K+',
+      value: '0',
       icon: Users,
       color: 'from-blue-500 to-indigo-600',
       bgColor: 'bg-blue-50',
@@ -31,7 +31,7 @@ export const Dashboard = () => {
     },
     {
       label: 'Growth Rate',
-      value: '40%',
+      value: '0%',
       icon: TrendingUp,
       color: 'from-emerald-500 to-teal-600',
       bgColor: 'bg-emerald-50',
