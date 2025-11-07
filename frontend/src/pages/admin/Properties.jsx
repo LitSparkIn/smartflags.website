@@ -3,7 +3,7 @@ import { AdminLayout } from '../../components/admin/AdminLayout';
 import { Plus, Pencil, Trash2, Search, Home, Building2, Mail, Phone, MapPin, Eye } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { mockProperties as initialProperties, mockOrganisations, getOrganisationById } from '../../mockAdmin';
+import { mockProperties as initialProperties, getOrganisationById } from '../../mockAdmin';
 import { PropertyDialog } from '../../components/admin/PropertyDialog';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
