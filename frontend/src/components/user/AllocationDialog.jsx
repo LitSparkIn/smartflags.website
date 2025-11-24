@@ -111,10 +111,46 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
 
   const handleSeatToggle = (seatId) => {
     setFormData(prev => {
-      const seatIds = prev.seatIds.includes(seatId)
+      const isRemoving = prev.seatIds.includes(seatId);
+      const seatIds = isRemoving
         ? prev.seatIds.filter(id => id !== seatId)
         : [...prev.seatIds, seatId];
-      return { ...prev, seatIds };
+      
+      // Auto-add/remove device IDs from selected seats
+      const seat = seats.find(s => s.id === seatId);
+      let deviceIds = [...prev.deviceIds];
+      
+      if (seat && seat.staticDeviceId) {
+        if (isRemoving) {
+          // Remove device if no other selected seat uses it
+          const otherSeatsWithDevice = seatIds
+            .filter(id => id !== seatId)
+            .some(id => {
+              const s = seats.find(seat => seat.id === id);
+              return s && s.staticDeviceId === seat.staticDeviceId;
+            });
+          
+          if (!otherSeatsWithDevice) {
+            deviceIds = deviceIds.filter(id => id !== seat.staticDeviceId);
+          }
+        } else {
+          // Add device if not already in list
+          if (!deviceIds.includes(seat.staticDeviceId)) {
+            deviceIds = [...deviceIds, seat.staticDeviceId];
+          }
+        }
+      }
+      
+      return { ...prev, seatIds, deviceIds };
+    });
+  };
+
+  const handleDeviceToggle = (deviceId) => {
+    setFormData(prev => {
+      const deviceIds = prev.deviceIds.includes(deviceId)
+        ? prev.deviceIds.filter(id => id !== deviceId)
+        : [...prev.deviceIds, deviceId];
+      return { ...prev, deviceIds };
     });
   };
 
