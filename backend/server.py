@@ -1125,6 +1125,267 @@ async def delete_role(role_id: str):
         logger.error(f"Error deleting role: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+# ============= GUEST ENDPOINTS =============
+
+@api_router.get("/guests/{property_id}")
+async def get_guests_by_property(property_id: str):
+    """Get all guests for a property"""
+    try:
+        guests = await db.guests.find({"propertyId": property_id}, {"_id": 0}).to_list(10000)
+        logger.info(f"Fetched {len(guests)} guests for property {property_id}")
+        return {"success": True, "guests": guests}
+    except Exception as e:
+        logger.error(f"Error fetching guests: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.post("/guests/bulk")
+async def create_guests_bulk(data: GuestBulkCreate):
+    """Bulk create guests from Excel import"""
+    try:
+        property_id = data.propertyId
+        guests_data = data.guests
+        
+        if not guests_data:
+            raise HTTPException(status_code=400, detail="No guest data provided")
+        
+        # Create guest documents
+        guests_to_insert = []
+        for guest_data in guests_data:
+            guest = Guest(
+                propertyId=property_id,
+                roomNumber=guest_data.get('roomNumber', ''),
+                guestName=guest_data.get('guestName', ''),
+                category=guest_data.get('category')
+            )
+            
+            guest_dict = guest.model_dump()
+            guest_dict['createdAt'] = guest_dict['createdAt'].isoformat()
+            guest_dict['updatedAt'] = guest_dict['updatedAt'].isoformat()
+            guests_to_insert.append(guest_dict)
+        
+        # Insert all guests
+        await db.guests.insert_many(guests_to_insert)
+        
+        logger.info(f"Bulk created {len(guests_to_insert)} guests for property {property_id}")
+        return {
+            "success": True,
+            "message": f"Successfully imported {len(guests_to_insert)} guests",
+            "count": len(guests_to_insert)
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error bulk creating guests: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.post("/guests", response_model=Guest)
+async def create_guest(guest: GuestCreate):
+    """Create a new guest"""
+    try:
+        new_guest = Guest(
+            propertyId=guest.propertyId,
+            roomNumber=guest.roomNumber,
+            guestName=guest.guestName,
+            category=guest.category
+        )
+        
+        guest_dict = new_guest.model_dump()
+        guest_dict['createdAt'] = guest_dict['createdAt'].isoformat()
+        guest_dict['updatedAt'] = guest_dict['updatedAt'].isoformat()
+        
+        await db.guests.insert_one(guest_dict)
+        
+        logger.info(f"Guest created: {new_guest.id}")
+        return new_guest
+        
+    except Exception as e:
+        logger.error(f"Error creating guest: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.put("/guests/{guest_id}")
+async def update_guest(guest_id: str, guest: GuestUpdate):
+    """Update a guest"""
+    try:
+        update_data = {k: v for k, v in guest.model_dump().items() if v is not None}
+        
+        if not update_data:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        update_data['updatedAt'] = datetime.now(timezone.utc).isoformat()
+        
+        result = await db.guests.update_one(
+            {"id": guest_id},
+            {"$set": update_data}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Guest not found")
+        
+        updated_guest = await db.guests.find_one({"id": guest_id}, {"_id": 0})
+        
+        logger.info(f"Guest updated: {guest_id}")
+        return {"success": True, "guest": updated_guest}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating guest: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/guests/{guest_id}")
+async def delete_guest(guest_id: str):
+    """Delete a guest"""
+    try:
+        result = await db.guests.delete_one({"id": guest_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Guest not found")
+        
+        logger.info(f"Guest deleted: {guest_id}")
+        return {"success": True, "message": "Guest deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting guest: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/guests/property/{property_id}")
+async def clear_all_guests(property_id: str):
+    """Clear all guests for a property"""
+    try:
+        result = await db.guests.delete_many({"propertyId": property_id})
+        
+        logger.info(f"Cleared {result.deleted_count} guests for property {property_id}")
+        return {
+            "success": True,
+            "message": f"Cleared {result.deleted_count} guests",
+            "count": result.deleted_count
+        }
+        
+    except Exception as e:
+        logger.error(f"Error clearing guests: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+# ============= ALLOCATION ENDPOINTS =============
+
+@api_router.get("/allocations/{property_id}")
+async def get_allocations_by_property(property_id: str, date: Optional[str] = None):
+    """Get all allocations for a property, optionally filtered by date"""
+    try:
+        query = {"propertyId": property_id}
+        if date:
+            query["allocationDate"] = date
+        
+        allocations = await db.allocations.find(query, {"_id": 0}).to_list(10000)
+        logger.info(f"Fetched {len(allocations)} allocations for property {property_id}")
+        return {"success": True, "allocations": allocations}
+    except Exception as e:
+        logger.error(f"Error fetching allocations: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.post("/allocations")
+async def create_allocation(allocation: AllocationCreate):
+    """Create a new seat allocation"""
+    try:
+        # Verify guest exists with the room number
+        guest = await db.guests.find_one(
+            {"propertyId": allocation.propertyId, "roomNumber": allocation.roomNumber},
+            {"_id": 0}
+        )
+        
+        if not guest:
+            raise HTTPException(
+                status_code=404,
+                detail=f"No guest found in room number {allocation.roomNumber}"
+            )
+        
+        # Verify F&B Manager exists
+        fb_manager = await db.staff.find_one(
+            {"id": allocation.fbManagerId, "propertyId": allocation.propertyId},
+            {"_id": 0}
+        )
+        
+        if not fb_manager:
+            raise HTTPException(status_code=404, detail="F&B Manager not found")
+        
+        # Set allocation date to today if not provided
+        allocation_date = allocation.allocationDate or datetime.now(timezone.utc).strftime('%Y-%m-%d')
+        
+        new_allocation = Allocation(
+            propertyId=allocation.propertyId,
+            guestId=guest['id'],
+            roomNumber=allocation.roomNumber,
+            guestName=guest['guestName'],
+            fbManagerId=allocation.fbManagerId,
+            seatIds=allocation.seatIds,
+            allocationDate=allocation_date
+        )
+        
+        allocation_dict = new_allocation.model_dump()
+        allocation_dict['createdAt'] = allocation_dict['createdAt'].isoformat()
+        allocation_dict['updatedAt'] = allocation_dict['updatedAt'].isoformat()
+        
+        await db.allocations.insert_one(allocation_dict)
+        
+        logger.info(f"Allocation created: {new_allocation.id}")
+        return {"success": True, "allocation": new_allocation}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating allocation: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.put("/allocations/{allocation_id}")
+async def update_allocation(allocation_id: str, allocation: AllocationUpdate):
+    """Update an allocation"""
+    try:
+        update_data = {k: v for k, v in allocation.model_dump().items() if v is not None}
+        
+        if not update_data:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        update_data['updatedAt'] = datetime.now(timezone.utc).isoformat()
+        
+        result = await db.allocations.update_one(
+            {"id": allocation_id},
+            {"$set": update_data}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Allocation not found")
+        
+        updated_allocation = await db.allocations.find_one({"id": allocation_id}, {"_id": 0})
+        
+        logger.info(f"Allocation updated: {allocation_id}")
+        return {"success": True, "allocation": updated_allocation}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating allocation: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/allocations/{allocation_id}")
+async def delete_allocation(allocation_id: str):
+    """Delete an allocation"""
+    try:
+        result = await db.allocations.delete_one({"id": allocation_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Allocation not found")
+        
+        logger.info(f"Allocation deleted: {allocation_id}")
+        return {"success": True, "message": "Allocation deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting allocation: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 @api_router.post("/user/login", response_model=VerifyOTPResponse)
 async def verify_otp_login(request: VerifyOTPRequest):
     """
