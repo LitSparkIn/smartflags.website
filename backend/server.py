@@ -259,6 +259,7 @@ class Allocation(BaseModel):
     guestCategory: Optional[str] = None  # Guest category from Daily Guest List
     fbManagerId: str  # Food & Beverage Manager staff ID
     seatIds: List[str] = []
+    deviceIds: List[str] = []  # Devices assigned to this allocation
     allocationDate: str  # Date in YYYY-MM-DD format
     status: str = "Free"  # Free, Seated, Active, Billing, Clear, Complete
     createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -269,6 +270,7 @@ class AllocationCreate(BaseModel):
     roomNumber: str
     fbManagerId: str
     seatIds: List[str]
+    deviceIds: Optional[List[str]] = []
     allocationDate: Optional[str] = None  # Defaults to today
 
 class AllocationUpdate(BaseModel):
