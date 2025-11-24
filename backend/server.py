@@ -1365,17 +1365,22 @@ async def get_allocated_seats(property_id: str, date: Optional[str] = None):
     try:
         allocation_date = date or datetime.now(timezone.utc).strftime('%Y-%m-%d')
         
+        # Only get seats from non-complete allocations
         allocations = await db.allocations.find(
-            {"propertyId": property_id, "allocationDate": allocation_date},
+            {
+                "propertyId": property_id, 
+                "allocationDate": allocation_date,
+                "status": {"$nin": ["Complete"]}  # Exclude completed allocations
+            },
             {"_id": 0, "seatIds": 1}
         ).to_list(10000)
         
-        # Collect all allocated seat IDs
+        # Collect all allocated seat IDs (only from active allocations)
         allocated_seat_ids = set()
         for allocation in allocations:
             allocated_seat_ids.update(allocation.get('seatIds', []))
         
-        logger.info(f"Found {len(allocated_seat_ids)} allocated seats for property {property_id} on {allocation_date}")
+        logger.info(f"Found {len(allocated_seat_ids)} allocated seats (non-complete) for property {property_id} on {allocation_date}")
         return {
             "success": True, 
             "allocatedSeatIds": list(allocated_seat_ids),
