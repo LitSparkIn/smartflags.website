@@ -38,6 +38,7 @@ export const Seats = () => {
       setUser(parsedUser);
       fetchSeatTypes(parsedUser.entityId);
       fetchSeats(parsedUser.entityId);
+      fetchDevices(parsedUser.entityId);
     }
   }, []);
 
