@@ -222,7 +222,11 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
                   id="allocationDate"
                   type="date"
                   value={formData.allocationDate}
-                  onChange={(e) => setFormData(prev => ({ ...prev, allocationDate: e.target.value }))}
+                  onChange={(e) => {
+                    const newDate = e.target.value;
+                    setFormData(prev => ({ ...prev, allocationDate: newDate }));
+                    fetchAllocatedSeats(newDate);
+                  }}
                   className="pl-10"
                 />
               </div>
