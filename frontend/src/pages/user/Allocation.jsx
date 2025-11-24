@@ -59,6 +59,12 @@ export const Allocation = () => {
       if (seatsResponse.data.success) {
         setSeats(seatsResponse.data.seats);
       }
+
+      // Fetch seat types
+      const seatTypesResponse = await axios.get(`${BACKEND_URL}/api/seat-types/${propertyId}`);
+      if (seatTypesResponse.data.success) {
+        setSeatTypes(seatTypesResponse.data.seatTypes);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
