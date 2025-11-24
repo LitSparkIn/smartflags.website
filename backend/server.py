@@ -147,6 +147,35 @@ class GroupUpdate(BaseModel):
     name: Optional[str] = None
     seatIds: Optional[List[str]] = None
 
+# Staff Models
+class Staff(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    propertyId: str
+    roleId: str
+    name: str
+    email: EmailStr
+    phone: Optional[str] = None
+    password: str  # In production, this should be hashed
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class StaffCreate(BaseModel):
+    propertyId: str
+    roleId: str
+    name: str
+    email: EmailStr
+    phone: Optional[str] = None
+    password: str
+
+class StaffUpdate(BaseModel):
+    roleId: Optional[str] = None
+    name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    phone: Optional[str] = None
+    password: Optional[str] = None
+
 # Helper Functions
 def generate_otp() -> str:
     """Generate a 6-digit OTP"""
