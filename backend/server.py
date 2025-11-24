@@ -1285,6 +1285,32 @@ async def get_allocations_by_property(property_id: str, date: Optional[str] = No
         logger.error(f"Error fetching allocations: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+@api_router.get("/allocations/{property_id}/allocated-seats")
+async def get_allocated_seats(property_id: str, date: Optional[str] = None):
+    """Get list of already allocated seat IDs for a specific date"""
+    try:
+        allocation_date = date or datetime.now(timezone.utc).strftime('%Y-%m-%d')
+        
+        allocations = await db.allocations.find(
+            {"propertyId": property_id, "allocationDate": allocation_date},
+            {"_id": 0, "seatIds": 1}
+        ).to_list(10000)
+        
+        # Collect all allocated seat IDs
+        allocated_seat_ids = set()
+        for allocation in allocations:
+            allocated_seat_ids.update(allocation.get('seatIds', []))
+        
+        logger.info(f"Found {len(allocated_seat_ids)} allocated seats for property {property_id} on {allocation_date}")
+        return {
+            "success": True, 
+            "allocatedSeatIds": list(allocated_seat_ids),
+            "date": allocation_date
+        }
+    except Exception as e:
+        logger.error(f"Error fetching allocated seats: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 @api_router.post("/allocations")
 async def create_allocation(allocation: AllocationCreate):
     """Create a new seat allocation"""
