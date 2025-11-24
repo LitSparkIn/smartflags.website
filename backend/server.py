@@ -1413,11 +1413,25 @@ async def create_allocation(allocation: AllocationCreate):
         # Set allocation date to today if not provided
         allocation_date = allocation.allocationDate or datetime.now(timezone.utc).strftime('%Y-%m-%d')
         
+        # Check if any of the requested seats are blocked
+        blocked_seats = []
+        for seat_id in allocation.seatIds:
+            seat = await db.seats.find_one({"id": seat_id}, {"_id": 0})
+            if seat and seat.get('status') == 'Blocked':
+                blocked_seats.append(seat.get('seatNumber', seat_id))
+        
+        if blocked_seats:
+            raise HTTPException(
+                status_code=400,
+                detail=f"The following seats are blocked and cannot be allocated: {', '.join(blocked_seats)}"
+            )
+        
         # Check if any of the requested seats are already allocated for the same date
         existing_allocations = await db.allocations.find(
             {
                 "propertyId": allocation.propertyId,
-                "allocationDate": allocation_date
+                "allocationDate": allocation_date,
+                "status": {"$nin": ["Complete"]}  # Exclude completed allocations
             },
             {"_id": 0}
         ).to_list(10000)
