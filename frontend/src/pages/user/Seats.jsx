@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { UserLayout } from '../../components/user/UserLayout';
 import { Button } from '../../components/ui/button';
-import { Plus, Armchair, Search, Pencil, Trash2, Filter } from 'lucide-react';
+import { Plus, Armchair, Search, Pencil, Trash2, Filter, Smartphone } from 'lucide-react';
 import { Input } from '../../components/ui/input';
 import { SeatDialog } from '../../components/user/SeatDialog';
+import { AssignDeviceDialog } from '../../components/user/AssignDeviceDialog';
 import axios from 'axios';
 import { useToast } from '../../hooks/use-toast';
 import {
@@ -19,11 +20,14 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'
 export const Seats = () => {
   const [seats, setSeats] = useState([]);
   const [seatTypes, setSeatTypes] = useState([]);
+  const [devices, setDevices] = useState([]);
   const [filteredSeats, setFilteredSeats] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterSeatType, setFilterSeatType] = useState('all');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDeviceDialogOpen, setIsDeviceDialogOpen] = useState(false);
   const [selectedSeat, setSelectedSeat] = useState(null);
+  const [seatForDevice, setSeatForDevice] = useState(null);
   const [user, setUser] = useState(null);
   const { toast } = useToast();
 
