@@ -70,6 +70,47 @@ export const Seats = () => {
     }
   };
 
+  const fetchDevices = async (propertyId) => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/devices/${propertyId}`);
+      if (response.data.success) {
+        setDevices(response.data.devices.filter(d => d.enabled)); // Only enabled devices
+      }
+    } catch (error) {
+      console.error('Error fetching devices:', error);
+    }
+  };
+
+  const handleAssignDevice = (seat) => {
+    setSeatForDevice(seat);
+    setIsDeviceDialogOpen(true);
+  };
+
+  const handleDeviceAssignment = async (deviceId) => {
+    try {
+      const response = await axios.put(
+        `${BACKEND_URL}/api/seats/${seatForDevice.id}`,
+        { staticDeviceId: deviceId }
+      );
+      
+      if (response.data.success) {
+        toast({
+          title: "Success",
+          description: deviceId ? "Device assigned successfully" : "Device unassigned successfully"
+        });
+        fetchSeats(user.entityId);
+        setIsDeviceDialogOpen(false);
+      }
+    } catch (error) {
+      console.error('Error assigning device:', error);
+      toast({
+        title: "Error",
+        description: "Failed to assign device",
+        variant: "destructive"
+      });
+    }
+  };
+
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
