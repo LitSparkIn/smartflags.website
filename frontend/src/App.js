@@ -22,6 +22,8 @@ import { Toaster as ShadcnToaster } from './components/ui/toaster';
 import { Dashboard as UserDashboard } from './pages/user/Dashboard';
 import { Properties as UserProperties } from './pages/user/Properties';
 import { SmartView } from './pages/user/SmartView';
+import { DailyGuestList } from './pages/user/DailyGuestList';
+import { Allocation } from './pages/user/Allocation';
 import { Staff } from './pages/user/Staff';
 import { SeatTypes } from './pages/user/SeatTypes';
 import { Seats } from './pages/user/Seats';
