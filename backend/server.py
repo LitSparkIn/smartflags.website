@@ -789,6 +789,71 @@ async def delete_seat(seat_id: str):
         logger.error(f"Error deleting seat: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+@api_router.patch("/seats/{seat_id}/status")
+async def update_seat_status(seat_id: str, status_update: SeatStatusUpdate):
+    """Update seat status (Free, Allocated, Blocked)"""
+    try:
+        valid_statuses = ["Free", "Allocated", "Blocked"]
+        if status_update.status not in valid_statuses:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Invalid status. Must be one of: {', '.join(valid_statuses)}"
+            )
+        
+        result = await db.seats.update_one(
+            {"id": seat_id},
+            {"$set": {
+                "status": status_update.status,
+                "updatedAt": datetime.now(timezone.utc).isoformat()
+            }}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Seat not found")
+        
+        updated_seat = await db.seats.find_one({"id": seat_id}, {"_id": 0})
+        
+        logger.info(f"Seat status updated: {seat_id} -> {status_update.status}")
+        return {"success": True, "seat": updated_seat}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating seat status: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.patch("/seats/bulk-status")
+async def update_bulk_seat_status(seat_ids: List[str], status: str):
+    """Update status for multiple seats"""
+    try:
+        valid_statuses = ["Free", "Allocated", "Blocked"]
+        if status not in valid_statuses:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Invalid status. Must be one of: {', '.join(valid_statuses)}"
+            )
+        
+        result = await db.seats.update_many(
+            {"id": {"$in": seat_ids}},
+            {"$set": {
+                "status": status,
+                "updatedAt": datetime.now(timezone.utc).isoformat()
+            }}
+        )
+        
+        logger.info(f"Updated {result.modified_count} seats to status: {status}")
+        return {
+            "success": True, 
+            "message": f"Updated {result.modified_count} seats",
+            "count": result.modified_count
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating bulk seat status: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 # Group CRUD Endpoints
 @api_router.post("/groups")
 async def create_group(group: GroupCreate):
