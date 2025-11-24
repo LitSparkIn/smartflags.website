@@ -263,19 +263,39 @@ export const Allocation = () => {
           </div>
         )}
 
-        {/* Search Bar */}
+        {/* Search Bar & Toggle */}
         {allocations.length > 0 && (
           <div className="bg-white rounded-xl shadow-md p-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-              <Input
-                type="text"
-                placeholder="Search by guest name or room number..."
-                className="pl-10"
-                value={searchTerm}
-                onChange={handleSearch}
-              />
+            <div className="flex items-center gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Input
+                  type="text"
+                  placeholder="Search by guest name or room number..."
+                  className="pl-10"
+                  value={searchTerm}
+                  onChange={handleSearch}
+                />
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={showAllAllocations}
+                    onChange={(e) => setShowAllAllocations(e.target.checked)}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <span className="text-sm font-medium text-slate-700 whitespace-nowrap">
+                    Show All Allocations
+                  </span>
+                </label>
+              </div>
             </div>
+            {!showAllAllocations && (
+              <p className="text-xs text-slate-500 mt-2">
+                Showing only active allocations. Toggle to see completed ones.
+              </p>
+            )}
           </div>
         )}
 
