@@ -1313,6 +1313,54 @@ async def create_allocation(allocation: AllocationCreate):
         # Set allocation date to today if not provided
         allocation_date = allocation.allocationDate or datetime.now(timezone.utc).strftime('%Y-%m-%d')
         
+        # Check if any of the requested seats are already allocated for the same date
+        existing_allocations = await db.allocations.find(
+            {
+                "propertyId": allocation.propertyId,
+                "allocationDate": allocation_date
+            },
+            {"_id": 0}
+        ).to_list(10000)
+        
+        # Collect all already allocated seat IDs
+        already_allocated_seats = set()
+        conflicting_allocations = []
+        
+        for existing in existing_allocations:
+            existing_seat_ids = existing.get('seatIds', [])
+            for seat_id in allocation.seatIds:
+                if seat_id in existing_seat_ids:
+                    already_allocated_seats.add(seat_id)
+                    conflicting_allocations.append({
+                        'guestName': existing.get('guestName'),
+                        'roomNumber': existing.get('roomNumber')
+                    })
+        
+        # If any seats are already allocated, return error with details
+        if already_allocated_seats:
+            # Get seat numbers for better error message
+            seat_numbers = []
+            for seat_id in already_allocated_seats:
+                seat = await db.seats.find_one({"id": seat_id}, {"_id": 0})
+                if seat:
+                    seat_numbers.append(seat.get('seatNumber', seat_id))
+            
+            # Get unique conflicting guests
+            unique_conflicts = []
+            seen = set()
+            for conflict in conflicting_allocations:
+                key = f"{conflict['roomNumber']}-{conflict['guestName']}"
+                if key not in seen:
+                    seen.add(key)
+                    unique_conflicts.append(conflict)
+            
+            conflict_details = ", ".join([f"{c['guestName']} (Room {c['roomNumber']})" for c in unique_conflicts[:3]])
+            
+            raise HTTPException(
+                status_code=400,
+                detail=f"The following seats are already allocated: {', '.join(seat_numbers)}. Currently allocated to: {conflict_details}"
+            )
+        
         new_allocation = Allocation(
             propertyId=allocation.propertyId,
             guestId=guest['id'],
