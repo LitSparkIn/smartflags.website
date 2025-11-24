@@ -1486,6 +1486,7 @@ async def create_allocation(allocation: AllocationCreate):
             guestId=guest['id'],
             roomNumber=allocation.roomNumber,
             guestName=guest['guestName'],
+            guestCategory=guest.get('category'),
             fbManagerId=allocation.fbManagerId,
             seatIds=allocation.seatIds,
             allocationDate=allocation_date
