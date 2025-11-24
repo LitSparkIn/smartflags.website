@@ -187,6 +187,23 @@ export const Allocation = () => {
     }).join(', ');
   };
 
+  const getSeatTypeIcons = (seatIds) => {
+    // Get unique seat types from the allocated seats
+    const seatTypeIds = new Set();
+    seatIds.forEach(seatId => {
+      const seat = seats.find(s => s.id === seatId);
+      if (seat) {
+        seatTypeIds.add(seat.seatTypeId);
+      }
+    });
+
+    // Return array of seat type objects with icons
+    return Array.from(seatTypeIds).map(typeId => {
+      const seatType = seatTypes.find(st => st.id === typeId);
+      return seatType;
+    }).filter(Boolean);
+  };
+
   return (
     <UserLayout>
       <div className="space-y-6">
