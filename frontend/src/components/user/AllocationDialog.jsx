@@ -47,10 +47,22 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
       setGuestInfo(null);
       setAllocatedSeats([]);
     } else {
-      // Fetch allocated seats when dialog opens
+      // Fetch allocated seats and seat types when dialog opens
       fetchAllocatedSeats(new Date().toISOString().split('T')[0]);
+      fetchSeatTypes();
     }
   }, [open]);
+
+  const fetchSeatTypes = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/seat-types/${propertyId}`);
+      if (response.data.success) {
+        setSeatTypes(response.data.seatTypes);
+      }
+    } catch (error) {
+      console.error('Error fetching seat types:', error);
+    }
+  };
 
   const fetchAllocatedSeats = async (date) => {
     try {
