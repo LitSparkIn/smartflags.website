@@ -31,7 +31,8 @@ export const AssignDeviceDialog = ({ open, onOpenChange, seat, devices, onAssign
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await onAssign(selectedDevice || null);
+    const deviceId = selectedDevice === '__none__' ? null : selectedDevice;
+    await onAssign(deviceId);
     setLoading(false);
   };
 
