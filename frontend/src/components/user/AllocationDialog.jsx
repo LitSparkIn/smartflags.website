@@ -44,14 +44,16 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
         roomNumber: '',
         fbManagerId: '',
         seatIds: [],
+        deviceIds: [],
         allocationDate: new Date().toISOString().split('T')[0]
       });
       setGuestInfo(null);
       setAllocatedSeats([]);
     } else {
-      // Fetch allocated seats and seat types when dialog opens
+      // Fetch allocated seats, seat types, and devices when dialog opens
       fetchAllocatedSeats(new Date().toISOString().split('T')[0]);
       fetchSeatTypes();
+      fetchDevices();
     }
   }, [open]);
 
