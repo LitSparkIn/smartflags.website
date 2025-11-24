@@ -28,12 +28,14 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
     roomNumber: '',
     fbManagerId: '',
     seatIds: [],
+    deviceIds: [],
     allocationDate: new Date().toISOString().split('T')[0]
   });
   const [loading, setLoading] = useState(false);
   const [guestInfo, setGuestInfo] = useState(null);
   const [allocatedSeats, setAllocatedSeats] = useState([]);
   const [seatTypes, setSeatTypes] = useState([]);
+  const [devices, setDevices] = useState([]);
   const { toast } = useToast();
 
   useEffect(() => {
