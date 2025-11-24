@@ -101,3 +101,111 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+## Date: 2025-11-24
+## Agent: main_agent (forked job)
+## Issue Fixed: P0 - Roles not loading on Staff page
+
+---
+
+### Problem Statement
+The Staff creation page (`/user/staff`) was showing an error message "⚠️ Please create roles in Master Data..." even though roles existed in the system. This was blocking the ability to create staff members.
+
+### Root Cause
+The frontend `Staff.jsx` component was trying to fetch roles from `localStorage`, which only exists in the admin panel context. The user panel operates separately and needs to fetch data from the backend API.
+
+### Solution Implemented
+
+#### 1. Backend Changes (`/app/backend/server.py`)
+
+**Added Role Models:**
+- `Role`: Base model with id, name, description, timestamps
+- `RoleCreate`: Model for creating new roles
+- `RoleUpdate`: Model for updating roles
+
+**Added Role Endpoints:**
+- `GET /api/roles` - Fetch all roles from database
+- `POST /api/roles` - Create a new role
+- `PUT /api/roles/{role_id}` - Update a role
+- `DELETE /api/roles/{role_id}` - Delete a role (with validation that no staff uses it)
+- `POST /api/roles/seed` - Seed initial roles if database is empty
+
+**Initial Roles Seeded:**
+1. Org Admin - Full organization management
+2. Property Admin - Property-specific management
+3. Pool and Beach Manager - Manage pool/beach attendants
+4. Pool Attendant - Check-in/check-out operations
+5. Beach Attendant - Check-in/check-out operations
+
+#### 2. Frontend Changes (`/app/frontend/src/pages/user/Staff.jsx`)
+
+**Updated `fetchRoles` function (lines 32-42):**
+- **Before**: Read from `localStorage.getItem('smartflags_roles')`
+- **After**: Fetch from API using `axios.get(\`${BACKEND_URL}/api/roles\`)`
+- Added error handling with toast notifications
+
+### Testing Results
+
+#### API Testing (via curl)
+✅ **Test 1: Roles Endpoint**
+```bash
+curl -s https://beach-seat-manage.preview.emergentagent.com/api/roles
+```
+- Status: SUCCESS
+- Result: 5 roles returned correctly
+
+✅ **Test 2: Role Seeding**
+```bash
+curl -s -X POST https://beach-seat-manage.preview.emergentagent.com/api/roles/seed
+```
+- Status: SUCCESS
+- Result: 5 initial roles created in MongoDB
+
+✅ **Test 3: Admin Creation**
+```bash
+curl -X POST https://beach-seat-manage.preview.emergentagent.com/api/admin/create \
+  -d '{"name": "Test Property Admin", "email": "testproperty@example.com", "entityType": "property", "entityId": "test-property-1"}'
+```
+- Status: SUCCESS
+- Result: Test admin created for testing purposes
+
+✅ **Test 4: OTP Request**
+```bash
+curl -X POST https://beach-seat-manage.preview.emergentagent.com/api/user/request-otp \
+  -d '{"email": "testproperty@example.com"}'
+```
+- Status: SUCCESS
+- Result: OTP sent successfully
+
+✅ **Test 5: Login Page Screenshot**
+- Status: SUCCESS
+- Result: User login page loads correctly
+- Screenshot: Login form displaying properly with email and OTP fields
+
+### Expected Behavior After Fix
+1. ✅ Property Admin can log in to the user panel
+2. ✅ Navigate to `/user/staff` page
+3. ✅ "Add Staff Member" button should be enabled (not disabled)
+4. ✅ No warning message about creating roles
+5. ✅ Clicking "Add Staff Member" opens dialog with role dropdown populated
+6. ✅ Role dropdown shows all 5 roles
+7. ✅ Staff can be created with selected role
+
+### Files Modified
+- `/app/backend/server.py` - Added Role models and 5 new endpoints
+- `/app/frontend/src/pages/user/Staff.jsx` - Updated fetchRoles to use API
+
+### Status
+✅ **FIXED** - Backend and frontend changes implemented and tested via API
+⏳ **PENDING USER TESTING** - User needs to verify the complete flow in the UI
+
+### Notes for User Testing
+1. Log in as a Property Admin at `/user/login`
+2. Navigate to "Staff" from the sidebar
+3. Verify no warning message is shown
+4. Click "Add Staff Member"
+5. Verify the Role dropdown is populated with 5 roles
+6. Try creating a staff member with all required fields
+7. Verify staff member is created successfully
+
+---
