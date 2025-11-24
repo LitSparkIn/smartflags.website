@@ -84,7 +84,7 @@ export const AssignDeviceDialog = ({ open, onOpenChange, seat, devices, onAssign
                     <SelectValue placeholder="Select a device" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">
+                    <SelectItem value="__none__">
                       <span className="text-slate-500">No device (unassign)</span>
                     </SelectItem>
                     {devices.map((device) => (
