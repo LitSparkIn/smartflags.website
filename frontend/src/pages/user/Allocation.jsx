@@ -335,7 +335,7 @@ export const Allocation = () => {
         )}
       </div>
 
-      {/* Dialog */}
+      {/* Dialogs */}
       <AllocationDialog
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
@@ -344,6 +344,13 @@ export const Allocation = () => {
         guests={guests}
         staff={staff}
         seats={seats}
+      />
+
+      <AllocationStatusDialog
+        open={isStatusDialogOpen}
+        onOpenChange={setIsStatusDialogOpen}
+        allocation={selectedAllocation}
+        onSave={handleStatusUpdate}
       />
     </UserLayout>
   );
