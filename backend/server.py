@@ -912,6 +912,98 @@ async def delete_staff(staff_id: str):
         logger.error(f"Error deleting staff: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+# ============= ROLE ENDPOINTS =============
+
+@api_router.get("/roles")
+async def get_all_roles():
+    """Get all roles from the master data"""
+    try:
+        roles = await db.roles.find({}, {"_id": 0}).to_list(1000)
+        logger.info(f"Fetched {len(roles)} roles")
+        return {"success": True, "roles": roles}
+    except Exception as e:
+        logger.error(f"Error fetching roles: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.post("/roles", response_model=Role)
+async def create_role(role: RoleCreate):
+    """Create a new role"""
+    try:
+        new_role = Role(
+            name=role.name,
+            description=role.description
+        )
+        
+        role_dict = new_role.model_dump()
+        role_dict['createdAt'] = role_dict['createdAt'].isoformat()
+        role_dict['updatedAt'] = role_dict['updatedAt'].isoformat()
+        
+        await db.roles.insert_one(role_dict)
+        
+        logger.info(f"Role created: {new_role.id}")
+        return new_role
+        
+    except Exception as e:
+        logger.error(f"Error creating role: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.put("/roles/{role_id}")
+async def update_role(role_id: str, role: RoleUpdate):
+    """Update a role"""
+    try:
+        update_data = {k: v for k, v in role.model_dump().items() if v is not None}
+        
+        if not update_data:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        update_data['updatedAt'] = datetime.now(timezone.utc).isoformat()
+        
+        result = await db.roles.update_one(
+            {"id": role_id},
+            {"$set": update_data}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Role not found")
+        
+        updated_role = await db.roles.find_one({"id": role_id}, {"_id": 0})
+        
+        logger.info(f"Role updated: {role_id}")
+        return {"success": True, "role": updated_role}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating role: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/roles/{role_id}")
+async def delete_role(role_id: str):
+    """Delete a role"""
+    try:
+        # Check if any staff members are using this role
+        staff_with_role = await db.staff.find_one({"roleId": role_id})
+        
+        if staff_with_role:
+            raise HTTPException(
+                status_code=400, 
+                detail="Cannot delete role that is assigned to staff members"
+            )
+        
+        result = await db.roles.delete_one({"id": role_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Role not found")
+        
+        logger.info(f"Role deleted: {role_id}")
+        return {"success": True, "message": "Role deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting role: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 @api_router.post("/user/login", response_model=VerifyOTPResponse)
 async def verify_otp_login(request: VerifyOTPRequest):
     """
