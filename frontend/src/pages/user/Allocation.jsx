@@ -21,6 +21,7 @@ export const Allocation = () => {
   const [guests, setGuests] = useState([]);
   const [staff, setStaff] = useState([]);
   const [seats, setSeats] = useState([]);
+  const [seatTypes, setSeatTypes] = useState([]);
   const { toast } = useToast();
 
   useEffect(() => {
