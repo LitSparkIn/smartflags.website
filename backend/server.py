@@ -127,6 +127,26 @@ class SeatUpdate(BaseModel):
     seatTypeId: Optional[str] = None
     seatNumber: Optional[str] = None
 
+# Group Models
+class Group(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    propertyId: str
+    name: str
+    seatIds: List[str] = []
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class GroupCreate(BaseModel):
+    propertyId: str
+    name: str
+    seatIds: List[str] = []
+
+class GroupUpdate(BaseModel):
+    name: Optional[str] = None
+    seatIds: Optional[List[str]] = None
+
 # Helper Functions
 def generate_otp() -> str:
     """Generate a 6-digit OTP"""
