@@ -19,6 +19,7 @@ export const UserSidebar = ({ user }) => {
     { name: 'Dashboard', path: '/user/dashboard', icon: LayoutDashboard },
     { name: 'Daily Guest List', path: '/user/guest-list', icon: UserCheck },
     { name: 'Allocation', path: '/user/allocation', icon: MapPin },
+    { name: 'Devices', path: '/user/devices', icon: Smartphone },
     { name: 'Staff', path: '/user/staff', icon: Users },
     { name: 'Seat Types', path: '/user/seat-types', icon: Grid3x3 },
     { name: 'Seats', path: '/user/seats', icon: Armchair },
