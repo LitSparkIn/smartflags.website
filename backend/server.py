@@ -235,6 +235,7 @@ class Allocation(BaseModel):
     guestId: str
     roomNumber: str
     guestName: str
+    guestCategory: Optional[str] = None  # Guest category from Daily Guest List
     fbManagerId: str  # Food & Beverage Manager staff ID
     seatIds: List[str] = []
     allocationDate: str  # Date in YYYY-MM-DD format
