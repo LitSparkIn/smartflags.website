@@ -293,6 +293,20 @@ export const Allocation = () => {
                   </Button>
                 </div>
                 
+                {/* Status Badge */}
+                <div className="mb-4">
+                  <button
+                    onClick={() => handleStatusChange(allocation)}
+                    className="w-full flex items-center justify-between p-3 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors group"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className={`w-3 h-3 rounded-full ${getStatusColor(allocation.status)}`}></div>
+                      <span className="text-sm font-semibold text-slate-700">{allocation.status}</span>
+                    </div>
+                    <Activity className="w-4 h-4 text-slate-400 group-hover:text-slate-600" />
+                  </button>
+                </div>
+                
                 <div className="space-y-3">
                   <div className="bg-slate-50 rounded-lg p-3">
                     <p className="text-xs text-slate-600 mb-1">F&B Manager</p>
