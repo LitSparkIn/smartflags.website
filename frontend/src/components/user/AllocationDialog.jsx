@@ -19,6 +19,7 @@ import {
 } from '../ui/select';
 import { MapPin, Users, Armchair, Calendar } from 'lucide-react';
 import { useToast } from '../../hooks/use-toast';
+import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
