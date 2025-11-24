@@ -793,6 +793,107 @@ async def delete_group(group_id: str):
         logger.error(f"Error deleting group: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+# Staff CRUD Endpoints
+@api_router.post("/staff")
+async def create_staff(staff: StaffCreate):
+    """Create a new staff member"""
+    try:
+        # Check if email already exists
+        existing = await db.staff.find_one({"email": staff.email}, {"_id": 0})
+        if existing:
+            raise HTTPException(status_code=400, detail="Staff member with this email already exists")
+        
+        staff_obj = Staff(**staff.model_dump())
+        
+        # Convert to dict and serialize datetime
+        doc = staff_obj.model_dump()
+        doc['createdAt'] = doc['createdAt'].isoformat()
+        doc['updatedAt'] = doc['updatedAt'].isoformat()
+        
+        await db.staff.insert_one(doc)
+        
+        logger.info(f"Staff created: {staff_obj.id}")
+        return {"success": True, "staff": staff_obj}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating staff: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.get("/staff/{property_id}")
+async def get_staff(property_id: str):
+    """Get all staff for a property"""
+    try:
+        staff_list = await db.staff.find(
+            {"propertyId": property_id},
+            {"_id": 0, "password": 0}  # Don't return passwords
+        ).to_list(1000)
+        
+        return {"success": True, "staff": staff_list}
+        
+    except Exception as e:
+        logger.error(f"Error fetching staff: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.put("/staff/{staff_id}")
+async def update_staff(staff_id: str, update_data: StaffUpdate):
+    """Update a staff member"""
+    try:
+        update_dict = {k: v for k, v in update_data.model_dump().items() if v is not None}
+        
+        if not update_dict:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        # Check if email is being updated and if it already exists
+        if 'email' in update_dict:
+            existing = await db.staff.find_one(
+                {"email": update_dict['email'], "id": {"$ne": staff_id}},
+                {"_id": 0}
+            )
+            if existing:
+                raise HTTPException(status_code=400, detail="Email already in use by another staff member")
+        
+        update_dict['updatedAt'] = datetime.now(timezone.utc).isoformat()
+        
+        result = await db.staff.update_one(
+            {"id": staff_id},
+            {"$set": update_dict}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Staff member not found")
+        
+        # Get updated staff (without password)
+        updated_staff = await db.staff.find_one({"id": staff_id}, {"_id": 0, "password": 0})
+        
+        logger.info(f"Staff updated: {staff_id}")
+        return {"success": True, "staff": updated_staff}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating staff: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/staff/{staff_id}")
+async def delete_staff(staff_id: str):
+    """Delete a staff member"""
+    try:
+        result = await db.staff.delete_one({"id": staff_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Staff member not found")
+        
+        logger.info(f"Staff deleted: {staff_id}")
+        return {"success": True, "message": "Staff member deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting staff: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 @api_router.post("/user/login", response_model=VerifyOTPResponse)
 async def verify_otp_login(request: VerifyOTPRequest):
     """
