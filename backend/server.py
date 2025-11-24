@@ -238,6 +238,7 @@ class Allocation(BaseModel):
     fbManagerId: str  # Food & Beverage Manager staff ID
     seatIds: List[str] = []
     allocationDate: str  # Date in YYYY-MM-DD format
+    status: str = "Free"  # Free, Seated, Active, Billing, Clear, Complete
     createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -252,6 +253,9 @@ class AllocationUpdate(BaseModel):
     fbManagerId: Optional[str] = None
     seatIds: Optional[List[str]] = None
     allocationDate: Optional[str] = None
+
+class AllocationStatusUpdate(BaseModel):
+    status: str  # Free, Seated, Active, Billing, Clear, Complete
 
 # Helper Functions
 def generate_otp() -> str:
