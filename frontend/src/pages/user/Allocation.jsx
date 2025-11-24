@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { UserLayout } from '../../components/user/UserLayout';
 import { Button } from '../../components/ui/button';
-import { Plus, MapPin, Search, Trash2, Calendar } from 'lucide-react';
+import { Plus, MapPin, Search, Trash2, Calendar, Activity } from 'lucide-react';
 import { Input } from '../../components/ui/input';
 import { AllocationDialog } from '../../components/user/AllocationDialog';
+import { AllocationStatusDialog } from '../../components/user/AllocationStatusDialog';
 import axios from 'axios';
 import { useToast } from '../../hooks/use-toast';
 
@@ -14,6 +15,8 @@ export const Allocation = () => {
   const [filteredAllocations, setFilteredAllocations] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
+  const [selectedAllocation, setSelectedAllocation] = useState(null);
   const [user, setUser] = useState(null);
   const [guests, setGuests] = useState([]);
   const [staff, setStaff] = useState([]);
