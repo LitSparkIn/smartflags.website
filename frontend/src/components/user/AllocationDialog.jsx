@@ -68,6 +68,17 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
     }
   };
 
+  const fetchDevices = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/devices/${propertyId}`);
+      if (response.data.success) {
+        setDevices(response.data.devices.filter(d => d.enabled)); // Only enabled devices
+      }
+    } catch (error) {
+      console.error('Error fetching devices:', error);
+    }
+  };
+
   const fetchAllocatedSeats = async (date) => {
     try {
       const response = await axios.get(
