@@ -33,6 +33,7 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
   const [loading, setLoading] = useState(false);
   const [guestInfo, setGuestInfo] = useState(null);
   const [allocatedSeats, setAllocatedSeats] = useState([]);
+  const [seatTypes, setSeatTypes] = useState([]);
   const { toast } = useToast();
 
   useEffect(() => {
