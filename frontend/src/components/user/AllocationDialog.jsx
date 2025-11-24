@@ -20,6 +20,8 @@ import {
 import { MapPin, Users, Armchair, Calendar } from 'lucide-react';
 import { useToast } from '../../hooks/use-toast';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+
 export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guests, staff, seats }) => {
   const [formData, setFormData] = useState({
     roomNumber: '',
@@ -29,6 +31,7 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
   });
   const [loading, setLoading] = useState(false);
   const [guestInfo, setGuestInfo] = useState(null);
+  const [allocatedSeats, setAllocatedSeats] = useState([]);
   const { toast } = useToast();
 
   useEffect(() => {
