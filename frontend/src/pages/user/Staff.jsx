@@ -29,15 +29,19 @@ export const Staff = () => {
     }
   }, []);
 
-  const fetchRoles = () => {
+  const fetchRoles = async () => {
     try {
-      const storedRoles = localStorage.getItem('smartflags_roles');
-      if (storedRoles) {
-        const parsedRoles = JSON.parse(storedRoles);
-        setRoles(parsedRoles);
+      const response = await axios.get(`${BACKEND_URL}/api/roles`);
+      if (response.data.success) {
+        setRoles(response.data.roles);
       }
     } catch (error) {
       console.error('Error fetching roles:', error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch roles",
+        variant: "destructive"
+      });
     }
   };
 
