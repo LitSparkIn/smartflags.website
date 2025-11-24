@@ -176,6 +176,24 @@ class StaffUpdate(BaseModel):
     phone: Optional[str] = None
     password: Optional[str] = None
 
+# Role Models
+class Role(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    description: Optional[str] = None
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class RoleCreate(BaseModel):
+    name: str
+    description: Optional[str] = None
+
+class RoleUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+
 # Helper Functions
 def generate_otp() -> str:
     """Generate a 6-digit OTP"""
