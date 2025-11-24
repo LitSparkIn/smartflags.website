@@ -44,8 +44,25 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
         allocationDate: new Date().toISOString().split('T')[0]
       });
       setGuestInfo(null);
+      setAllocatedSeats([]);
+    } else {
+      // Fetch allocated seats when dialog opens
+      fetchAllocatedSeats(new Date().toISOString().split('T')[0]);
     }
   }, [open]);
+
+  const fetchAllocatedSeats = async (date) => {
+    try {
+      const response = await axios.get(
+        `${BACKEND_URL}/api/allocations/${propertyId}/allocated-seats?date=${date}`
+      );
+      if (response.data.success) {
+        setAllocatedSeats(response.data.allocatedSeatIds);
+      }
+    } catch (error) {
+      console.error('Error fetching allocated seats:', error);
+    }
+  };
 
   const handleRoomNumberChange = (e) => {
     const roomNum = e.target.value;
