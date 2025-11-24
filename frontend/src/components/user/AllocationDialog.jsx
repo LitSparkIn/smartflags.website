@@ -368,6 +368,64 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
                 </div>
               </div>
             </div>
+
+            {/* Device Selection */}
+            <div className="space-y-2">
+              <Label className="text-slate-700 font-medium">
+                Assign Devices ({formData.deviceIds.length} selected)
+              </Label>
+              <p className="text-xs text-slate-500">
+                Devices auto-selected from seats. You can add more or remove them.
+              </p>
+              {devices.length === 0 ? (
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                  <p className="text-sm text-orange-800">
+                    ⚠️ No devices available. Add devices first to assign them.
+                  </p>
+                </div>
+              ) : (
+                <div className="border border-slate-300 rounded-lg p-4 max-h-48 overflow-y-auto">
+                  <div className="space-y-2">
+                    {devices.map((device) => {
+                      const isSelected = formData.deviceIds.includes(device.id);
+                      const isAutoSelected = formData.seatIds.some(seatId => {
+                        const seat = seats.find(s => s.id === seatId);
+                        return seat && seat.staticDeviceId === device.id;
+                      });
+                      
+                      return (
+                        <label
+                          key={device.id}
+                          className={`flex items-center space-x-3 p-2 rounded-lg border-2 cursor-pointer transition-all ${
+                            isSelected
+                              ? 'bg-blue-50 border-blue-500'
+                              : 'bg-white border-slate-300 hover:border-blue-300'
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={() => handleDeviceToggle(device.id)}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                          />
+                          <Smartphone className={`w-4 h-4 ${isSelected ? 'text-blue-600' : 'text-slate-400'}`} />
+                          <div className="flex-1">
+                            <span className={`text-sm font-semibold ${isSelected ? 'text-blue-900' : 'text-slate-900'}`}>
+                              {device.deviceId}
+                            </span>
+                            {isAutoSelected && (
+                              <span className="ml-2 text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
+                                Auto
+                              </span>
+                            )}
+                          </div>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           <DialogFooter>
