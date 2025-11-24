@@ -925,6 +925,73 @@ async def get_all_roles():
         logger.error(f"Error fetching roles: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+@api_router.post("/roles/seed")
+async def seed_initial_roles():
+    """Seed initial roles if database is empty"""
+    try:
+        # Check if roles already exist
+        existing_count = await db.roles.count_documents({})
+        
+        if existing_count > 0:
+            return {
+                "success": True, 
+                "message": f"Roles already exist ({existing_count} roles). No seeding needed.",
+                "roles": await db.roles.find({}, {"_id": 0}).to_list(1000)
+            }
+        
+        # Initial roles to seed
+        initial_roles = [
+            {
+                "id": "role-1",
+                "name": "Org Admin",
+                "description": "Will be able to see an org, all properties under it and all the reporting later on.",
+                "createdAt": datetime.now(timezone.utc).isoformat(),
+                "updatedAt": datetime.now(timezone.utc).isoformat()
+            },
+            {
+                "id": "role-2",
+                "name": "Property Admin",
+                "description": "Will be able to see all the details of the associated property.",
+                "createdAt": datetime.now(timezone.utc).isoformat(),
+                "updatedAt": datetime.now(timezone.utc).isoformat()
+            },
+            {
+                "id": "role-3",
+                "name": "Pool and Beach Manager",
+                "description": "Will be able to manage Pool and Beach Attendants of the associated property.",
+                "createdAt": datetime.now(timezone.utc).isoformat(),
+                "updatedAt": datetime.now(timezone.utc).isoformat()
+            },
+            {
+                "id": "role-4",
+                "name": "Pool Attendant",
+                "description": "Will be able to see the people on a seat and actions like check-in and check-out.",
+                "createdAt": datetime.now(timezone.utc).isoformat(),
+                "updatedAt": datetime.now(timezone.utc).isoformat()
+            },
+            {
+                "id": "role-5",
+                "name": "Beach Attendant",
+                "description": "Will be able to see the people on a seat and actions like check-in and check-out.",
+                "createdAt": datetime.now(timezone.utc).isoformat(),
+                "updatedAt": datetime.now(timezone.utc).isoformat()
+            }
+        ]
+        
+        # Insert all roles
+        await db.roles.insert_many(initial_roles)
+        
+        logger.info(f"Seeded {len(initial_roles)} initial roles")
+        return {
+            "success": True, 
+            "message": f"Successfully seeded {len(initial_roles)} roles",
+            "roles": initial_roles
+        }
+        
+    except Exception as e:
+        logger.error(f"Error seeding roles: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 @api_router.post("/roles", response_model=Role)
 async def create_role(role: RoleCreate):
     """Create a new role"""
