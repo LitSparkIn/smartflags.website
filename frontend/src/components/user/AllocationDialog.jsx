@@ -237,28 +237,55 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
               <Label className="text-slate-700 font-medium">
                 Select Seats * ({formData.seatIds.length} selected)
               </Label>
+              {allocatedSeats.length > 0 && (
+                <p className="text-xs text-orange-600">
+                  ⚠️ {allocatedSeats.length} seats already allocated for {formData.allocationDate}
+                </p>
+              )}
               <div className="border border-slate-300 rounded-lg p-4 max-h-64 overflow-y-auto">
                 {seats.length === 0 ? (
                   <p className="text-sm text-slate-500 text-center py-4">No seats available</p>
                 ) : (
                   <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                    {seats.map((seat) => (
-                      <button
-                        key={seat.id}
-                        type="button"
-                        onClick={() => handleSeatToggle(seat.id)}
-                        className={`flex items-center justify-center space-x-1 px-3 py-2 rounded-lg border-2 transition-all ${
-                          formData.seatIds.includes(seat.id)
-                            ? 'bg-blue-500 border-blue-500 text-white'
-                            : 'bg-white border-slate-300 text-slate-700 hover:border-blue-300'
-                        }`}
-                      >
-                        <Armchair className="w-4 h-4" />
-                        <span className="text-sm font-semibold">{seat.seatNumber}</span>
-                      </button>
-                    ))}
+                    {seats.map((seat) => {
+                      const isAllocated = allocatedSeats.includes(seat.id);
+                      const isSelected = formData.seatIds.includes(seat.id);
+                      
+                      return (
+                        <button
+                          key={seat.id}
+                          type="button"
+                          onClick={() => !isAllocated && handleSeatToggle(seat.id)}
+                          disabled={isAllocated}
+                          className={`flex items-center justify-center space-x-1 px-3 py-2 rounded-lg border-2 transition-all ${
+                            isSelected
+                              ? 'bg-blue-500 border-blue-500 text-white'
+                              : isAllocated
+                              ? 'bg-red-100 border-red-300 text-red-400 cursor-not-allowed'
+                              : 'bg-white border-slate-300 text-slate-700 hover:border-blue-300'
+                          }`}
+                        >
+                          <Armchair className="w-4 h-4" />
+                          <span className="text-sm font-semibold">{seat.seatNumber}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
+              </div>
+              <div className="flex items-center gap-4 text-xs text-slate-600">
+                <div className="flex items-center gap-1">
+                  <div className="w-4 h-4 bg-blue-500 rounded"></div>
+                  <span>Selected</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
+                  <span>Already Allocated</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-4 h-4 bg-white border border-slate-300 rounded"></div>
+                  <span>Available</span>
+                </div>
               </div>
             </div>
           </div>
