@@ -1,0 +1,291 @@
+import React, { useState, useEffect } from 'react';
+import { UserLayout } from '../../components/user/UserLayout';
+import { Button } from '../../components/ui/button';
+import { Plus, MapPin, Search, Trash2, Calendar } from 'lucide-react';
+import { Input } from '../../components/ui/input';
+import { AllocationDialog } from '../../components/user/AllocationDialog';
+import axios from 'axios';
+import { useToast } from '../../hooks/use-toast';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+
+export const Allocation = () => {
+  const [allocations, setAllocations] = useState([]);
+  const [filteredAllocations, setFilteredAllocations] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [guests, setGuests] = useState([]);
+  const [staff, setStaff] = useState([]);
+  const [seats, setSeats] = useState([]);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+      fetchAllData(parsedUser.entityId);
+    }
+  }, []);
+
+  const fetchAllData = async (propertyId) => {
+    try {
+      // Fetch allocations
+      const allocResponse = await axios.get(`${BACKEND_URL}/api/allocations/${propertyId}`);
+      if (allocResponse.data.success) {
+        setAllocations(allocResponse.data.allocations);
+        setFilteredAllocations(allocResponse.data.allocations);
+      }
+
+      // Fetch guests
+      const guestResponse = await axios.get(`${BACKEND_URL}/api/guests/${propertyId}`);
+      if (guestResponse.data.success) {
+        setGuests(guestResponse.data.guests);
+      }
+
+      // Fetch staff
+      const staffResponse = await axios.get(`${BACKEND_URL}/api/staff/${propertyId}`);
+      if (staffResponse.data.success) {
+        setStaff(staffResponse.data.staff);
+      }
+
+      // Fetch seats
+      const seatsResponse = await axios.get(`${BACKEND_URL}/api/seats/${propertyId}`);
+      if (seatsResponse.data.success) {
+        setSeats(seatsResponse.data.seats);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const handleSearch = (e) => {
+    const term = e.target.value.toLowerCase();
+    setSearchTerm(term);
+    
+    if (term === '') {
+      setFilteredAllocations(allocations);
+    } else {
+      const filtered = allocations.filter(allocation => 
+        allocation.guestName.toLowerCase().includes(term) ||
+        allocation.roomNumber.toLowerCase().includes(term)
+      );
+      setFilteredAllocations(filtered);
+    }
+  };
+
+  const handleSave = async (data) => {
+    try {
+      const response = await axios.post(`${BACKEND_URL}/api/allocations`, data);
+      
+      if (response.data.success) {
+        toast({
+          title: "Success",
+          description: "Allocation created successfully"
+        });
+        fetchAllData(user.entityId);
+      }
+      
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error('Error saving allocation:', error);
+      toast({
+        title: "Error",
+        description: error.response?.data?.detail || "Failed to create allocation",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDelete = async (allocationId) => {
+    if (!window.confirm('Are you sure you want to delete this allocation?')) {
+      return;
+    }
+
+    try {
+      const response = await axios.delete(`${BACKEND_URL}/api/allocations/${allocationId}`);
+      
+      if (response.data.success) {
+        toast({
+          title: "Success",
+          description: "Allocation deleted successfully"
+        });
+        fetchAllData(user.entityId);
+      }
+    } catch (error) {
+      console.error('Error deleting allocation:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete allocation",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const getStaffName = (staffId) => {
+    const staffMember = staff.find(s => s.id === staffId);
+    return staffMember ? staffMember.name : 'Unknown';
+  };
+
+  const getSeatNumbers = (seatIds) => {
+    return seatIds.map(seatId => {
+      const seat = seats.find(s => s.id === seatId);
+      return seat ? seat.seatNumber : seatId;
+    }).join(', ');
+  };
+
+  return (
+    <UserLayout>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-800">Seat Allocation</h1>
+            <p className="text-slate-600 mt-1">Assign seats to guests with F&B Manager</p>
+          </div>
+          <Button 
+            onClick={() => setIsDialogOpen(true)}
+            className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
+            disabled={guests.length === 0 || staff.length === 0 || seats.length === 0}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Allocation
+          </Button>
+        </div>
+
+        {/* Warning Cards */}
+        {guests.length === 0 && (
+          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+            <p className="text-sm text-orange-800">
+              ⚠️ Please add guests in Daily Guest List before creating allocations.
+            </p>
+          </div>
+        )}
+        
+        {staff.length === 0 && (
+          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+            <p className="text-sm text-orange-800">
+              ⚠️ Please add staff members before creating allocations.
+            </p>
+          </div>
+        )}
+
+        {seats.length === 0 && (
+          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+            <p className="text-sm text-orange-800">
+              ⚠️ Please create seats before creating allocations.
+            </p>
+          </div>
+        )}
+
+        {/* Search Bar */}
+        {allocations.length > 0 && (
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+              <Input
+                type="text"
+                placeholder="Search by guest name or room number..."
+                className="pl-10"
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Allocations List */}
+        {filteredAllocations.length === 0 ? (
+          <div className="bg-white rounded-xl shadow-md p-12">
+            <div className="text-center max-w-md mx-auto">
+              <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <MapPin className="w-12 h-12 text-slate-400" />
+              </div>
+              <h2 className="text-xl font-semibold text-slate-800 mb-2">
+                {searchTerm ? 'No allocations found' : 'No allocations yet'}
+              </h2>
+              <p className="text-slate-600 mb-6">
+                {searchTerm 
+                  ? 'Try adjusting your search terms'
+                  : 'Create your first seat allocation to assign seats to guests.'}
+              </p>
+              {!searchTerm && guests.length > 0 && staff.length > 0 && seats.length > 0 && (
+                <Button 
+                  onClick={() => setIsDialogOpen(true)}
+                  className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add First Allocation
+                </Button>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredAllocations.map((allocation) => (
+              <div
+                key={allocation.id}
+                className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-6 border border-slate-200"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center space-x-3 flex-1">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                      {allocation.roomNumber}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-bold text-slate-900 truncate">{allocation.guestName}</h3>
+                      <p className="text-sm text-slate-600">Room {allocation.roomNumber}</p>
+                    </div>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50 flex-shrink-0"
+                    onClick={() => handleDelete(allocation.id)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="bg-slate-50 rounded-lg p-3">
+                    <p className="text-xs text-slate-600 mb-1">F&B Manager</p>
+                    <p className="text-sm font-semibold text-slate-900">{getStaffName(allocation.fbManagerId)}</p>
+                  </div>
+
+                  <div className="bg-blue-50 rounded-lg p-3">
+                    <p className="text-xs text-blue-600 mb-1">Allocated Seats</p>
+                    <p className="text-sm font-semibold text-blue-900">{getSeatNumbers(allocation.seatIds)}</p>
+                  </div>
+
+                  <div className="flex items-center text-sm text-slate-600">
+                    <Calendar className="w-4 h-4 mr-2 text-slate-400" />
+                    <span>{allocation.allocationDate}</span>
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-slate-200">
+                  <p className="text-xs text-slate-500">
+                    Created {new Date(allocation.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Dialog */}
+      <AllocationDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        onSave={handleSave}
+        propertyId={user?.entityId}
+        guests={guests}
+        staff={staff}
+        seats={seats}
+      />
+    </UserLayout>
+  );
+};
