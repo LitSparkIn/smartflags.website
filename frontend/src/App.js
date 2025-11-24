@@ -130,6 +130,7 @@ function App() {
             <Route path="/user/smartview" element={<SmartView />} />
             <Route path="/user/guest-list" element={<DailyGuestList />} />
             <Route path="/user/allocation" element={<Allocation />} />
+            <Route path="/user/devices" element={<Devices />} />
             <Route path="/user/staff" element={<Staff />} />
             <Route path="/user/seat-types" element={<SeatTypes />} />
             <Route path="/user/seats" element={<Seats />} />
