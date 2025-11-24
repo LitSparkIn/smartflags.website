@@ -1589,14 +1589,29 @@ async def update_allocation_status(allocation_id: str, status_update: Allocation
 
 @api_router.delete("/allocations/{allocation_id}")
 async def delete_allocation(allocation_id: str):
-    """Delete an allocation"""
+    """Delete an allocation and free up seats"""
     try:
-        result = await db.allocations.delete_one({"id": allocation_id})
+        # Get allocation first to get seat IDs
+        allocation = await db.allocations.find_one({"id": allocation_id}, {"_id": 0})
         
-        if result.deleted_count == 0:
+        if not allocation:
             raise HTTPException(status_code=404, detail="Allocation not found")
         
-        logger.info(f"Allocation deleted: {allocation_id}")
+        # Delete allocation
+        await db.allocations.delete_one({"id": allocation_id})
+        
+        # Free up seats
+        seat_ids = allocation.get('seatIds', [])
+        if seat_ids:
+            await db.seats.update_many(
+                {"id": {"$in": seat_ids}},
+                {"$set": {
+                    "status": "Free",
+                    "updatedAt": datetime.now(timezone.utc).isoformat()
+                }}
+            )
+        
+        logger.info(f"Allocation deleted: {allocation_id}, freed {len(seat_ids)} seats")
         return {"success": True, "message": "Allocation deleted successfully"}
         
     except HTTPException:
