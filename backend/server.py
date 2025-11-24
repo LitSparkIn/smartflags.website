@@ -132,6 +132,25 @@ class SeatUpdate(BaseModel):
 class SeatStatusUpdate(BaseModel):
     status: str  # Free, Allocated, Blocked
 
+# Device Models
+class Device(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    propertyId: str
+    deviceId: str  # Physical device identifier
+    enabled: bool = True
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class DeviceCreate(BaseModel):
+    propertyId: str
+    deviceId: str
+
+class DeviceUpdate(BaseModel):
+    deviceId: Optional[str] = None
+    enabled: Optional[bool] = None
+
 # Group Models
 class Group(BaseModel):
     model_config = ConfigDict(extra="ignore")
