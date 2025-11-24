@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { UserLayout } from '../../components/user/UserLayout';
 import { Button } from '../../components/ui/button';
-import { Plus, MapPin, Search, Trash2, Calendar, Activity } from 'lucide-react';
+import { Plus, MapPin, Search, Trash2, Calendar, Activity, Armchair } from 'lucide-react';
 import { Input } from '../../components/ui/input';
 import { AllocationDialog } from '../../components/user/AllocationDialog';
 import { AllocationStatusDialog } from '../../components/user/AllocationStatusDialog';
