@@ -400,7 +400,7 @@ export const Seats = () => {
         )}
       </div>
 
-      {/* Dialog */}
+      {/* Dialogs */}
       <SeatDialog
         open={isDialogOpen}
         onOpenChange={(open) => {
@@ -411,6 +411,14 @@ export const Seats = () => {
         onSave={handleSave}
         propertyId={user?.entityId}
         seatTypes={seatTypes}
+      />
+
+      <AssignDeviceDialog
+        open={isDeviceDialogOpen}
+        onOpenChange={setIsDeviceDialogOpen}
+        seat={seatForDevice}
+        devices={devices}
+        onAssign={handleDeviceAssignment}
       />
     </UserLayout>
   );
