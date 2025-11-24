@@ -14,6 +14,7 @@ export const Allocation = () => {
   const [allocations, setAllocations] = useState([]);
   const [filteredAllocations, setFilteredAllocations] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showAllAllocations, setShowAllAllocations] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
   const [selectedAllocation, setSelectedAllocation] = useState(null);
