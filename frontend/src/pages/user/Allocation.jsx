@@ -328,7 +328,14 @@ export const Allocation = () => {
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-bold text-slate-900 truncate">{allocation.guestName}</h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-lg font-bold text-slate-900 truncate">{allocation.guestName}</h3>
+                        {allocation.guestCategory && (
+                          <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold flex-shrink-0">
+                            {allocation.guestCategory}
+                          </span>
+                        )}
+                      </div>
                       <p className="text-sm text-slate-600">Room {allocation.roomNumber}</p>
                     </div>
                   </div>
