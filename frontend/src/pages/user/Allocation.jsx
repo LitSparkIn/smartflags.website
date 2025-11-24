@@ -299,8 +299,33 @@ export const Allocation = () => {
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center space-x-3 flex-1">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                      {allocation.roomNumber}
+                    {/* Seat Type Icons */}
+                    <div className="flex items-center">
+                      {getSeatTypeIcons(allocation.seatIds).slice(0, 2).map((seatType, idx) => (
+                        <div
+                          key={seatType.id}
+                          className="w-12 h-12 bg-white border-2 border-slate-200 rounded-lg flex items-center justify-center overflow-hidden"
+                          style={{ marginLeft: idx > 0 ? '-8px' : '0', zIndex: getSeatTypeIcons(allocation.seatIds).length - idx }}
+                        >
+                          {seatType.icon ? (
+                            <img 
+                              src={seatType.icon} 
+                              alt={seatType.name}
+                              className="w-8 h-8 object-contain"
+                            />
+                          ) : (
+                            <Armchair className="w-6 h-6 text-slate-400" />
+                          )}
+                        </div>
+                      ))}
+                      {getSeatTypeIcons(allocation.seatIds).length > 2 && (
+                        <div
+                          className="w-12 h-12 bg-slate-100 border-2 border-slate-200 rounded-lg flex items-center justify-center text-xs font-bold text-slate-600"
+                          style={{ marginLeft: '-8px', zIndex: 0 }}
+                        >
+                          +{getSeatTypeIcons(allocation.seatIds).length - 2}
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="text-lg font-bold text-slate-900 truncate">{allocation.guestName}</h3>
