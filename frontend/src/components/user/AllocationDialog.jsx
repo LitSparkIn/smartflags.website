@@ -263,6 +263,7 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
                     {seats.map((seat) => {
                       const isAllocated = allocatedSeats.includes(seat.id);
                       const isSelected = formData.seatIds.includes(seat.id);
+                      const seatType = seatTypes.find(st => st.id === seat.seatTypeId);
                       
                       return (
                         <button
@@ -270,7 +271,7 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
                           type="button"
                           onClick={() => !isAllocated && handleSeatToggle(seat.id)}
                           disabled={isAllocated}
-                          className={`flex items-center justify-center space-x-1 px-3 py-2 rounded-lg border-2 transition-all ${
+                          className={`flex flex-col items-center justify-center p-2 rounded-lg border-2 transition-all min-h-[80px] ${
                             isSelected
                               ? 'bg-blue-500 border-blue-500 text-white'
                               : isAllocated
@@ -278,8 +279,18 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
                               : 'bg-white border-slate-300 text-slate-700 hover:border-blue-300'
                           }`}
                         >
-                          <Armchair className="w-4 h-4" />
-                          <span className="text-sm font-semibold">{seat.seatNumber}</span>
+                          {seatType && seatType.icon ? (
+                            <img 
+                              src={seatType.icon} 
+                              alt={seatType.name}
+                              className={`w-8 h-8 object-contain mb-1 ${
+                                isSelected ? 'brightness-0 invert' : isAllocated ? 'opacity-50' : ''
+                              }`}
+                            />
+                          ) : (
+                            <Armchair className="w-6 h-6 mb-1" />
+                          )}
+                          <span className="text-xs font-semibold">{seat.seatNumber}</span>
                         </button>
                       );
                     })}
