@@ -71,19 +71,33 @@ export const Allocation = () => {
     }
   };
 
-  const handleSearch = (e) => {
-    const term = e.target.value.toLowerCase();
-    setSearchTerm(term);
-    
-    if (term === '') {
-      setFilteredAllocations(allocations);
-    } else {
-      const filtered = allocations.filter(allocation => 
+  // Filter allocations based on toggle and search
+  useEffect(() => {
+    applyFilters();
+  }, [allocations, showAllAllocations, searchTerm]);
+
+  const applyFilters = () => {
+    let filtered = [...allocations];
+
+    // Filter by completion status
+    if (!showAllAllocations) {
+      filtered = filtered.filter(allocation => allocation.status !== 'Complete');
+    }
+
+    // Filter by search term
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(allocation => 
         allocation.guestName.toLowerCase().includes(term) ||
         allocation.roomNumber.toLowerCase().includes(term)
       );
-      setFilteredAllocations(filtered);
     }
+
+    setFilteredAllocations(filtered);
+  };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
   };
 
   const handleSave = async (data) => {
