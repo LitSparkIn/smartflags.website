@@ -102,7 +102,7 @@ export const Allocation = () => {
   };
 
   const handleDelete = async (allocationId) => {
-    if (!window.confirm('Are you sure you want to delete this allocation?')) {
+    if (!window.confirm('Are you sure you want to delete this allocation? This will free up the allocated seats.')) {
       return;
     }
 
@@ -124,6 +124,48 @@ export const Allocation = () => {
         variant: "destructive"
       });
     }
+  };
+
+  const handleStatusChange = (allocation) => {
+    setSelectedAllocation(allocation);
+    setIsStatusDialogOpen(true);
+  };
+
+  const handleStatusUpdate = async (newStatus) => {
+    try {
+      const response = await axios.patch(
+        `${BACKEND_URL}/api/allocations/${selectedAllocation.id}/status`,
+        { status: newStatus }
+      );
+      
+      if (response.data.success) {
+        toast({
+          title: "Success",
+          description: `Status updated to ${newStatus}`
+        });
+        fetchAllData(user.entityId);
+        setIsStatusDialogOpen(false);
+      }
+    } catch (error) {
+      console.error('Error updating status:', error);
+      toast({
+        title: "Error",
+        description: error.response?.data?.detail || "Failed to update status",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const getStatusColor = (status) => {
+    const colors = {
+      'Free': 'bg-gray-500',
+      'Seated': 'bg-blue-500',
+      'Active': 'bg-green-500',
+      'Billing': 'bg-orange-500',
+      'Clear': 'bg-purple-500',
+      'Complete': 'bg-slate-500'
+    };
+    return colors[status] || 'bg-gray-500';
   };
 
   const getStaffName = (staffId) => {
