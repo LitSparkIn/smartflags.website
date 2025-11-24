@@ -365,6 +365,15 @@ export const Seats = () => {
                       size="sm"
                       variant="outline"
                       className="bg-white"
+                      onClick={() => handleAssignDevice(seat)}
+                      title="Assign Device"
+                    >
+                      <Smartphone className="w-3 h-3" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="bg-white"
                       onClick={() => handleEdit(seat)}
                     >
                       <Pencil className="w-3 h-3" />
