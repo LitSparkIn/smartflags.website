@@ -1539,6 +1539,54 @@ async def update_allocation(allocation_id: str, allocation: AllocationUpdate):
         logger.error(f"Error updating allocation: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+@api_router.patch("/allocations/{allocation_id}/status")
+async def update_allocation_status(allocation_id: str, status_update: AllocationStatusUpdate):
+    """Update allocation status (Free, Seated, Active, Billing, Clear, Complete)"""
+    try:
+        valid_statuses = ["Free", "Seated", "Active", "Billing", "Clear", "Complete"]
+        if status_update.status not in valid_statuses:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Invalid status. Must be one of: {', '.join(valid_statuses)}"
+            )
+        
+        # Get allocation first
+        allocation = await db.allocations.find_one({"id": allocation_id}, {"_id": 0})
+        if not allocation:
+            raise HTTPException(status_code=404, detail="Allocation not found")
+        
+        # Update allocation status
+        result = await db.allocations.update_one(
+            {"id": allocation_id},
+            {"$set": {
+                "status": status_update.status,
+                "updatedAt": datetime.now(timezone.utc).isoformat()
+            }}
+        )
+        
+        # If status changed to "Complete", set seat status back to "Free"
+        if status_update.status == "Complete":
+            seat_ids = allocation.get('seatIds', [])
+            await db.seats.update_many(
+                {"id": {"$in": seat_ids}},
+                {"$set": {
+                    "status": "Free",
+                    "updatedAt": datetime.now(timezone.utc).isoformat()
+                }}
+            )
+            logger.info(f"Released {len(seat_ids)} seats from allocation {allocation_id}")
+        
+        updated_allocation = await db.allocations.find_one({"id": allocation_id}, {"_id": 0})
+        
+        logger.info(f"Allocation status updated: {allocation_id} -> {status_update.status}")
+        return {"success": True, "allocation": updated_allocation}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating allocation status: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 @api_router.delete("/allocations/{allocation_id}")
 async def delete_allocation(allocation_id: str):
     """Delete an allocation"""
