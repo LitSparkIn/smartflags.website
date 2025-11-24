@@ -191,10 +191,14 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
               />
               {guestInfo && (
                 <div className="bg-green-50 border border-green-200 rounded-lg p-3 mt-2">
-                  <p className="text-sm font-semibold text-green-900">{guestInfo.guestName}</p>
-                  {guestInfo.category && (
-                    <p className="text-xs text-green-700">Category: {guestInfo.category}</p>
-                  )}
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-semibold text-green-900">{guestInfo.guestName}</p>
+                    {guestInfo.category && (
+                      <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold">
+                        {guestInfo.category}
+                      </span>
+                    )}
+                  </div>
                 </div>
               )}
               {formData.roomNumber && !guestInfo && (
