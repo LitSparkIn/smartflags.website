@@ -200,6 +200,7 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
       roomNumber: formData.roomNumber,
       fbManagerId: formData.fbManagerId,
       seatIds: formData.seatIds,
+      deviceIds: formData.deviceIds,
       allocationDate: formData.allocationDate
     });
     
