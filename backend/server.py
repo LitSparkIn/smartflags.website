@@ -112,6 +112,7 @@ class Seat(BaseModel):
     propertyId: str
     seatTypeId: str
     seatNumber: str
+    status: str = "Free"  # Free, Allocated, Blocked
     createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -126,6 +127,10 @@ class SeatBulkCreate(BaseModel):
 class SeatUpdate(BaseModel):
     seatTypeId: Optional[str] = None
     seatNumber: Optional[str] = None
+    status: Optional[str] = None
+
+class SeatStatusUpdate(BaseModel):
+    status: str  # Free, Allocated, Blocked
 
 # Group Models
 class Group(BaseModel):
