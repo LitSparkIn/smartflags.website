@@ -24,7 +24,7 @@ export const AssignDeviceDialog = ({ open, onOpenChange, seat, devices, onAssign
 
   useEffect(() => {
     if (seat && open) {
-      setSelectedDevice(seat.staticDeviceId || '');
+      setSelectedDevice(seat.staticDeviceId || '__none__');
     }
   }, [seat, open]);
 
