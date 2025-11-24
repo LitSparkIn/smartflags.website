@@ -357,6 +357,12 @@ export const Seats = () => {
                     )}
                     <p className="font-bold text-slate-900 text-center text-sm">{seat.seatNumber}</p>
                     <p className="text-xs text-slate-600 text-center">{getSeatTypeName(seat.seatTypeId)}</p>
+                    {seat.staticDeviceId && (
+                      <div className="flex items-center gap-1 text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                        <Smartphone className="w-3 h-3" />
+                        <span>{devices.find(d => d.id === seat.staticDeviceId)?.deviceId || 'Device'}</span>
+                      </div>
+                    )}
                   </div>
                   
                   {/* Hover Actions */}
