@@ -17,6 +17,8 @@ export const UserSidebar = ({ user }) => {
   const propertyAdminMenu = [
     { name: 'SmartView', path: '/user/smartview', icon: Eye },
     { name: 'Dashboard', path: '/user/dashboard', icon: LayoutDashboard },
+    { name: 'Daily Guest List', path: '/user/guest-list', icon: UserCheck },
+    { name: 'Allocation', path: '/user/allocation', icon: MapPin },
     { name: 'Staff', path: '/user/staff', icon: Users },
     { name: 'Seat Types', path: '/user/seat-types', icon: Grid3x3 },
     { name: 'Seats', path: '/user/seats', icon: Armchair },
