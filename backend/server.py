@@ -194,6 +194,60 @@ class RoleUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
 
+# Guest Models
+class Guest(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    propertyId: str
+    roomNumber: str
+    guestName: str
+    category: Optional[str] = None
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class GuestCreate(BaseModel):
+    propertyId: str
+    roomNumber: str
+    guestName: str
+    category: Optional[str] = None
+
+class GuestUpdate(BaseModel):
+    roomNumber: Optional[str] = None
+    guestName: Optional[str] = None
+    category: Optional[str] = None
+
+class GuestBulkCreate(BaseModel):
+    propertyId: str
+    guests: List[dict]  # List of {roomNumber, guestName, category}
+
+# Allocation Models
+class Allocation(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    propertyId: str
+    guestId: str
+    roomNumber: str
+    guestName: str
+    fbManagerId: str  # Food & Beverage Manager staff ID
+    seatIds: List[str] = []
+    allocationDate: str  # Date in YYYY-MM-DD format
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class AllocationCreate(BaseModel):
+    propertyId: str
+    roomNumber: str
+    fbManagerId: str
+    seatIds: List[str]
+    allocationDate: Optional[str] = None  # Defaults to today
+
+class AllocationUpdate(BaseModel):
+    fbManagerId: Optional[str] = None
+    seatIds: Optional[List[str]] = None
+    allocationDate: Optional[str] = None
+
 # Helper Functions
 def generate_otp() -> str:
     """Generate a 6-digit OTP"""
