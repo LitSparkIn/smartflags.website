@@ -28,6 +28,7 @@ import { Staff } from './pages/user/Staff';
 import { SeatTypes } from './pages/user/SeatTypes';
 import { Seats } from './pages/user/Seats';
 import { Groups } from './pages/user/Groups';
+import { Devices } from './pages/user/Devices';
 
 function App() {
   return (
