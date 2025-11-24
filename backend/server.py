@@ -1491,7 +1491,16 @@ async def create_allocation(allocation: AllocationCreate):
         
         await db.allocations.insert_one(allocation_dict)
         
-        logger.info(f"Allocation created: {new_allocation.id}")
+        # Update seat status to "Allocated"
+        await db.seats.update_many(
+            {"id": {"$in": allocation.seatIds}},
+            {"$set": {
+                "status": "Allocated",
+                "updatedAt": datetime.now(timezone.utc).isoformat()
+            }}
+        )
+        
+        logger.info(f"Allocation created: {new_allocation.id} with {len(allocation.seatIds)} seats")
         return {"success": True, "allocation": new_allocation}
         
     except HTTPException:
