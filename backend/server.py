@@ -878,6 +878,100 @@ async def update_bulk_seat_status(seat_ids: List[str], status: str):
         logger.error(f"Error updating bulk seat status: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+# ============= DEVICE ENDPOINTS =============
+
+@api_router.get("/devices/{property_id}")
+async def get_devices_by_property(property_id: str):
+    """Get all devices for a property"""
+    try:
+        devices = await db.devices.find({"propertyId": property_id}, {"_id": 0}).to_list(1000)
+        logger.info(f"Fetched {len(devices)} devices for property {property_id}")
+        return {"success": True, "devices": devices}
+    except Exception as e:
+        logger.error(f"Error fetching devices: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.post("/devices", response_model=Device)
+async def create_device(device: DeviceCreate):
+    """Create a new device"""
+    try:
+        # Check if device ID already exists for this property
+        existing = await db.devices.find_one({
+            "propertyId": device.propertyId,
+            "deviceId": device.deviceId
+        })
+        
+        if existing:
+            raise HTTPException(status_code=400, detail=f"Device ID {device.deviceId} already exists")
+        
+        new_device = Device(
+            propertyId=device.propertyId,
+            deviceId=device.deviceId
+        )
+        
+        device_dict = new_device.model_dump()
+        device_dict['createdAt'] = device_dict['createdAt'].isoformat()
+        device_dict['updatedAt'] = device_dict['updatedAt'].isoformat()
+        
+        await db.devices.insert_one(device_dict)
+        
+        logger.info(f"Device created: {new_device.deviceId}")
+        return new_device
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating device: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.put("/devices/{device_id}")
+async def update_device(device_id: str, device: DeviceUpdate):
+    """Update a device"""
+    try:
+        update_data = {k: v for k, v in device.model_dump().items() if v is not None}
+        
+        if not update_data:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        update_data['updatedAt'] = datetime.now(timezone.utc).isoformat()
+        
+        result = await db.devices.update_one(
+            {"id": device_id},
+            {"$set": update_data}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Device not found")
+        
+        updated_device = await db.devices.find_one({"id": device_id}, {"_id": 0})
+        
+        logger.info(f"Device updated: {device_id}")
+        return {"success": True, "device": updated_device}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating device: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/devices/{device_id}")
+async def delete_device(device_id: str):
+    """Delete a device"""
+    try:
+        result = await db.devices.delete_one({"id": device_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Device not found")
+        
+        logger.info(f"Device deleted: {device_id}")
+        return {"success": True, "message": "Device deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting device: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 # Group CRUD Endpoints
 @api_router.post("/groups")
 async def create_group(group: GroupCreate):
