@@ -1,5 +1,5 @@
 export const heroData = {
-  title: "Revolutionize Poolside & Beach Service",
+  title: "Revolutionize Poolside & Beach Services",
   subtitle: "SmartFlags",
   description: "Transform guest experience with intelligent crowd management. Instant service calls, seamless checkouts, and real-time monitoring for luxury resorts.",
   cta: "Request Demo",
