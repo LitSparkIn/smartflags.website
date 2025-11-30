@@ -18,8 +18,7 @@ export const Sidebar = () => {
   const masterDataItems = [
     { path: '/admin/master-data/countries', label: 'Country', icon: Globe },
     { path: '/admin/master-data/states', label: 'State', icon: Map },
-    { path: '/admin/master-data/cities', label: 'City', icon: MapPin },
-    { path: '/admin/master-data/roles', label: 'Roles', icon: Shield }
+    { path: '/admin/master-data/cities', label: 'City', icon: MapPin }
   ];
 
   const isActive = (path) => location.pathname === path;
