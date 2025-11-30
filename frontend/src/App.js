@@ -24,6 +24,7 @@ import { SmartView } from './pages/user/SmartView';
 import { DailyGuestList } from './pages/user/DailyGuestList';
 import { Allocation } from './pages/user/Allocation';
 import { Staff } from './pages/user/Staff';
+import { Roles as UserRoles } from './pages/user/Roles';
 import { SeatTypes } from './pages/user/SeatTypes';
 import { Seats } from './pages/user/Seats';
 import { Groups } from './pages/user/Groups';
