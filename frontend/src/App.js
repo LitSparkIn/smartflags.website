@@ -112,14 +112,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/admin/master-data/roles"
-              element={
-                <ProtectedRoute>
-                  <Roles />
-                </ProtectedRoute>
-              }
-            />
             
             {/* Redirect /admin to dashboard */}
             <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
@@ -132,6 +124,7 @@ function App() {
             <Route path="/user/allocation" element={<Allocation />} />
             <Route path="/user/devices" element={<Devices />} />
             <Route path="/user/staff" element={<Staff />} />
+            <Route path="/user/roles" element={<UserRoles />} />
             <Route path="/user/seat-types" element={<SeatTypes />} />
             <Route path="/user/seats" element={<Seats />} />
             <Route path="/user/groups" element={<Groups />} />
