@@ -21,6 +21,7 @@ export const UserSidebar = ({ user }) => {
     { name: 'Allocation', path: '/user/allocation', icon: MapPin },
     { name: 'Devices', path: '/user/devices', icon: Smartphone },
     { name: 'Staff', path: '/user/staff', icon: Users },
+    { name: 'Roles', path: '/user/roles', icon: Shield },
     { name: 'Seat Types', path: '/user/seat-types', icon: Grid3x3 },
     { name: 'Seats', path: '/user/seats', icon: Armchair },
     { name: 'Groups', path: '/user/groups', icon: UsersRound }
