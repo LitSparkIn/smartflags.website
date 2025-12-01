@@ -537,10 +537,19 @@ export const Allocation = () => {
                   </div>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-slate-200">
+                <div className="mt-4 pt-4 border-t border-slate-200 flex items-center justify-between">
                   <p className="text-xs text-slate-500">
                     Created {new Date(allocation.createdAt).toLocaleDateString()}
                   </p>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                    onClick={() => navigate(`/user/allocation/${allocation.id}`)}
+                  >
+                    <Eye className="w-4 h-4 mr-1" />
+                    Details
+                  </Button>
                 </div>
               </div>
             ))}
