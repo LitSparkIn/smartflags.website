@@ -402,7 +402,7 @@ export const SmartView = () => {
                 <div className="p-6">
                   <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-16 xl:grid-cols-20 gap-1.5">
                     {ungroupedSeats.map(seat => {
-                      const { status, color, allocation, isCalling } = getSeatStatus(seat.id);
+                      const { status, color, allocation, isCalling, callingDuration } = getSeatStatus(seat.id);
                       const seatType = getSeatType(seat.seatTypeId);
                       
                       return (
