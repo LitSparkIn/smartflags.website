@@ -85,27 +85,55 @@ export const SmartView = () => {
     );
     
     if (!allocation) {
-      return { status: 'Free', color: 'bg-white border-slate-300', allocation: null, isCalling: false };
+      return { status: 'Free', color: 'bg-white border-slate-300', allocation: null, isCalling: false, callingDuration: 0 };
     }
     
     // Check if calling flag is set
     const isCalling = allocation.callingFlag === "Calling" || allocation.callingFlag === "Calling for Checkout";
     
-    // Return status based on allocation status
-    const statusMap = {
-      'Allocated': { status: 'Allocated', color: 'bg-blue-500 border-blue-600' },
-      'Active': { status: 'Active', color: 'bg-green-500 border-green-600' },
-      'Billing': { status: 'Billing', color: 'bg-purple-500 border-purple-600' },
-      'Clear': { status: 'Clear', color: 'bg-teal-500 border-teal-600' },
-      'Complete': { status: 'Free', color: 'bg-white border-slate-300' }
-    };
+    // Calculate calling duration in seconds
+    let callingDuration = 0;
+    if (isCalling && allocation.updatedAt) {
+      const updatedAt = new Date(allocation.updatedAt);
+      callingDuration = Math.floor((currentTime - updatedAt.getTime()) / 1000);
+    }
     
-    const statusInfo = statusMap[allocation.status] || { status: 'Free', color: 'bg-white border-slate-300' };
+    // Determine color based on calling duration
+    let color;
+    if (isCalling) {
+      if (callingDuration > 90) {
+        // Red for > 90 seconds
+        color = 'bg-red-500 border-red-600';
+      } else if (callingDuration > 45) {
+        // Orange for > 45 seconds
+        color = 'bg-orange-500 border-orange-600';
+      } else if (callingDuration > 15) {
+        // Yellow for > 15 seconds
+        color = 'bg-yellow-500 border-yellow-600';
+      } else {
+        // Default calling color (< 15 seconds)
+        color = 'bg-blue-400 border-blue-500';
+      }
+    } else {
+      // Return status based on allocation status when not calling
+      const statusMap = {
+        'Allocated': { status: 'Allocated', color: 'bg-blue-500 border-blue-600' },
+        'Active': { status: 'Active', color: 'bg-green-500 border-green-600' },
+        'Billing': { status: 'Billing', color: 'bg-purple-500 border-purple-600' },
+        'Clear': { status: 'Clear', color: 'bg-teal-500 border-teal-600' },
+        'Complete': { status: 'Free', color: 'bg-white border-slate-300' }
+      };
+      
+      const statusInfo = statusMap[allocation.status] || { status: 'Free', color: 'bg-white border-slate-300' };
+      color = statusInfo.color;
+    }
     
     return { 
-      ...statusInfo, 
+      status: allocation.status,
+      color: color,
       allocation: allocation,
-      isCalling: isCalling
+      isCalling: isCalling,
+      callingDuration: callingDuration
     };
   };
 
