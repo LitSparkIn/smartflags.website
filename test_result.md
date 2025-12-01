@@ -279,3 +279,5 @@ test_plan:
 agent_communication:
     - agent: "testing"
     - message: "Starting comprehensive debugging of SmartView seat grouping. Will test complete flow: login -> create group -> create seat with group -> verify SmartView display. Focus on data consistency between frontend filtering logic and backend API responses."
+    - agent: "testing"
+    - message: "ISSUE RESOLVED: SmartView seat grouping functionality is now working correctly. Root cause was incorrect BACKEND_URL configuration in package.json start script (http://localhost:8282 instead of production URL). Fixed by updating frontend/package.json and component fallback URLs. All seat grouping features working: grouped seats display in correct sections, ungrouped seats display separately, filtering logic works perfectly. No further action needed."
