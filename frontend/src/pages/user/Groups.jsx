@@ -7,7 +7,7 @@ import { GroupDialog } from '../../components/user/GroupDialog';
 import axios from 'axios';
 import { useToast } from '../../hooks/use-toast';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
 export const Groups = () => {
   const [groups, setGroups] = useState([]);
