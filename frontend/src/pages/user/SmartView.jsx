@@ -1,31 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import { UserLayout } from '../../components/user/UserLayout';
-import { Eye, Armchair } from 'lucide-react';
+import { Eye, Armchair, Users, CheckCircle2, Clock } from 'lucide-react';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
 export const SmartView = () => {
   const [user, setUser] = useState(null);
+  const [seats, setSeats] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [seatTypes, setSeatTypes] = useState([]);
+  const [allocations, setAllocations] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const userData = localStorage.getItem('userData');
     if (userData) {
       const parsedUser = JSON.parse(userData);
       setUser(parsedUser);
-      fetchSeatTypes(parsedUser.entityId);
+      fetchAllData(parsedUser.entityId);
     }
   }, []);
 
-  const fetchSeatTypes = async (propertyId) => {
+  const fetchAllData = async (propertyId) => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/seat-types/${propertyId}`);
-      if (response.data.success) {
-        setSeatTypes(response.data.seatTypes);
+      setLoading(true);
+      
+      // Fetch seats
+      const seatsResponse = await axios.get(`${BACKEND_URL}/api/seats/${propertyId}`);
+      if (seatsResponse.data.success) {
+        setSeats(seatsResponse.data.seats);
+      }
+
+      // Fetch groups
+      const groupsResponse = await axios.get(`${BACKEND_URL}/api/groups/${propertyId}`);
+      if (groupsResponse.data.success) {
+        setGroups(groupsResponse.data.groups);
+      }
+
+      // Fetch seat types
+      const seatTypesResponse = await axios.get(`${BACKEND_URL}/api/seat-types/${propertyId}`);
+      if (seatTypesResponse.data.success) {
+        setSeatTypes(seatTypesResponse.data.seatTypes);
+      }
+
+      // Fetch today's allocations
+      const allocationsResponse = await axios.get(`${BACKEND_URL}/api/allocations/${propertyId}`);
+      if (allocationsResponse.data.success) {
+        setAllocations(allocationsResponse.data.allocations);
       }
     } catch (error) {
-      console.error('Error fetching seat types:', error);
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
