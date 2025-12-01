@@ -1638,7 +1638,8 @@ async def create_allocation(allocation: AllocationCreate):
             fbManagerId=allocation.fbManagerId,
             seatIds=allocation.seatIds,
             deviceIds=allocation.deviceIds or [],
-            allocationDate=allocation_date
+            allocationDate=allocation_date,
+            status="Allocated"
         )
         
         allocation_dict = new_allocation.model_dump()
