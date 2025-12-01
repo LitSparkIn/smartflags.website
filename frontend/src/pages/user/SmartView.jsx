@@ -363,6 +363,14 @@ export const SmartView = () => {
                   <h2 className="text-xl font-bold text-white">Ungrouped Seats</h2>
                   <p className="text-slate-200 text-sm">{ungroupedSeats.length} seats</p>
                 </div>
+                
+                {/* Info Message */}
+                <div className="bg-amber-50 border-l-4 border-amber-500 p-4 mx-6 mt-6">
+                  <p className="text-sm text-amber-800">
+                    💡 <strong>Tip:</strong> These seats are not assigned to any group. Edit seats in the Seats page to assign them to groups like "Pool Area" or "Beach Zone" for better organization.
+                  </p>
+                </div>
+                
                 <div className="p-6">
                   <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-3">
                     {ungroupedSeats.map(seat => {
