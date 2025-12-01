@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AdminLayout } from '../../components/admin/AdminLayout';
 import { Plus, Pencil, Trash2, Search, Building2, Mail, Phone, MapPin, Eye } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { mockOrganisations as initialOrganisations } from '../../mockAdmin';
 import { OrganisationDialog } from '../../components/admin/OrganisationDialog';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import axios from 'axios';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,13 +18,16 @@ import {
   AlertDialogTitle,
 } from '../../components/ui/alert-dialog';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
+
 export const Organisations = () => {
   const navigate = useNavigate();
-  const [organisations, setOrganisations] = useLocalStorage('smartflags_organisations', initialOrganisations);
+  const [organisations, setOrganisations] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingOrg, setEditingOrg] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const filteredOrganisations = organisations.filter((org) =>
     org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
