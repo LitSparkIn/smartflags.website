@@ -204,15 +204,22 @@ export const Allocation = () => {
 
   const handleSetCallingForCheckout = async (allocationId) => {
     try {
-      const response = await axios.patch(
+      // First, set the calling flag
+      const flagResponse = await axios.patch(
         `${BACKEND_URL}/api/allocations/${allocationId}/calling-flag`,
         { callingFlag: "Calling for Checkout" }
       );
       
-      if (response.data.success) {
+      if (flagResponse.data.success) {
+        // Then, automatically update status to Billing
+        await axios.patch(
+          `${BACKEND_URL}/api/allocations/${allocationId}/status`,
+          { status: "Billing" }
+        );
+        
         toast({
           title: "Success",
-          description: "Calling for Checkout flag set"
+          description: "Calling for Checkout set - Status changed to Billing"
         });
         fetchAllData(user.entityId);
       }
