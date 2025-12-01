@@ -603,6 +603,209 @@ async def create_admin_login(request: CreateAdminRequest):
         logger.error(f"Error creating admin: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+
+# Organisation Endpoints
+@api_router.get("/organisations")
+async def get_organisations():
+    """Get all organisations"""
+    try:
+        organisations = await db.organisations.find({}, {"_id": 0}).to_list(1000)
+        return {"success": True, "organisations": organisations}
+    except Exception as e:
+        logger.error(f"Error fetching organisations: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.get("/organisations/{organisation_id}")
+async def get_organisation(organisation_id: str):
+    """Get a single organisation by ID"""
+    try:
+        organisation = await db.organisations.find_one({"id": organisation_id}, {"_id": 0})
+        if not organisation:
+            raise HTTPException(status_code=404, detail="Organisation not found")
+        return {"success": True, "organisation": organisation}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching organisation: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.post("/organisations")
+async def create_organisation(org_data: OrganisationCreate):
+    """Create a new organisation"""
+    try:
+        new_org = Organisation(**org_data.model_dump())
+        
+        org_dict = new_org.model_dump()
+        org_dict['createdAt'] = org_dict['createdAt'].isoformat()
+        org_dict['updatedAt'] = org_dict['updatedAt'].isoformat()
+        
+        await db.organisations.insert_one(org_dict)
+        
+        logger.info(f"Organisation created: {new_org.id}")
+        return {"success": True, "organisation": new_org}
+    except Exception as e:
+        logger.error(f"Error creating organisation: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.put("/organisations/{organisation_id}")
+async def update_organisation(organisation_id: str, update_data: OrganisationUpdate):
+    """Update an organisation"""
+    try:
+        update_dict = {k: v for k, v in update_data.model_dump().items() if v is not None}
+        
+        if not update_dict:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        update_dict['updatedAt'] = datetime.now(timezone.utc).isoformat()
+        
+        result = await db.organisations.update_one(
+            {"id": organisation_id},
+            {"$set": update_dict}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Organisation not found")
+        
+        updated_org = await db.organisations.find_one({"id": organisation_id}, {"_id": 0})
+        
+        logger.info(f"Organisation updated: {organisation_id}")
+        return {"success": True, "organisation": updated_org}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating organisation: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/organisations/{organisation_id}")
+async def delete_organisation(organisation_id: str):
+    """Delete an organisation"""
+    try:
+        result = await db.organisations.delete_one({"id": organisation_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Organisation not found")
+        
+        logger.info(f"Organisation deleted: {organisation_id}")
+        return {"success": True, "message": "Organisation deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting organisation: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+# Property Endpoints (Admin)
+@api_router.get("/properties")
+async def get_properties():
+    """Get all properties"""
+    try:
+        properties = await db.properties.find({}, {"_id": 0}).to_list(1000)
+        return {"success": True, "properties": properties}
+    except Exception as e:
+        logger.error(f"Error fetching properties: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.get("/properties/organisation/{organisation_id}")
+async def get_properties_by_organisation(organisation_id: str):
+    """Get all properties for an organisation"""
+    try:
+        properties = await db.properties.find({"organisationId": organisation_id}, {"_id": 0}).to_list(1000)
+        return {"success": True, "properties": properties}
+    except Exception as e:
+        logger.error(f"Error fetching properties: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.get("/properties/{property_id}")
+async def get_property(property_id: str):
+    """Get a single property by ID"""
+    try:
+        property_data = await db.properties.find_one({"id": property_id}, {"_id": 0})
+        if not property_data:
+            raise HTTPException(status_code=404, detail="Property not found")
+        return {"success": True, "property": property_data}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching property: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.post("/properties")
+async def create_property(property_data: PropertyCreate):
+    """Create a new property"""
+    try:
+        # Verify organisation exists
+        organisation = await db.organisations.find_one({"id": property_data.organisationId}, {"_id": 0})
+        if not organisation:
+            raise HTTPException(status_code=404, detail="Organisation not found")
+        
+        new_property = Property(**property_data.model_dump())
+        
+        prop_dict = new_property.model_dump()
+        prop_dict['createdAt'] = prop_dict['createdAt'].isoformat()
+        prop_dict['updatedAt'] = prop_dict['updatedAt'].isoformat()
+        
+        await db.properties.insert_one(prop_dict)
+        
+        logger.info(f"Property created: {new_property.id}")
+        return {"success": True, "property": new_property}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating property: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.put("/properties/{property_id}")
+async def update_property(property_id: str, update_data: PropertyUpdate):
+    """Update a property"""
+    try:
+        update_dict = {k: v for k, v in update_data.model_dump().items() if v is not None}
+        
+        if not update_dict:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        # If organisationId is being updated, verify it exists
+        if 'organisationId' in update_dict:
+            organisation = await db.organisations.find_one({"id": update_dict['organisationId']}, {"_id": 0})
+            if not organisation:
+                raise HTTPException(status_code=404, detail="Organisation not found")
+        
+        update_dict['updatedAt'] = datetime.now(timezone.utc).isoformat()
+        
+        result = await db.properties.update_one(
+            {"id": property_id},
+            {"$set": update_dict}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Property not found")
+        
+        updated_property = await db.properties.find_one({"id": property_id}, {"_id": 0})
+        
+        logger.info(f"Property updated: {property_id}")
+        return {"success": True, "property": updated_property}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating property: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/properties/{property_id}")
+async def delete_property(property_id: str):
+    """Delete a property"""
+    try:
+        result = await db.properties.delete_one({"id": property_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Property not found")
+        
+        logger.info(f"Property deleted: {property_id}")
+        return {"success": True, "message": "Property deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting property: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+
 @api_router.post("/user/request-otp", response_model=RequestOTPResponse)
 async def request_otp(request: RequestOTPRequest):
     """
