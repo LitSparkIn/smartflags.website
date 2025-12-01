@@ -312,11 +312,6 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
               <Label className="text-slate-700 font-medium">
                 Select Seats * ({formData.seatIds.length} selected)
               </Label>
-              {allocatedSeats.length > 0 && (
-                <p className="text-xs text-orange-600">
-                  ⚠️ {allocatedSeats.length} seats already allocated today
-                </p>
-              )}
               <div className="border border-slate-300 rounded-lg p-4 max-h-64 overflow-y-auto">
                 {seats.length === 0 ? (
                   <p className="text-sm text-slate-500 text-center py-4">No seats available</p>
