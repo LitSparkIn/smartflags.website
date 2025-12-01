@@ -12,79 +12,13 @@ export const mockOrganisations = [];
 export const mockProperties = [];
 
 // Master Data - Countries
-export const mockCountries = [
-  {
-    id: 'country-1',
-    name: 'United States',
-    code: 'US',
-    createdAt: new Date('2024-01-01').toISOString()
-  },
-  {
-    id: 'country-2',
-    name: 'United Kingdom',
-    code: 'UK',
-    createdAt: new Date('2024-01-01').toISOString()
-  },
-  {
-    id: 'country-3',
-    name: 'Australia',
-    code: 'AU',
-    createdAt: new Date('2024-01-01').toISOString()
-  }
-];
+export const mockCountries = [];
 
 // Master Data - States
-export const mockStates = [
-  {
-    id: 'state-1',
-    name: 'Florida',
-    countryId: 'country-1',
-    code: 'FL',
-    createdAt: new Date('2024-01-01').toISOString()
-  },
-  {
-    id: 'state-2',
-    name: 'California',
-    countryId: 'country-1',
-    code: 'CA',
-    createdAt: new Date('2024-01-01').toISOString()
-  },
-  {
-    id: 'state-3',
-    name: 'New York',
-    countryId: 'country-1',
-    code: 'NY',
-    createdAt: new Date('2024-01-01').toISOString()
-  }
-];
+export const mockStates = [];
 
 // Master Data - Cities
-export const mockCities = [
-  {
-    id: 'city-1',
-    name: 'Miami',
-    stateId: 'state-1',
-    createdAt: new Date('2024-01-01').toISOString()
-  },
-  {
-    id: 'city-2',
-    name: 'Los Angeles',
-    stateId: 'state-2',
-    createdAt: new Date('2024-01-01').toISOString()
-  },
-  {
-    id: 'city-3',
-    name: 'San Francisco',
-    stateId: 'state-2',
-    createdAt: new Date('2024-01-01').toISOString()
-  },
-  {
-    id: 'city-4',
-    name: 'New York City',
-    stateId: 'state-3',
-    createdAt: new Date('2024-01-01').toISOString()
-  }
-];
+export const mockCities = [];
 
 // Master Data - Roles
 export const mockRoles = [
