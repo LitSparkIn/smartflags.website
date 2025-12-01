@@ -23,6 +23,7 @@ import { Properties as UserProperties } from './pages/user/Properties';
 import { SmartView } from './pages/user/SmartView';
 import { DailyGuestList } from './pages/user/DailyGuestList';
 import { Allocation } from './pages/user/Allocation';
+import { AllocationDetails } from './pages/user/AllocationDetails';
 import { Staff } from './pages/user/Staff';
 import { Roles as UserRoles } from './pages/user/Roles';
 import { SeatTypes } from './pages/user/SeatTypes';
