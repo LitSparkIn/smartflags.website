@@ -7,7 +7,24 @@ export const mockAdmin = {
   id: 'admin-1'
 };
 
-export const mockOrganisations = [];
+export const mockOrganisations = [
+  {
+    id: 'org-1',
+    name: 'SmartFlags Demo Resort',
+    email: 'contact@smartflagsdemo.com',
+    phone: '+1-555-0100',
+    address: '123 Beach Boulevard, Miami, FL 33139',
+    createdAt: new Date('2024-01-15').toISOString()
+  },
+  {
+    id: 'org-2',
+    name: 'Oceanview Hotels Group',
+    email: 'info@oceanviewhotels.com',
+    phone: '+1-555-0200',
+    address: '456 Coastal Drive, Malibu, CA 90265',
+    createdAt: new Date('2024-02-20').toISOString()
+  }
+];
 
 export const mockProperties = [];
 
