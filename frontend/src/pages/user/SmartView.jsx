@@ -12,6 +12,7 @@ export const SmartView = () => {
   const [seatTypes, setSeatTypes] = useState([]);
   const [allocations, setAllocations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentTime, setCurrentTime] = useState(Date.now());
 
   useEffect(() => {
     const userData = localStorage.getItem('userData');
@@ -21,11 +22,19 @@ export const SmartView = () => {
       fetchAllData(parsedUser.entityId);
       
       // Auto-refresh every 30 seconds
-      const interval = setInterval(() => {
+      const dataInterval = setInterval(() => {
         fetchAllData(parsedUser.entityId);
       }, 30000);
       
-      return () => clearInterval(interval);
+      // Update current time every second for calling timers
+      const timeInterval = setInterval(() => {
+        setCurrentTime(Date.now());
+      }, 1000);
+      
+      return () => {
+        clearInterval(dataInterval);
+        clearInterval(timeInterval);
+      };
     }
   }, []);
 
