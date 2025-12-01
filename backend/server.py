@@ -726,7 +726,8 @@ async def create_seats_bulk(seat_data: SeatBulkCreate):
             seat = Seat(
                 propertyId=seat_data.propertyId,
                 seatTypeId=seat_data.seatTypeId,
-                seatNumber=seat_number
+                seatNumber=seat_number,
+                groupId=seat_data.groupId
             )
             
             # Convert to dict and serialize datetime
