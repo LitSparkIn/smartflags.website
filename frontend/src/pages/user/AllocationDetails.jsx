@@ -83,9 +83,10 @@ export const AllocationDetails = () => {
     const completedEvent = events.find(e => e.eventType === "Status Change" && e.newValue === "Complete");
     const endTime = completedEvent ? new Date(completedEvent.timestamp) : now;
     const totalTimeMs = endTime - createdAt;
-    const totalTimeMinutes = Math.floor(totalTimeMs / 60000);
-    const totalTimeHours = Math.floor(totalTimeMinutes / 60);
-    const totalTimeRemainderMinutes = totalTimeMinutes % 60;
+    const totalTimeSeconds = Math.floor(totalTimeMs / 1000);
+    const totalTimeHours = Math.floor(totalTimeSeconds / 3600);
+    const totalTimeMinutes = Math.floor((totalTimeSeconds % 3600) / 60);
+    const totalTimeRemainderSeconds = totalTimeSeconds % 60;
     
     // Count calling events
     const callingOnEvents = events.filter(e => e.eventType === "Calling On");
@@ -116,12 +117,17 @@ export const AllocationDetails = () => {
       }
     }
     
-    const avgCallingTime = callingCount > 0 ? totalCallingTime / callingCount / 60000 : 0;
-    const totalCallingMinutes = Math.floor(totalCallingTime / 60000);
+    const avgCallingTimeSeconds = callingCount > 0 ? Math.floor(totalCallingTime / callingCount / 1000) : 0;
+    const avgCallingTimeMinutes = Math.floor(avgCallingTimeSeconds / 60);
+    const avgCallingTimeRemainderSeconds = avgCallingTimeSeconds % 60;
+    
+    const totalCallingSeconds = Math.floor(totalCallingTime / 1000);
+    const totalCallingMinutes = Math.floor(totalCallingSeconds / 60);
+    const totalCallingRemainderSeconds = totalCallingSeconds % 60;
     
     // Calculate active time (time in "Active" status)
     const activeStartEvent = events.find(e => e.eventType === "Status Change" && e.newValue === "Active");
-    let activeTimeMinutes = 0;
+    let activeTimeSeconds = 0;
     
     if (activeStartEvent) {
       const activeStartTime = new Date(activeStartEvent.timestamp);
@@ -136,18 +142,21 @@ export const AllocationDetails = () => {
       const activeEndTime = activeEndEvent ? new Date(activeEndEvent.timestamp) : 
         (alloc.status === "Active" ? now : activeStartTime);
       
-      activeTimeMinutes = Math.floor((activeEndTime - activeStartTime) / 60000);
+      activeTimeSeconds = Math.floor((activeEndTime - activeStartTime) / 1000);
     }
+    
+    const activeTimeMinutes = Math.floor(activeTimeSeconds / 60);
+    const activeTimeRemainderSeconds = activeTimeSeconds % 60;
     
     // Status change count
     const statusChangeCount = events.filter(e => e.eventType === "Status Change").length;
     
     setAnalytics({
-      totalTime: { hours: totalTimeHours, minutes: totalTimeRemainderMinutes },
+      totalTime: { hours: totalTimeHours, minutes: totalTimeMinutes, seconds: totalTimeRemainderSeconds },
       callingCount,
-      avgCallingTime: Math.round(avgCallingTime),
-      totalCallingTime: totalCallingMinutes,
-      activeTime: activeTimeMinutes,
+      avgCallingTime: { minutes: avgCallingTimeMinutes, seconds: avgCallingTimeRemainderSeconds },
+      totalCallingTime: { minutes: totalCallingMinutes, seconds: totalCallingRemainderSeconds },
+      activeTime: { minutes: activeTimeMinutes, seconds: activeTimeRemainderSeconds },
       statusChangeCount,
       callingDurations
     });
