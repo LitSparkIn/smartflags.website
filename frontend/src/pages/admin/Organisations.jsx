@@ -29,6 +29,25 @@ export const Organisations = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    fetchOrganisations();
+  }, []);
+
+  const fetchOrganisations = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${BACKEND_URL}/api/organisations`);
+      if (response.data.success) {
+        setOrganisations(response.data.organisations);
+      }
+    } catch (error) {
+      console.error('Error fetching organisations:', error);
+      toast.error('Failed to load organisations');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filteredOrganisations = organisations.filter((org) =>
     org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     org.email.toLowerCase().includes(searchTerm.toLowerCase())
@@ -49,31 +68,44 @@ export const Organisations = () => {
     navigate(`/admin/organisations/${orgId}`);
   };
 
-  const handleSave = (orgData) => {
-    if (editingOrg) {
-      // Update
-      setOrganisations(organisations.map(org =>
-        org.id === editingOrg.id ? { ...org, ...orgData } : org
-      ));
-      toast.success('Organisation updated successfully!');
-    } else {
-      // Create
-      const newOrg = {
-        id: `org-${Date.now()}`,
-        ...orgData,
-        createdAt: new Date().toISOString()
-      };
-      setOrganisations([...organisations, newOrg]);
-      toast.success('Organisation created successfully!');
+  const handleSave = async (orgData) => {
+    try {
+      if (editingOrg) {
+        // Update
+        const response = await axios.put(`${BACKEND_URL}/api/organisations/${editingOrg.id}`, orgData);
+        if (response.data.success) {
+          toast.success('Organisation updated successfully!');
+          fetchOrganisations();
+        }
+      } else {
+        // Create
+        const response = await axios.post(`${BACKEND_URL}/api/organisations`, orgData);
+        if (response.data.success) {
+          toast.success('Organisation created successfully!');
+          fetchOrganisations();
+        }
+      }
+      setIsDialogOpen(false);
+      setEditingOrg(null);
+    } catch (error) {
+      console.error('Error saving organisation:', error);
+      toast.error(error.response?.data?.detail || 'Failed to save organisation');
     }
-    setIsDialogOpen(false);
-    setEditingOrg(null);
   };
 
-  const handleDelete = (id) => {
-    setOrganisations(organisations.filter(org => org.id !== id));
-    toast.success('Organisation deleted successfully!');
-    setDeleteId(null);
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`${BACKEND_URL}/api/organisations/${id}`);
+      if (response.data.success) {
+        toast.success('Organisation deleted successfully!');
+        fetchOrganisations();
+      }
+      setDeleteId(null);
+    } catch (error) {
+      console.error('Error deleting organisation:', error);
+      toast.error(error.response?.data?.detail || 'Failed to delete organisation');
+      setDeleteId(null);
+    }
   };
 
   return (
