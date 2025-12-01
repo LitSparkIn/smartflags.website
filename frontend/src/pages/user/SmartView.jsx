@@ -134,6 +134,18 @@ export const SmartView = () => {
 
   const stats = calculateStats();
 
+  // Calculate calling duration
+  const getCallingSince = (allocation) => {
+    if (!allocation || allocation.callingFlag === "Non Calling") return null;
+    
+    const updatedAt = new Date(allocation.updatedAt);
+    const elapsedSeconds = Math.floor((currentTime - updatedAt.getTime()) / 1000);
+    
+    const flagText = allocation.callingFlag === "Calling" ? "Calling" : "Checkout";
+    
+    return `${flagText} ${elapsedSeconds}s`;
+  };
+
   // Group seats by group
   const groupedSeats = groups.map(group => {
     const groupSeats = seats.filter(seat => seat.groupId === group.id);
