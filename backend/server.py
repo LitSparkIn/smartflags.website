@@ -84,6 +84,57 @@ class RequestOTPResponse(BaseModel):
     success: bool
     message: str
 
+# Organisation Models
+class Organisation(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    email: EmailStr
+    phone: str
+    address: str
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class OrganisationCreate(BaseModel):
+    name: str
+    email: EmailStr
+    phone: str
+    address: str
+
+class OrganisationUpdate(BaseModel):
+    name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
+
+# Property Models (for admin)
+class Property(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    organisationId: str
+    name: str
+    email: EmailStr
+    phone: str
+    address: str
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class PropertyCreate(BaseModel):
+    organisationId: str
+    name: str
+    email: EmailStr
+    phone: str
+    address: str
+
+class PropertyUpdate(BaseModel):
+    organisationId: Optional[str] = None
+    name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
+
 # Seat Type Models
 class SeatType(BaseModel):
     model_config = ConfigDict(extra="ignore")
