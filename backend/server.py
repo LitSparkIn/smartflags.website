@@ -1801,13 +1801,28 @@ async def update_allocation_calling_flag(allocation_id: str, flag_update: Alloca
         if not allocation:
             raise HTTPException(status_code=404, detail="Allocation not found")
         
-        # Update allocation calling flag
+        old_flag = allocation.get('callingFlag', 'Non Calling')
+        
+        # Create event for calling flag change
+        event_type = "Calling On" if flag_update.callingFlag != "Non Calling" else "Calling Off"
+        calling_event = {
+            "eventType": event_type,
+            "oldValue": old_flag,
+            "newValue": flag_update.callingFlag,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "description": f"Calling flag changed from {old_flag} to {flag_update.callingFlag}"
+        }
+        
+        # Update allocation calling flag and add event
         result = await db.allocations.update_one(
             {"id": allocation_id},
-            {"$set": {
-                "callingFlag": flag_update.callingFlag,
-                "updatedAt": datetime.now(timezone.utc).isoformat()
-            }}
+            {
+                "$set": {
+                    "callingFlag": flag_update.callingFlag,
+                    "updatedAt": datetime.now(timezone.utc).isoformat()
+                },
+                "$push": {"events": calling_event}
+            }
         )
         
         updated_allocation = await db.allocations.find_one({"id": allocation_id}, {"_id": 0})
