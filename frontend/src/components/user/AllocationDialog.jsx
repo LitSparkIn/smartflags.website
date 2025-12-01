@@ -378,11 +378,6 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
               <p className="text-xs text-slate-500">
                 Devices auto-selected from seats. You can add more or remove them.
               </p>
-              {allocatedDevices.length > 0 && (
-                <p className="text-xs text-orange-600">
-                  ⚠️ {allocatedDevices.length} devices already allocated today
-                </p>
-              )}
               {devices.length === 0 ? (
                 <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
                   <p className="text-sm text-orange-800">
