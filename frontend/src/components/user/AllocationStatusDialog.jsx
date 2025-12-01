@@ -28,7 +28,7 @@ const STATUS_OPTIONS = [
 ];
 
 export const AllocationStatusDialog = ({ open, onOpenChange, allocation, onSave }) => {
-  const [selectedStatus, setSelectedStatus] = useState(allocation?.status || 'Free');
+  const [selectedStatus, setSelectedStatus] = useState(allocation?.status || 'Allocated');
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
