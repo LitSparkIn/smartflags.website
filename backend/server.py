@@ -1752,6 +1752,42 @@ async def update_allocation_status(allocation_id: str, status_update: Allocation
         logger.error(f"Error updating allocation status: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+@api_router.patch("/allocations/{allocation_id}/calling-flag")
+async def update_allocation_calling_flag(allocation_id: str, flag_update: AllocationCallingFlagUpdate):
+    """Update allocation calling flag (Non Calling, Calling, Calling for Checkout)"""
+    try:
+        valid_flags = ["Non Calling", "Calling", "Calling for Checkout"]
+        if flag_update.callingFlag not in valid_flags:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Invalid calling flag. Must be one of: {', '.join(valid_flags)}"
+            )
+        
+        # Get allocation first
+        allocation = await db.allocations.find_one({"id": allocation_id}, {"_id": 0})
+        if not allocation:
+            raise HTTPException(status_code=404, detail="Allocation not found")
+        
+        # Update allocation calling flag
+        result = await db.allocations.update_one(
+            {"id": allocation_id},
+            {"$set": {
+                "callingFlag": flag_update.callingFlag,
+                "updatedAt": datetime.now(timezone.utc).isoformat()
+            }}
+        )
+        
+        updated_allocation = await db.allocations.find_one({"id": allocation_id}, {"_id": 0})
+        
+        logger.info(f"Allocation calling flag updated: {allocation_id} -> {flag_update.callingFlag}")
+        return {"success": True, "allocation": updated_allocation}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating allocation calling flag: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 @api_router.delete("/allocations/{allocation_id}")
 async def delete_allocation(allocation_id: str):
     """Delete an allocation and free up seats"""
