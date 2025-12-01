@@ -258,7 +258,7 @@ export const SmartView = () => {
                     <p className="text-slate-300 text-sm">{group.seats.length} seats</p>
                   </div>
                   <div className="p-6">
-                    <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-3">
+                    <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-16 xl:grid-cols-20 gap-3">
                       {group.seats.map(seat => {
                         const { status, color, allocation, isCalling } = getSeatStatus(seat.id);
                         const seatType = getSeatType(seat.seatTypeId);
@@ -271,14 +271,14 @@ export const SmartView = () => {
                             {/* Category Badge (VIP, etc.) */}
                             {allocation && allocation.guestCategory && (
                               <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 z-10">
-                                <span className="bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md whitespace-nowrap">
+                                <span className="bg-amber-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full shadow-md whitespace-nowrap">
                                   {allocation.guestCategory}
                                 </span>
                               </div>
                             )}
                             
                             <div
-                              className={`${color} rounded-lg border-2 p-3 transition-all hover:scale-105 hover:shadow-lg cursor-pointer flex flex-col items-center justify-center min-h-[80px] ${
+                              className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg cursor-pointer flex flex-col items-center justify-center h-[80px] w-[40px] ${
                                 isCalling ? 'animate-pulse ring-4 ring-red-500 ring-offset-2 shadow-xl shadow-red-500/50' : ''
                               }`}
                             >
@@ -286,16 +286,16 @@ export const SmartView = () => {
                                 <img 
                                   src={seatType.icon} 
                                   alt={seatType.name}
-                                  className={`w-8 h-8 object-contain mb-1 ${
+                                  className={`w-5 h-5 object-contain mb-1 ${
                                     status === 'Free' ? '' : 'brightness-0 invert'
                                   }`}
                                 />
                               ) : (
-                                <Armchair className={`w-6 h-6 mb-1 ${
+                                <Armchair className={`w-4 h-4 mb-1 ${
                                   status === 'Free' ? 'text-slate-400' : 'text-white'
                                 }`} />
                               )}
-                              <span className={`text-xs font-semibold ${
+                              <span className={`text-[10px] font-semibold ${
                                 status === 'Free' ? 'text-slate-700' : 'text-white'
                               }`}>
                                 {seat.seatNumber}
