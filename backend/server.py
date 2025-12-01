@@ -261,7 +261,7 @@ class Allocation(BaseModel):
     seatIds: List[str] = []
     deviceIds: List[str] = []  # Devices assigned to this allocation
     allocationDate: str  # Date in YYYY-MM-DD format
-    status: str = "Free"  # Free, Seated, Active, Billing, Clear, Complete
+    status: str = "Allocated"  # Allocated, Active, Billing, Clear, Complete
     createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
