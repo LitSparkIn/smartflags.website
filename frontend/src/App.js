@@ -123,6 +123,7 @@ function App() {
             <Route path="/user/smartview" element={<SmartView />} />
             <Route path="/user/guest-list" element={<DailyGuestList />} />
             <Route path="/user/allocation" element={<Allocation />} />
+            <Route path="/user/allocation/:allocationId" element={<AllocationDetails />} />
             <Route path="/user/devices" element={<Devices />} />
             <Route path="/user/staff" element={<Staff />} />
             <Route path="/user/roles" element={<UserRoles />} />
