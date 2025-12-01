@@ -20,9 +20,10 @@ import {
 import { Armchair, AlertCircle } from 'lucide-react';
 import { useToast } from '../../hooks/use-toast';
 
-export const SeatDialog = ({ open, onOpenChange, seat, onSave, propertyId, seatTypes }) => {
+export const SeatDialog = ({ open, onOpenChange, seat, onSave, propertyId, seatTypes, groups }) => {
   const [formData, setFormData] = useState({
     seatTypeId: '',
+    groupId: '',
     prefix: '',
     suffix: '',
     startNumber: '',
