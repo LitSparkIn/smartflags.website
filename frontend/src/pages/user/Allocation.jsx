@@ -468,6 +468,48 @@ export const Allocation = () => {
                     <Activity className="w-4 h-4 text-slate-400 group-hover:text-slate-600" />
                   </button>
                 </div>
+
+                {/* Calling Buttons */}
+                <div className="mb-4 space-y-2">
+                  {allocation.callingFlag === "Non Calling" ? (
+                    <>
+                      <Button
+                        size="sm"
+                        className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+                        onClick={() => handleSetCalling(allocation.id)}
+                      >
+                        🔔 Set Calling
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="w-full bg-purple-500 hover:bg-purple-600 text-white"
+                        onClick={() => handleSetCallingForCheckout(allocation.id)}
+                      >
+                        💳 Set Calling for Checkout
+                      </Button>
+                    </>
+                  ) : (
+                    <div className="space-y-2">
+                      <div className={`w-full p-3 rounded-lg border-2 flex items-center justify-center gap-2 ${
+                        allocation.callingFlag === "Calling" 
+                          ? "bg-orange-100 border-orange-500 text-orange-700" 
+                          : "bg-purple-100 border-purple-500 text-purple-700"
+                      }`}>
+                        <span className="text-sm font-bold">
+                          {allocation.callingFlag === "Calling" ? "🔔 Calling" : "💳 Calling for Checkout"}
+                        </span>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => handleClearCalling(allocation.id)}
+                      >
+                        Clear Calling
+                      </Button>
+                    </div>
+                  )}
+                </div>
                 
                 <div className="space-y-3">
                   <div className="bg-slate-50 rounded-lg p-3">
