@@ -1508,6 +1508,37 @@ async def get_allocated_seats(property_id: str, date: Optional[str] = None):
         logger.error(f"Error fetching allocated seats: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+@api_router.get("/allocations/{property_id}/allocated-devices")
+async def get_allocated_devices(property_id: str, date: Optional[str] = None):
+    """Get list of already allocated device IDs for a specific date"""
+    try:
+        allocation_date = date or datetime.now(timezone.utc).strftime('%Y-%m-%d')
+        
+        # Only get devices from non-complete allocations
+        allocations = await db.allocations.find(
+            {
+                "propertyId": property_id, 
+                "allocationDate": allocation_date,
+                "status": {"$nin": ["Complete"]}  # Exclude completed allocations
+            },
+            {"_id": 0, "deviceIds": 1}
+        ).to_list(10000)
+        
+        # Collect all allocated device IDs (only from active allocations)
+        allocated_device_ids = set()
+        for allocation in allocations:
+            allocated_device_ids.update(allocation.get('deviceIds', []))
+        
+        logger.info(f"Found {len(allocated_device_ids)} allocated devices (non-complete) for property {property_id} on {allocation_date}")
+        return {
+            "success": True, 
+            "allocatedDeviceIds": list(allocated_device_ids),
+            "date": allocation_date
+        }
+    except Exception as e:
+        logger.error(f"Error fetching allocated devices: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 @api_router.post("/allocations")
 async def create_allocation(allocation: AllocationCreate):
     """Create a new seat allocation"""
