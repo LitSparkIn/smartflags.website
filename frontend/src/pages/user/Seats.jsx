@@ -20,6 +20,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'
 export const Seats = () => {
   const [seats, setSeats] = useState([]);
   const [seatTypes, setSeatTypes] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [devices, setDevices] = useState([]);
   const [filteredSeats, setFilteredSeats] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -39,6 +40,7 @@ export const Seats = () => {
       fetchSeatTypes(parsedUser.entityId);
       fetchSeats(parsedUser.entityId);
       fetchDevices(parsedUser.entityId);
+      fetchGroups(parsedUser.entityId);
     }
   }, []);
 
