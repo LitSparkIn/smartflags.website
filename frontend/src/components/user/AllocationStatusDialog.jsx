@@ -20,12 +20,11 @@ import { Activity } from 'lucide-react';
 import { useToast } from '../../hooks/use-toast';
 
 const STATUS_OPTIONS = [
-  { value: 'Free', label: 'Free', color: 'bg-gray-500', description: 'Initial status' },
-  { value: 'Seated', label: 'Seated', color: 'bg-blue-500', description: 'Guests have been seated' },
-  { value: 'Active', label: 'Active', color: 'bg-green-500', description: 'First order placed' },
-  { value: 'Billing', label: 'Billing', color: 'bg-orange-500', description: 'Bill requested' },
-  { value: 'Clear', label: 'Clear', color: 'bg-purple-500', description: 'Needs cleaning' },
-  { value: 'Complete', label: 'Complete', color: 'bg-slate-500', description: 'Guests left, seat free' }
+  { value: 'Allocated', label: 'Allocated', color: 'bg-blue-500', description: 'Seats assigned to guest' },
+  { value: 'Active', label: 'Active', color: 'bg-green-500', description: 'Guest is using seats' },
+  { value: 'Billing', label: 'Billing', color: 'bg-purple-500', description: 'Processing checkout' },
+  { value: 'Clear', label: 'Clear', color: 'bg-teal-500', description: 'Cleaning in progress' },
+  { value: 'Complete', label: 'Complete', color: 'bg-[#006400]', description: 'Fully completed' }
 ];
 
 export const AllocationStatusDialog = ({ open, onOpenChange, allocation, onSave }) => {
