@@ -55,6 +55,17 @@ export const Seats = () => {
     }
   };
 
+  const fetchGroups = async (propertyId) => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/groups/${propertyId}`);
+      if (response.data.success) {
+        setGroups(response.data.groups);
+      }
+    } catch (error) {
+      console.error('Error fetching groups:', error);
+    }
+  };
+
   const fetchSeats = async (propertyId) => {
     try {
       const response = await axios.get(`${BACKEND_URL}/api/seats/${propertyId}`);
