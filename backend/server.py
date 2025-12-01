@@ -251,6 +251,14 @@ class GuestBulkCreate(BaseModel):
     guests: List[dict]  # List of {roomNumber, guestName, category}
 
 # Allocation Models
+class AllocationEvent(BaseModel):
+    """Event in allocation timeline"""
+    eventType: str  # Created, Status Change, Calling On, Calling Off, Complete
+    oldValue: Optional[str] = None
+    newValue: Optional[str] = None
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    description: str
+
 class Allocation(BaseModel):
     model_config = ConfigDict(extra="ignore")
     
@@ -266,6 +274,7 @@ class Allocation(BaseModel):
     allocationDate: str  # Date in YYYY-MM-DD format
     status: str = "Allocated"  # Allocated, Active, Billing, Clear, Complete
     callingFlag: str = "Non Calling"  # Non Calling, Calling, Calling for Checkout
+    events: List[dict] = []  # Timeline of events
     createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
