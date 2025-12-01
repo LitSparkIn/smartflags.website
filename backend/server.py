@@ -285,6 +285,9 @@ class AllocationUpdate(BaseModel):
 class AllocationStatusUpdate(BaseModel):
     status: str  # Allocated, Active, Billing, Clear, Complete
 
+class AllocationCallingFlagUpdate(BaseModel):
+    callingFlag: str  # Non Calling, Calling, Calling for Checkout
+
 # Helper Functions
 def generate_otp() -> str:
     """Generate a 6-digit OTP"""
