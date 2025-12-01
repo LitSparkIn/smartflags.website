@@ -353,8 +353,8 @@ export const SmartView = () => {
                     </div>
                   </div>
                 </div>
-              )
-            ))}
+              );
+            })}
 
             {/* Ungrouped Seats */}
             {ungroupedSeats.length > 0 && (
