@@ -286,7 +286,7 @@ export const SmartView = () => {
                     <p className="text-slate-300 text-sm">{group.seats.length} seats</p>
                   </div>
                   <div className="p-6">
-                    <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-16 xl:grid-cols-20 gap-1.5">
+                    <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-16 xl:grid-cols-20 gap-1">
                       {group.seats.map(seat => {
                         const { status, color, allocation, isCalling, callingDuration } = getSeatStatus(seat.id);
                         const seatType = getSeatType(seat.seatTypeId);
