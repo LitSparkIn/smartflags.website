@@ -299,25 +299,12 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
               </Select>
             </div>
 
-            {/* Allocation Date */}
-            <div className="space-y-2">
-              <Label htmlFor="allocationDate" className="text-slate-700 font-medium">
-                Allocation Date
-              </Label>
-              <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <Input
-                  id="allocationDate"
-                  type="date"
-                  value={formData.allocationDate}
-                  onChange={(e) => {
-                    const newDate = e.target.value;
-                    setFormData(prev => ({ ...prev, allocationDate: newDate }));
-                    fetchAllocatedSeats(newDate);
-                  }}
-                  className="pl-10"
-                />
-              </div>
+            {/* Real-time Allocation Notice */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <p className="text-sm text-blue-800 flex items-center">
+                <Calendar className="w-4 h-4 mr-2" />
+                <strong>Real-time allocation:</strong>&nbsp;Current date and time will be used
+              </p>
             </div>
 
             {/* Seat Selection */}
