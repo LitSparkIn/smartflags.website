@@ -279,7 +279,7 @@ class AllocationUpdate(BaseModel):
     allocationDate: Optional[str] = None
 
 class AllocationStatusUpdate(BaseModel):
-    status: str  # Free, Seated, Active, Billing, Clear, Complete
+    status: str  # Allocated, Active, Billing, Clear, Complete
 
 # Helper Functions
 def generate_otp() -> str:
