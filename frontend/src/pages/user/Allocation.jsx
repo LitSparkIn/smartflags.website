@@ -178,6 +178,78 @@ export const Allocation = () => {
     }
   };
 
+  const handleSetCalling = async (allocationId) => {
+    try {
+      const response = await axios.patch(
+        `${BACKEND_URL}/api/allocations/${allocationId}/calling-flag`,
+        { callingFlag: "Calling" }
+      );
+      
+      if (response.data.success) {
+        toast({
+          title: "Success",
+          description: "Calling flag set - Guest needs service"
+        });
+        fetchAllData(user.entityId);
+      }
+    } catch (error) {
+      console.error('Error setting calling flag:', error);
+      toast({
+        title: "Error",
+        description: error.response?.data?.detail || "Failed to set calling flag",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleSetCallingForCheckout = async (allocationId) => {
+    try {
+      const response = await axios.patch(
+        `${BACKEND_URL}/api/allocations/${allocationId}/calling-flag`,
+        { callingFlag: "Calling for Checkout" }
+      );
+      
+      if (response.data.success) {
+        toast({
+          title: "Success",
+          description: "Calling for Checkout flag set"
+        });
+        fetchAllData(user.entityId);
+      }
+    } catch (error) {
+      console.error('Error setting calling for checkout flag:', error);
+      toast({
+        title: "Error",
+        description: error.response?.data?.detail || "Failed to set calling for checkout flag",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleClearCalling = async (allocationId) => {
+    try {
+      const response = await axios.patch(
+        `${BACKEND_URL}/api/allocations/${allocationId}/calling-flag`,
+        { callingFlag: "Non Calling" }
+      );
+      
+      if (response.data.success) {
+        toast({
+          title: "Success",
+          description: "Calling flag cleared"
+        });
+        fetchAllData(user.entityId);
+      }
+    } catch (error) {
+      console.error('Error clearing calling flag:', error);
+      toast({
+        title: "Error",
+        description: error.response?.data?.detail || "Failed to clear calling flag",
+        variant: "destructive"
+      });
+    }
+  };
+
   const getStatusColor = (status) => {
     const colors = {
       'Allocated': 'bg-blue-500',
