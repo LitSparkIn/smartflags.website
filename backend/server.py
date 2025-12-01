@@ -1698,9 +1698,9 @@ async def update_allocation(allocation_id: str, allocation: AllocationUpdate):
 
 @api_router.patch("/allocations/{allocation_id}/status")
 async def update_allocation_status(allocation_id: str, status_update: AllocationStatusUpdate):
-    """Update allocation status (Free, Seated, Active, Billing, Clear, Complete)"""
+    """Update allocation status (Allocated, Active, Billing, Clear, Complete)"""
     try:
-        valid_statuses = ["Free", "Seated", "Active", "Billing", "Clear", "Complete"]
+        valid_statuses = ["Allocated", "Active", "Billing", "Clear", "Complete"]
         if status_update.status not in valid_statuses:
             raise HTTPException(
                 status_code=400, 
