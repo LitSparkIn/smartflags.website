@@ -26,7 +26,35 @@ export const mockOrganisations = [
   }
 ];
 
-export const mockProperties = [];
+export const mockProperties = [
+  {
+    id: 'prop-1',
+    name: 'SmartFlags Beach Resort',
+    organisationId: 'org-1',
+    email: 'beach@smartflagsdemo.com',
+    phone: '+1-555-0101',
+    address: '123 Beach Boulevard, Miami, FL 33139',
+    createdAt: new Date('2024-01-20').toISOString()
+  },
+  {
+    id: 'prop-2',
+    name: 'SmartFlags Pool Club',
+    organisationId: 'org-1',
+    email: 'pool@smartflagsdemo.com',
+    phone: '+1-555-0102',
+    address: '124 Beach Boulevard, Miami, FL 33139',
+    createdAt: new Date('2024-01-25').toISOString()
+  },
+  {
+    id: 'prop-3',
+    name: 'Oceanview Malibu',
+    organisationId: 'org-2',
+    email: 'malibu@oceanviewhotels.com',
+    phone: '+1-555-0201',
+    address: '456 Coastal Drive, Malibu, CA 90265',
+    createdAt: new Date('2024-02-22').toISOString()
+  }
+];
 
 // Master Data - Countries
 export const mockCountries = [];
