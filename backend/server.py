@@ -130,6 +130,7 @@ class SeatBulkCreate(BaseModel):
 class SeatUpdate(BaseModel):
     seatTypeId: Optional[str] = None
     seatNumber: Optional[str] = None
+    groupId: Optional[str] = None
     staticDeviceId: Optional[str] = None
     status: Optional[str] = None
 
