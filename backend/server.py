@@ -1739,13 +1739,27 @@ async def update_allocation_status(allocation_id: str, status_update: Allocation
         if not allocation:
             raise HTTPException(status_code=404, detail="Allocation not found")
         
-        # Update allocation status
+        old_status = allocation.get('status', 'Allocated')
+        
+        # Create event for status change
+        status_event = {
+            "eventType": "Status Change",
+            "oldValue": old_status,
+            "newValue": status_update.status,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "description": f"Status changed from {old_status} to {status_update.status}"
+        }
+        
+        # Update allocation status and add event
         result = await db.allocations.update_one(
             {"id": allocation_id},
-            {"$set": {
-                "status": status_update.status,
-                "updatedAt": datetime.now(timezone.utc).isoformat()
-            }}
+            {
+                "$set": {
+                    "status": status_update.status,
+                    "updatedAt": datetime.now(timezone.utc).isoformat()
+                },
+                "$push": {"events": status_event}
+            }
         )
         
         # If status changed to "Complete", set seat status back to "Free"
