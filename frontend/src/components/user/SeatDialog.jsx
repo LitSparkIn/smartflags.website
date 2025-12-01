@@ -39,6 +39,7 @@ export const SeatDialog = ({ open, onOpenChange, seat, onSave, propertyId, seatT
       // Edit mode
       setFormData({
         seatTypeId: seat.seatTypeId,
+        groupId: seat.groupId || '',
         seatNumber: seat.seatNumber,
         prefix: '',
         suffix: '',
@@ -50,6 +51,7 @@ export const SeatDialog = ({ open, onOpenChange, seat, onSave, propertyId, seatT
       // Add mode
       setFormData({
         seatTypeId: '',
+        groupId: '',
         prefix: '',
         suffix: '',
         startNumber: '',
