@@ -424,6 +424,7 @@ export const Seats = () => {
         onSave={handleSave}
         propertyId={user?.entityId}
         seatTypes={seatTypes}
+        groups={groups}
       />
 
       <AssignDeviceDialog
