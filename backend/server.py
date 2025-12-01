@@ -1646,6 +1646,15 @@ async def create_allocation(allocation: AllocationCreate):
                 detail=f"The following seats are already allocated: {', '.join(seat_numbers)}. Currently allocated to: {conflict_details}"
             )
         
+        # Create initial event
+        initial_event = {
+            "eventType": "Created",
+            "oldValue": None,
+            "newValue": "Allocated",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "description": f"Allocation created for {guest['guestName']} (Room {allocation.roomNumber})"
+        }
+        
         new_allocation = Allocation(
             propertyId=allocation.propertyId,
             guestId=guest['id'],
@@ -1656,7 +1665,8 @@ async def create_allocation(allocation: AllocationCreate):
             seatIds=allocation.seatIds,
             deviceIds=allocation.deviceIds or [],
             allocationDate=allocation_date,
-            status="Allocated"
+            status="Allocated",
+            events=[initial_event]
         )
         
         allocation_dict = new_allocation.model_dump()
