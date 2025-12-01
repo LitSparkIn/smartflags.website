@@ -211,13 +211,16 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
 
     setLoading(true);
     
+    // Use current date/time for real-time allocation
+    const currentDate = new Date().toISOString().split('T')[0];
+    
     await onSave({
       propertyId,
       roomNumber: formData.roomNumber,
       fbManagerId: formData.fbManagerId,
       seatIds: formData.seatIds,
       deviceIds: formData.deviceIds,
-      allocationDate: formData.allocationDate
+      allocationDate: currentDate
     });
     
     setLoading(false);
