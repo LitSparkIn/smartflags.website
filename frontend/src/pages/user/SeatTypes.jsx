@@ -7,7 +7,7 @@ import { SeatTypeDialog } from '../../components/user/SeatTypeDialog';
 import axios from 'axios';
 import { useToast } from '../../hooks/use-toast';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
 export const SeatTypes = () => {
   const [seatTypes, setSeatTypes] = useState([]);
