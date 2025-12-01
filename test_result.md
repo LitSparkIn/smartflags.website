@@ -219,39 +219,48 @@ user_problem_statement: "User reports that seats are NOT displaying in their ass
 frontend:
   - task: "SmartView seat grouping functionality"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/pages/user/SmartView.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
         - agent: "testing"
         - comment: "Starting comprehensive test of seat grouping functionality. Need to verify: 1) Group creation, 2) Seat creation with group assignment, 3) SmartView filtering logic, 4) API data consistency"
+        - working: true
+        - agent: "testing"
+        - comment: "FIXED: Root cause was incorrect BACKEND_URL configuration. Frontend was calling http://localhost:8282 instead of production URL. Fixed by updating package.json start script and component fallback URLs. SmartView now correctly displays: Pool Area group with 3 seats (P1, P2, P3), Ungrouped section with 2 seats (U1, U2), Total 5 seats. Grouping logic working perfectly."
 
   - task: "Groups page functionality"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/pages/user/Groups.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
         - agent: "testing"
         - comment: "Need to verify group creation works correctly"
+        - working: true
+        - agent: "testing"
+        - comment: "FIXED: Backend URL configuration issue resolved. Groups API now working correctly."
 
   - task: "Seats page with group assignment"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/pages/user/Seats.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
         - agent: "testing"
         - comment: "Need to verify seats can be created with group assignment and that groupId is properly sent to backend"
+        - working: true
+        - agent: "testing"
+        - comment: "FIXED: Backend URL configuration issue resolved. Seats can be created with proper group assignment. Backend correctly stores groupId field."
 
 metadata:
   created_by: "testing_agent"
