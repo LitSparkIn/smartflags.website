@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { MapPin, Users, Armchair, Calendar, Smartphone } from 'lucide-react';
+import { MapPin, Users, Armchair, Smartphone, Calendar } from 'lucide-react';
 import { useToast } from '../../hooks/use-toast';
 import axios from 'axios';
 
