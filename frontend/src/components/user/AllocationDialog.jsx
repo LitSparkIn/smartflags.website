@@ -314,7 +314,7 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
               </Label>
               {allocatedSeats.length > 0 && (
                 <p className="text-xs text-orange-600">
-                  ⚠️ {allocatedSeats.length} seats already allocated for {formData.allocationDate}
+                  ⚠️ {allocatedSeats.length} seats already allocated today
                 </p>
               )}
               <div className="border border-slate-300 rounded-lg p-4 max-h-64 overflow-y-auto">
