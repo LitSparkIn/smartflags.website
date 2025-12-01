@@ -237,7 +237,7 @@ export const SmartView = () => {
                   <div className="p-6">
                     <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-3">
                       {group.seats.map(seat => {
-                        const { status, color, allocation } = getSeatStatus(seat.id);
+                        const { status, color, allocation, isCalling } = getSeatStatus(seat.id);
                         const seatType = getSeatType(seat.seatTypeId);
                         
                         return (
@@ -254,8 +254,20 @@ export const SmartView = () => {
                               </div>
                             )}
                             
+                            {/* Calling Indicator */}
+                            {isCalling && (
+                              <div className="absolute -top-1 -right-1 z-10">
+                                <span className="relative flex h-4 w-4">
+                                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                  <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500"></span>
+                                </span>
+                              </div>
+                            )}
+                            
                             <div
-                              className={`${color} rounded-lg border-2 p-3 transition-all hover:scale-105 hover:shadow-lg cursor-pointer flex flex-col items-center justify-center min-h-[80px]`}
+                              className={`${color} rounded-lg border-2 p-3 transition-all hover:scale-105 hover:shadow-lg cursor-pointer flex flex-col items-center justify-center min-h-[80px] ${
+                                isCalling ? 'animate-pulse ring-2 ring-red-500 ring-offset-2' : ''
+                              }`}
                             >
                               {seatType.icon ? (
                                 <img 
