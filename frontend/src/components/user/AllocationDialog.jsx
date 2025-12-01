@@ -383,6 +383,11 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
               <p className="text-xs text-slate-500">
                 Devices auto-selected from seats. You can add more or remove them.
               </p>
+              {allocatedDevices.length > 0 && (
+                <p className="text-xs text-orange-600">
+                  ⚠️ {allocatedDevices.length} devices already allocated today
+                </p>
+              )}
               {devices.length === 0 ? (
                 <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
                   <p className="text-sm text-orange-800">
@@ -393,6 +398,7 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
                 <div className="border border-slate-300 rounded-lg p-4 max-h-48 overflow-y-auto">
                   <div className="space-y-2">
                     {devices.map((device) => {
+                      const isAllocated = allocatedDevices.includes(device.id);
                       const isSelected = formData.deviceIds.includes(device.id);
                       const isAutoSelected = formData.seatIds.some(seatId => {
                         const seat = seats.find(s => s.id === seatId);
@@ -402,24 +408,32 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
                       return (
                         <label
                           key={device.id}
-                          className={`flex items-center space-x-3 p-2 rounded-lg border-2 cursor-pointer transition-all ${
-                            isSelected
-                              ? 'bg-blue-50 border-blue-500'
-                              : 'bg-white border-slate-300 hover:border-blue-300'
+                          className={`flex items-center space-x-3 p-2 rounded-lg border-2 transition-all ${
+                            isAllocated
+                              ? 'bg-red-100 border-red-300 cursor-not-allowed opacity-60'
+                              : isSelected
+                              ? 'bg-blue-50 border-blue-500 cursor-pointer'
+                              : 'bg-white border-slate-300 hover:border-blue-300 cursor-pointer'
                           }`}
                         >
                           <input
                             type="checkbox"
                             checked={isSelected}
-                            onChange={() => handleDeviceToggle(device.id)}
-                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                            onChange={() => !isAllocated && handleDeviceToggle(device.id)}
+                            disabled={isAllocated}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                           />
-                          <Smartphone className={`w-4 h-4 ${isSelected ? 'text-blue-600' : 'text-slate-400'}`} />
+                          <Smartphone className={`w-4 h-4 ${isAllocated ? 'text-red-400' : isSelected ? 'text-blue-600' : 'text-slate-400'}`} />
                           <div className="flex-1">
-                            <span className={`text-sm font-semibold ${isSelected ? 'text-blue-900' : 'text-slate-900'}`}>
+                            <span className={`text-sm font-semibold ${isAllocated ? 'text-red-400' : isSelected ? 'text-blue-900' : 'text-slate-900'}`}>
                               {device.deviceId}
                             </span>
-                            {isAutoSelected && (
+                            {isAllocated && (
+                              <span className="ml-2 text-xs text-red-600 bg-red-100 px-2 py-0.5 rounded-full">
+                                Allocated
+                              </span>
+                            )}
+                            {!isAllocated && isAutoSelected && (
                               <span className="ml-2 text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
                                 Auto
                               </span>
