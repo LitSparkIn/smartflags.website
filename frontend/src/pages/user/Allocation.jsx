@@ -25,6 +25,7 @@ export const Allocation = () => {
   const [seats, setSeats] = useState([]);
   const [seatTypes, setSeatTypes] = useState([]);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userData = localStorage.getItem('userData');
