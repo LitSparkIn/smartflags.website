@@ -302,7 +302,16 @@ export const AllocationDetails = () => {
               <Calendar className="w-5 h-5 text-teal-500 mt-1" />
               <div>
                 <p className="text-sm text-slate-600">Allocation Date</p>
-                <p className="font-semibold text-slate-800">{allocation.allocationDate}</p>
+                <p className="font-semibold text-slate-800">
+                  {new Date(allocation.createdAt).toLocaleString('en-US', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                  })}
+                </p>
               </div>
             </div>
           </div>
