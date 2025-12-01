@@ -265,6 +265,7 @@ class Allocation(BaseModel):
     deviceIds: List[str] = []  # Devices assigned to this allocation
     allocationDate: str  # Date in YYYY-MM-DD format
     status: str = "Allocated"  # Allocated, Active, Billing, Clear, Complete
+    callingFlag: str = "Non Calling"  # Non Calling, Calling, Calling for Checkout
     createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
