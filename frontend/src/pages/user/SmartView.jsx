@@ -258,7 +258,7 @@ export const SmartView = () => {
                     <p className="text-slate-300 text-sm">{group.seats.length} seats</p>
                   </div>
                   <div className="p-6">
-                    <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-16 xl:grid-cols-20 gap-3">
+                    <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-16 xl:grid-cols-20 gap-1.5">
                       {group.seats.map(seat => {
                         const { status, color, allocation, isCalling } = getSeatStatus(seat.id);
                         const seatType = getSeatType(seat.seatTypeId);
@@ -278,7 +278,7 @@ export const SmartView = () => {
                             )}
                             
                             <div
-                              className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg cursor-pointer flex flex-col items-center justify-center h-[80px] w-[40px] ${
+                              className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg cursor-pointer flex flex-col items-center justify-center h-[88px] w-[60px] ${
                                 isCalling ? 'animate-pulse ring-4 ring-red-500 ring-offset-2 shadow-xl shadow-red-500/50' : ''
                               }`}
                             >
@@ -286,16 +286,16 @@ export const SmartView = () => {
                                 <img 
                                   src={seatType.icon} 
                                   alt={seatType.name}
-                                  className={`w-5 h-5 object-contain mb-1 ${
+                                  className={`w-6 h-6 object-contain mb-1 ${
                                     status === 'Free' ? '' : 'brightness-0 invert'
                                   }`}
                                 />
                               ) : (
-                                <Armchair className={`w-4 h-4 mb-1 ${
+                                <Armchair className={`w-5 h-5 mb-1 ${
                                   status === 'Free' ? 'text-slate-400' : 'text-white'
                                 }`} />
                               )}
-                              <span className={`text-[10px] font-semibold ${
+                              <span className={`text-[11px] font-semibold ${
                                 status === 'Free' ? 'text-slate-700' : 'text-white'
                               }`}>
                                 {seat.seatNumber}
