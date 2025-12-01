@@ -95,6 +95,19 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
     }
   };
 
+  const fetchAllocatedDevices = async (date) => {
+    try {
+      const response = await axios.get(
+        `${BACKEND_URL}/api/allocations/${propertyId}/allocated-devices?date=${date}`
+      );
+      if (response.data.success) {
+        setAllocatedDevices(response.data.allocatedDeviceIds);
+      }
+    } catch (error) {
+      console.error('Error fetching allocated devices:', error);
+    }
+  };
+
   const handleRoomNumberChange = (e) => {
     const roomNum = e.target.value;
     setFormData(prev => ({ ...prev, roomNumber: roomNum }));
