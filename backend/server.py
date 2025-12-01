@@ -112,6 +112,7 @@ class Seat(BaseModel):
     propertyId: str
     seatTypeId: str
     seatNumber: str
+    groupId: Optional[str] = None  # Group assignment
     staticDeviceId: Optional[str] = None  # Static device assigned to seat
     status: str = "Free"  # Free, Allocated, Blocked
     createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
