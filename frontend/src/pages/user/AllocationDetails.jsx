@@ -335,7 +335,7 @@ export const AllocationDetails = () => {
               </div>
               <p className="text-sm opacity-90 mb-1">Total Time</p>
               <p className="text-3xl font-bold">
-                {analytics.totalTime.hours}h {analytics.totalTime.minutes}m
+                {analytics.totalTime.hours}h {analytics.totalTime.minutes}m {analytics.totalTime.seconds}s
               </p>
             </div>
 
@@ -353,7 +353,7 @@ export const AllocationDetails = () => {
                 <Clock className="w-8 h-8 opacity-80" />
               </div>
               <p className="text-sm opacity-90 mb-1">Avg Calling Time</p>
-              <p className="text-3xl font-bold">{analytics.avgCallingTime}m</p>
+              <p className="text-3xl font-bold">{analytics.avgCallingTime.minutes}m {analytics.avgCallingTime.seconds}s</p>
               <p className="text-xs opacity-75 mt-1">per call</p>
             </div>
 
@@ -362,7 +362,7 @@ export const AllocationDetails = () => {
                 <Activity className="w-8 h-8 opacity-80" />
               </div>
               <p className="text-sm opacity-90 mb-1">Active Time</p>
-              <p className="text-3xl font-bold">{analytics.activeTime}m</p>
+              <p className="text-3xl font-bold">{analytics.activeTime.minutes}m {analytics.activeTime.seconds}s</p>
               <p className="text-xs opacity-75 mt-1">in Active status</p>
             </div>
 
