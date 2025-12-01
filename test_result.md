@@ -281,3 +281,38 @@ agent_communication:
     - message: "Starting comprehensive debugging of SmartView seat grouping. Will test complete flow: login -> create group -> create seat with group -> verify SmartView display. Focus on data consistency between frontend filtering logic and backend API responses."
     - agent: "testing"
     - message: "ISSUE RESOLVED: SmartView seat grouping functionality is now working correctly. Root cause was incorrect BACKEND_URL configuration in package.json start script (http://localhost:8282 instead of production URL). Fixed by updating frontend/package.json and component fallback URLs. All seat grouping features working: grouped seats display in correct sections, ungrouped seats display separately, filtering logic works perfectly. No further action needed."
+    - agent: "testing"
+    - message: "Starting comprehensive testing of new Allocation Details page feature. Will test: 1) Details button on allocation cards, 2) AllocationDetails page navigation and display, 3) Event tracking and timeline, 4) Analytics calculations, 5) Back button functionality. Focus on complete user flow from Allocation page to AllocationDetails page."
+
+frontend:
+  - task: "Allocation Details page implementation"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/user/AllocationDetails.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "New feature implementation to test. Need to verify: 1) Details button on allocation cards, 2) AllocationDetails page loads correctly, 3) Guest information displays, 4) Analytics cards show correct calculations, 5) Event timeline displays events, 6) Navigation works properly"
+
+  - task: "Allocation page Details button"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/user/Allocation.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+        - agent: "testing"
+        - comment: "Need to verify Details button with eye icon is visible on allocation cards and navigates correctly to AllocationDetails page"
+
+test_plan:
+  current_focus:
+    - "Allocation Details page implementation"
+    - "Allocation page Details button"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
