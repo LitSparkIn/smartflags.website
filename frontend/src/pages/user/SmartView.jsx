@@ -76,8 +76,11 @@ export const SmartView = () => {
     );
     
     if (!allocation) {
-      return { status: 'Free', color: 'bg-white border-slate-300', allocation: null };
+      return { status: 'Free', color: 'bg-white border-slate-300', allocation: null, isCalling: false };
     }
+    
+    // Check if calling flag is set
+    const isCalling = allocation.callingFlag === "Calling" || allocation.callingFlag === "Calling for Checkout";
     
     // Return status based on allocation status
     const statusMap = {
@@ -92,7 +95,8 @@ export const SmartView = () => {
     
     return { 
       ...statusInfo, 
-      allocation: allocation 
+      allocation: allocation,
+      isCalling: isCalling
     };
   };
 
