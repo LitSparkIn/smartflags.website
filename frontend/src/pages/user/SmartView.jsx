@@ -68,7 +68,7 @@ export const SmartView = () => {
     }
   };
 
-  // Get seat status based on allocation
+  // Get seat status and allocation details
   const getSeatStatus = (seatId) => {
     // Find if this seat is in any active allocation
     const allocation = allocations.find(alloc => 
@@ -76,7 +76,7 @@ export const SmartView = () => {
     );
     
     if (!allocation) {
-      return { status: 'Free', color: 'bg-white border-slate-300' };
+      return { status: 'Free', color: 'bg-white border-slate-300', allocation: null };
     }
     
     // Return status based on allocation status
@@ -88,7 +88,12 @@ export const SmartView = () => {
       'Complete': { status: 'Free', color: 'bg-white border-slate-300' }
     };
     
-    return statusMap[allocation.status] || { status: 'Free', color: 'bg-white border-slate-300' };
+    const statusInfo = statusMap[allocation.status] || { status: 'Free', color: 'bg-white border-slate-300' };
+    
+    return { 
+      ...statusInfo, 
+      allocation: allocation 
+    };
   };
 
   // Calculate statistics
