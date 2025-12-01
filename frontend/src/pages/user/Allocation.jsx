@@ -180,14 +180,13 @@ export const Allocation = () => {
 
   const getStatusColor = (status) => {
     const colors = {
-      'Free': 'bg-gray-500',
-      'Seated': 'bg-blue-500',
+      'Allocated': 'bg-blue-500',
       'Active': 'bg-green-500',
-      'Billing': 'bg-orange-500',
-      'Clear': 'bg-purple-500',
-      'Complete': 'bg-slate-500'
+      'Billing': 'bg-purple-500',
+      'Clear': 'bg-teal-500',
+      'Complete': 'bg-[#006400]'
     };
-    return colors[status] || 'bg-gray-500';
+    return colors[status] || 'bg-blue-500';
   };
 
   const getStaffName = (staffId) => {
