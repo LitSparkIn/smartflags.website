@@ -381,19 +381,9 @@ export const SmartView = () => {
                             </div>
                           )}
                           
-                          {/* Calling Indicator */}
-                          {isCalling && (
-                            <div className="absolute -top-1 -right-1 z-10">
-                              <span className="relative flex h-4 w-4">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500"></span>
-                              </span>
-                            </div>
-                          )}
-                          
                           <div
                             className={`${color} rounded-lg border-2 p-3 transition-all hover:scale-105 hover:shadow-lg cursor-pointer flex flex-col items-center justify-center min-h-[80px] ${
-                              isCalling ? 'animate-pulse ring-2 ring-red-500 ring-offset-2' : ''
+                              isCalling ? 'animate-pulse ring-4 ring-red-500 ring-offset-2 shadow-xl shadow-red-500/50' : ''
                             }`}
                           >
                             {seatType.icon ? (
@@ -415,6 +405,15 @@ export const SmartView = () => {
                               {seat.seatNumber}
                             </span>
                           </div>
+
+                          {/* Calling Timer */}
+                          {isCalling && (
+                            <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 z-10">
+                              <span className="bg-red-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-lg whitespace-nowrap animate-pulse">
+                                {getCallingSince(allocation)}
+                              </span>
+                            </div>
+                          )}
                           
                           {/* Enhanced Tooltip */}
                           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
