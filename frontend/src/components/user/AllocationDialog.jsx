@@ -44,14 +44,17 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
         roomNumber: '',
         fbManagerId: '',
         seatIds: [],
-        deviceIds: [],
-        allocationDate: new Date().toISOString().split('T')[0]
+        deviceIds: []
       });
       setGuestInfo(null);
       setAllocatedSeats([]);
+      setAllocatedDevices([]);
     } else {
-      // Fetch allocated seats, seat types, and devices when dialog opens
-      fetchAllocatedSeats(new Date().toISOString().split('T')[0]);
+      // Fetch allocated seats/devices, seat types, and devices when dialog opens
+      // Use current date for real-time allocation
+      const currentDate = new Date().toISOString().split('T')[0];
+      fetchAllocatedSeats(currentDate);
+      fetchAllocatedDevices(currentDate);
       fetchSeatTypes();
       fetchDevices();
     }
