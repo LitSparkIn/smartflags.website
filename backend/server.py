@@ -121,6 +121,7 @@ class Seat(BaseModel):
 class SeatBulkCreate(BaseModel):
     propertyId: str
     seatTypeId: str
+    groupId: Optional[str] = None
     prefix: Optional[str] = ""
     suffix: Optional[str] = ""
     startNumber: int
