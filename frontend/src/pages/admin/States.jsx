@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AdminLayout } from '../../components/admin/AdminLayout';
 import { Plus, Pencil, Trash2, Search, Map, Globe } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { mockStates as initialStates, getCountryById } from '../../mockAdmin';
 import { StateDialog } from '../../components/admin/StateDialog';
 import { toast } from 'sonner';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import axios from 'axios';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,14 +24,42 @@ import {
   SelectValue,
 } from '../../components/ui/select';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
+
 export const States = () => {
-  const [states, setStates] = useLocalStorage('smartflags_states', initialStates);
-  const [countries] = useLocalStorage('smartflags_countries', []);
+  const [states, setStates] = useState([]);
+  const [countries, setCountries] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCountryId, setFilterCountryId] = useState('all');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingState, setEditingState] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      
+      const statesResponse = await axios.get(`${BACKEND_URL}/api/states`);
+      if (statesResponse.data.success) {
+        setStates(statesResponse.data.states);
+      }
+      
+      const countriesResponse = await axios.get(`${BACKEND_URL}/api/countries`);
+      if (countriesResponse.data.success) {
+        setCountries(countriesResponse.data.countries);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      toast.error('Failed to load data');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredStates = states.filter((state) => {
     const matchesSearch = state.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -46,59 +73,91 @@ export const States = () => {
     setIsDialogOpen(true);
   };
 
-  const handleEdit = (state, e) => {
-    e.stopPropagation();
+  const handleEdit = (state) => {
     setEditingState(state);
     setIsDialogOpen(true);
   };
 
-  const handleSave = (stateData) => {
-    if (editingState) {
-      setStates(states.map(s =>
-        s.id === editingState.id ? { ...s, ...stateData } : s
-      ));
-      toast.success('State updated successfully!');
-    } else {
-      const newState = {
-        id: `state-${Date.now()}`,
-        ...stateData,
-        createdAt: new Date().toISOString()
-      };
-      setStates([...states, newState]);
-      toast.success('State created successfully!');
+  const handleSave = async (stateData) => {
+    try {
+      if (editingState) {
+        const response = await axios.put(`${BACKEND_URL}/api/states/${editingState.id}`, stateData);
+        if (response.data.success) {
+          toast.success('State updated successfully!');
+          fetchData();
+        }
+      } else {
+        const response = await axios.post(`${BACKEND_URL}/api/states`, stateData);
+        if (response.data.success) {
+          toast.success('State created successfully!');
+          fetchData();
+        }
+      }
+      setIsDialogOpen(false);
+      setEditingState(null);
+    } catch (error) {
+      console.error('Error saving state:', error);
+      toast.error(error.response?.data?.detail || 'Failed to save state');
     }
-    setIsDialogOpen(false);
-    setEditingState(null);
   };
 
-  const handleDelete = (id) => {
-    setStates(states.filter(s => s.id !== id));
-    toast.success('State deleted successfully!');
-    setDeleteId(null);
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`${BACKEND_URL}/api/states/${id}`);
+      if (response.data.success) {
+        toast.success('State deleted successfully!');
+        fetchData();
+      }
+      setDeleteId(null);
+    } catch (error) {
+      console.error('Error deleting state:', error);
+      toast.error(error.response?.data?.detail || 'Failed to delete state');
+      setDeleteId(null);
+    }
   };
+
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="p-8 flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-slate-600">Loading states...</p>
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout>
       <div className="p-8">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-slate-900 mb-2">States</h1>
-            <p className="text-slate-600">Manage state master data</p>
+            <p className="text-slate-600">Manage states and provinces</p>
           </div>
           <Button
             onClick={handleCreate}
             className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white shadow-lg"
+            disabled={countries.length === 0}
           >
             <Plus className="w-5 h-5 mr-2" />
             Add State
           </Button>
         </div>
 
-        {/* Filters */}
-        <div className="mb-6 flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+        {countries.length === 0 && (
+          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
+            <p className="text-sm text-orange-800">
+              ⚠️ Please add countries first before creating states.
+            </p>
+          </div>
+        )}
+
+        <div className="mb-6 flex gap-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
             <Input
               type="text"
               placeholder="Search states..."
@@ -108,7 +167,7 @@ export const States = () => {
             />
           </div>
           <Select value={filterCountryId} onValueChange={setFilterCountryId}>
-            <SelectTrigger className="w-full sm:w-64">
+            <SelectTrigger className="w-64">
               <SelectValue placeholder="Filter by country" />
             </SelectTrigger>
             <SelectContent>
@@ -122,74 +181,83 @@ export const States = () => {
           </Select>
         </div>
 
-        {/* Grid View */}
         {filteredStates.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg border border-slate-100 p-12 text-center">
+          <div className="bg-white rounded-xl shadow-md p-12 text-center">
             <Map className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-            <p className="text-slate-500 text-lg">No states found</p>
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">No states found</h3>
+            <p className="text-slate-600 mb-4">
+              {searchTerm ? 'Try adjusting your search terms' : 'Add your first state to get started'}
+            </p>
+            {!searchTerm && countries.length > 0 && (
+              <Button onClick={handleCreate}>
+                <Plus className="w-4 h-4 mr-2" />
+                Add State
+              </Button>
+            )}
           </div>
         ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredStates.map((state) => {
-                const country = getCountryById(state.countryId);
-                return (
-                  <div
-                    key={state.id}
-                    className="bg-white rounded-xl shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group overflow-hidden"
-                  >
-                    {/* Header */}
-                    <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-6">
-                      <div className="flex items-center justify-between">
-                        <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                          <Map className="w-7 h-7 text-white" />
+          <div className="bg-white rounded-xl shadow-md overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-slate-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    State Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Code
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Country
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                {filteredStates.map((state) => {
+                  const country = countries.find(c => c.id === state.countryId);
+                  return (
+                    <tr key={state.id} className="hover:bg-slate-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <Map className="w-5 h-5 text-slate-400 mr-3" />
+                          <span className="text-sm font-medium text-slate-900">{state.name}</span>
                         </div>
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={(e) => handleEdit(state, e)}
-                            className="w-9 h-9 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg flex items-center justify-center transition-colors"
-                          >
-                            <Pencil className="w-4 h-4 text-white" />
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setDeleteId(state.id);
-                            }}
-                            className="w-9 h-9 bg-white/20 hover:bg-red-500 backdrop-blur-sm rounded-lg flex items-center justify-center transition-colors"
-                          >
-                            <Trash2 className="w-4 h-4 text-white" />
-                          </button>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="text-sm text-slate-600">{state.code}</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <Globe className="w-4 h-4 text-slate-400 mr-2" />
+                          <span className="text-sm text-slate-600">{country?.name || 'Unknown'}</span>
                         </div>
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-6">
-                      <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors">
-                        {state.name}
-                      </h3>
-                      
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="inline-flex items-center space-x-2 bg-emerald-50 px-3 py-1 rounded-full">
-                          <span className="text-xs font-mono font-bold text-emerald-700">Code: {state.code}</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-2 text-slate-600">
-                        <Globe className="w-4 h-4" />
-                        <span className="text-sm">{country?.name || 'N/A'}</span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="mt-6 text-sm text-slate-500">
-              Showing {filteredStates.length} of {states.length} states
-            </div>
-          </>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleEdit(state)}
+                          className="text-blue-600 hover:text-blue-900 hover:bg-blue-50 mr-2"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setDeleteId(state.id)}
+                          className="text-red-600 hover:text-red-900 hover:bg-red-50"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 
@@ -198,6 +266,7 @@ export const States = () => {
         onOpenChange={setIsDialogOpen}
         state={editingState}
         onSave={handleSave}
+        countries={countries}
       />
 
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
