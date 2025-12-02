@@ -3,13 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { AdminLayout } from '../../components/admin/AdminLayout';
 import { ArrowLeft, Home, Mail, Phone, MapPin, Calendar, Pencil, Building2, UserPlus, Users } from 'lucide-react';
 import { Button } from '../../components/ui/button';
-import { getOrganisationById } from '../../mockAdmin';
 import { PropertyDialog } from '../../components/admin/PropertyDialog';
 import { AdminLoginDialog } from '../../components/admin/AdminLoginDialog';
 import { toast } from 'sonner';
 import axios from 'axios';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
 export const PropertyDetails = () => {
   const { id } = useParams();
@@ -18,36 +17,60 @@ export const PropertyDetails = () => {
   const [isAdminLoginDialogOpen, setIsAdminLoginDialogOpen] = useState(false);
   const [property, setProperty] = useState(null);
   const [organisation, setOrganisation] = useState(null);
+  const [organisations, setOrganisations] = useState([]);
   const [admins, setAdmins] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Fetch admins for this property
-  const fetchAdmins = async () => {
-    try {
-      const response = await axios.get(`${BACKEND_URL}/api/admin/list/property/${id}`);
-      if (response.data.success) {
-        setAdmins(response.data.admins);
-      }
-    } catch (error) {
-      console.error('Error fetching admins:', error);
-    }
-  };
-
-  // Get property and organisation from localStorage
   useEffect(() => {
+    fetchData();
+  }, [id]);
+
+  const fetchData = async () => {
     try {
-      const stored = localStorage.getItem('smartflags_properties');
-      const properties = stored ? JSON.parse(stored) : [];
-      const foundProperty = properties.find(prop => prop.id === id);
-      setProperty(foundProperty);
+      setLoading(true);
       
-      if (foundProperty) {
-        const foundOrg = getOrganisationById(foundProperty.organisationId);
-        setOrganisation(foundOrg);
-        // Fetch admins for this property
-        fetchAdmins();
+      // Fetch property
+      const propResponse = await axios.get(`${BACKEND_URL}/api/properties/${id}`);
+      if (propResponse.data.success) {
+        setProperty(propResponse.data.property);
+        
+        // Fetch organisation for this property
+        const orgResponse = await axios.get(`${BACKEND_URL}/api/organisations/${propResponse.data.property.organisationId}`);
+        if (orgResponse.data.success) {
+          setOrganisation(orgResponse.data.organisation);
+        }
+      }
+      
+      // Fetch all organisations for editing
+      const orgsResponse = await axios.get(`${BACKEND_URL}/api/organisations`);
+      if (orgsResponse.data.success) {
+        setOrganisations(orgsResponse.data.organisations);
+      }
+      
+      // Fetch admins for this property
+      const adminsResponse = await axios.get(`${BACKEND_URL}/api/admin/list/property/${id}`);
+      if (adminsResponse.data.success) {
+        setAdmins(adminsResponse.data.admins);
       }
     } catch (error) {
       console.error('Error loading property:', error);
+      toast.error('Failed to load property details');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async (propData) => {
+    try {
+      const response = await axios.put(`${BACKEND_URL}/api/properties/${id}`, propData);
+      if (response.data.success) {
+        toast.success('Property updated successfully!');
+        fetchData();
+        setIsEditDialogOpen(false);
+      }
+    } catch (error) {
+      console.error('Error updating property:', error);
+      toast.error(error.response?.data?.detail || 'Failed to update property');
     }
   }, [id]);
 
