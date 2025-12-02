@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AdminLayout } from '../../components/admin/AdminLayout';
 import { Plus, Pencil, Trash2, Search, Home, Building2, Mail, Phone, MapPin, Eye } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { mockProperties as initialProperties, getOrganisationById } from '../../mockAdmin';
 import { PropertyDialog } from '../../components/admin/PropertyDialog';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import axios from 'axios';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,15 +25,18 @@ import {
   SelectValue,
 } from '../../components/ui/select';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
+
 export const Properties = () => {
   const navigate = useNavigate();
-  const [properties, setProperties] = useLocalStorage('smartflags_properties', initialProperties);
-  const [organisations] = useLocalStorage('smartflags_organisations', []);
+  const [properties, setProperties] = useState([]);
+  const [organisations, setOrganisations] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterOrgId, setFilterOrgId] = useState('all');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingProperty, setEditingProperty] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const filteredProperties = properties.filter((prop) => {
     const matchesSearch =
