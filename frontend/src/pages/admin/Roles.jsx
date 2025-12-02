@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AdminLayout } from '../../components/admin/AdminLayout';
 import { Plus, Pencil, Trash2, Search, Shield } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { mockRoles as initialRoles } from '../../mockAdmin';
 import { RoleDialog } from '../../components/admin/RoleDialog';
 import { toast } from 'sonner';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import axios from 'axios';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,19 +17,34 @@ import {
   AlertDialogTitle,
 } from '../../components/ui/alert-dialog';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
+
 export const Roles = () => {
-  const [roles, setRoles] = useLocalStorage('smartflags_roles', initialRoles);
+  const [roles, setRoles] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingRole, setEditingRole] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Initialize roles if localStorage is empty but initialRoles has data
-  React.useEffect(() => {
-    if (roles.length === 0 && initialRoles.length > 0) {
-      setRoles(initialRoles);
-    }
+  useEffect(() => {
+    fetchRoles();
   }, []);
+
+  const fetchRoles = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${BACKEND_URL}/api/roles`);
+      if (response.data.success) {
+        setRoles(response.data.roles);
+      }
+    } catch (error) {
+      console.error('Error fetching roles:', error);
+      toast.error('Failed to load roles');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredRoles = roles.filter((role) =>
     role.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -42,45 +56,69 @@ export const Roles = () => {
     setIsDialogOpen(true);
   };
 
-  const handleEdit = (role, e) => {
-    e.stopPropagation();
+  const handleEdit = (role) => {
     setEditingRole(role);
     setIsDialogOpen(true);
   };
 
-  const handleSave = (roleData) => {
-    if (editingRole) {
-      setRoles(roles.map(r =>
-        r.id === editingRole.id ? { ...r, ...roleData } : r
-      ));
-      toast.success('Role updated successfully!');
-    } else {
-      const newRole = {
-        id: `role-${Date.now()}`,
-        ...roleData,
-        createdAt: new Date().toISOString()
-      };
-      setRoles([...roles, newRole]);
-      toast.success('Role created successfully!');
+  const handleSave = async (roleData) => {
+    try {
+      if (editingRole) {
+        const response = await axios.put(`${BACKEND_URL}/api/roles/${editingRole.id}`, roleData);
+        if (response.data.success) {
+          toast.success('Role updated successfully!');
+          fetchRoles();
+        }
+      } else {
+        const response = await axios.post(`${BACKEND_URL}/api/roles`, roleData);
+        if (response.data.success) {
+          toast.success('Role created successfully!');
+          fetchRoles();
+        }
+      }
+      setIsDialogOpen(false);
+      setEditingRole(null);
+    } catch (error) {
+      console.error('Error saving role:', error);
+      toast.error(error.response?.data?.detail || 'Failed to save role');
     }
-    setIsDialogOpen(false);
-    setEditingRole(null);
   };
 
-  const handleDelete = (id) => {
-    setRoles(roles.filter(r => r.id !== id));
-    toast.success('Role deleted successfully!');
-    setDeleteId(null);
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`${BACKEND_URL}/api/roles/${id}`);
+      if (response.data.success) {
+        toast.success('Role deleted successfully!');
+        fetchRoles();
+      }
+      setDeleteId(null);
+    } catch (error) {
+      console.error('Error deleting role:', error);
+      toast.error(error.response?.data?.detail || 'Failed to delete role');
+      setDeleteId(null);
+    }
   };
+
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="p-8 flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-slate-600">Loading roles...</p>
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout>
       <div className="p-8">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-slate-900 mb-2">Roles</h1>
-            <p className="text-slate-600">Manage role and permissions</p>
+            <p className="text-slate-600">Define roles and permissions for users</p>
           </div>
           <Button
             onClick={handleCreate}
@@ -91,10 +129,9 @@ export const Roles = () => {
           </Button>
         </div>
 
-        {/* Search */}
         <div className="mb-6">
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
             <Input
               type="text"
               placeholder="Search roles..."
@@ -105,84 +142,84 @@ export const Roles = () => {
           </div>
         </div>
 
-        {/* Grid View */}
         {filteredRoles.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg border border-slate-100 p-12 text-center">
+          <div className="bg-white rounded-xl shadow-md p-12 text-center">
             <Shield className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-            <p className="text-slate-500 text-lg">No roles found</p>
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">No roles found</h3>
+            <p className="text-slate-600 mb-4">
+              {searchTerm ? 'Try adjusting your search terms' : 'Add your first role to get started'}
+            </p>
+            {!searchTerm && (
+              <Button onClick={handleCreate}>
+                <Plus className="w-4 h-4 mr-2" />
+                Add Role
+              </Button>
+            )}
           </div>
         ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredRoles.map((role) => (
-                <div
-                  key={role.id}
-                  className="bg-white rounded-xl shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group overflow-hidden"
-                >
-                  {/* Header */}
-                  <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                        <Shield className="w-7 h-7 text-white" />
-                      </div>
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={(e) => handleEdit(role, e)}
-                          className="w-9 h-9 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg flex items-center justify-center transition-colors"
-                        >
-                          <Pencil className="w-4 h-4 text-white" />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setDeleteId(role.id);
-                          }}
-                          className="w-9 h-9 bg-white/20 hover:bg-red-500 backdrop-blur-sm rounded-lg flex items-center justify-center transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4 text-white" />
-                        </button>
-                      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredRoles.map((role) => (
+              <div
+                key={role.id}
+                className="bg-white rounded-xl shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+              >
+                <div className="bg-gradient-to-br from-purple-500 to-indigo-600 p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                      <Shield className="w-7 h-7 text-white" />
                     </div>
                   </div>
+                  <h3 className="text-xl font-bold text-white mt-4">{role.name}</h3>
+                </div>
 
-                  {/* Content */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors">
-                      {role.name}
-                    </h3>
-                    
-                    <p className="text-sm text-slate-600 mb-4 line-clamp-2">
-                      {role.description}
-                    </p>
+                <div className="p-6">
+                  <p className="text-sm text-slate-600 mb-4 line-clamp-2">{role.description}</p>
 
-                    {/* Permissions */}
-                    <div className="space-y-2">
-                      <p className="text-xs font-semibold text-slate-500 uppercase">Permissions</p>
+                  {role.permissions && role.permissions.length > 0 && (
+                    <div className="mb-4">
+                      <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Permissions</p>
                       <div className="flex flex-wrap gap-2">
-                        {role.permissions.slice(0, 3).map((permission, index) => (
+                        {role.permissions.slice(0, 3).map((permission, idx) => (
                           <span
-                            key={index}
-                            className="inline-flex items-center px-2 py-1 bg-emerald-50 text-emerald-700 text-xs rounded-md font-medium"
+                            key={idx}
+                            className="px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md"
                           >
                             {permission}
                           </span>
                         ))}
                         {role.permissions.length > 3 && (
-                          <span className="inline-flex items-center px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md font-medium">
+                          <span className="px-2 py-1 bg-slate-200 text-slate-700 text-xs rounded-md font-medium">
                             +{role.permissions.length - 3} more
                           </span>
                         )}
                       </div>
                     </div>
+                  )}
+
+                  <div className="flex justify-end space-x-2 pt-4 border-t border-slate-100">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleEdit(role)}
+                      className="text-blue-600 hover:text-blue-900 hover:bg-blue-50"
+                    >
+                      <Pencil className="w-4 h-4 mr-1" />
+                      Edit
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setDeleteId(role.id)}
+                      className="text-red-600 hover:text-red-900 hover:bg-red-50"
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      Delete
+                    </Button>
                   </div>
                 </div>
-              ))}
-            </div>
-
-            <div className="mt-6 text-sm text-slate-500">
-              Showing {filteredRoles.length} of {roles.length} roles
-            </div>
-          </>
+              </div>
+            ))}
+          </div>
         )}
       </div>
 
