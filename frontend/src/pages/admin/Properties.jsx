@@ -38,6 +38,33 @@ export const Properties = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch properties
+      const propertiesResponse = await axios.get(`${BACKEND_URL}/api/properties`);
+      if (propertiesResponse.data.success) {
+        setProperties(propertiesResponse.data.properties);
+      }
+      
+      // Fetch organisations for filter
+      const orgsResponse = await axios.get(`${BACKEND_URL}/api/organisations`);
+      if (orgsResponse.data.success) {
+        setOrganisations(orgsResponse.data.organisations);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      toast.error('Failed to load data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filteredProperties = properties.filter((prop) => {
     const matchesSearch =
       prop.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -61,31 +88,44 @@ export const Properties = () => {
     navigate(`/admin/properties/${propertyId}`);
   };
 
-  const handleSave = (propertyData) => {
-    if (editingProperty) {
-      // Update
-      setProperties(properties.map(prop =>
-        prop.id === editingProperty.id ? { ...prop, ...propertyData } : prop
-      ));
-      toast.success('Property updated successfully!');
-    } else {
-      // Create
-      const newProperty = {
-        id: `prop-${Date.now()}`,
-        ...propertyData,
-        createdAt: new Date().toISOString()
-      };
-      setProperties([...properties, newProperty]);
-      toast.success('Property created successfully!');
+  const handleSave = async (propertyData) => {
+    try {
+      if (editingProperty) {
+        // Update
+        const response = await axios.put(`${BACKEND_URL}/api/properties/${editingProperty.id}`, propertyData);
+        if (response.data.success) {
+          toast.success('Property updated successfully!');
+          fetchData();
+        }
+      } else {
+        // Create
+        const response = await axios.post(`${BACKEND_URL}/api/properties`, propertyData);
+        if (response.data.success) {
+          toast.success('Property created successfully!');
+          fetchData();
+        }
+      }
+      setIsDialogOpen(false);
+      setEditingProperty(null);
+    } catch (error) {
+      console.error('Error saving property:', error);
+      toast.error(error.response?.data?.detail || 'Failed to save property');
     }
-    setIsDialogOpen(false);
-    setEditingProperty(null);
   };
 
-  const handleDelete = (id) => {
-    setProperties(properties.filter(prop => prop.id !== id));
-    toast.success('Property deleted successfully!');
-    setDeleteId(null);
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`${BACKEND_URL}/api/properties/${id}`);
+      if (response.data.success) {
+        toast.success('Property deleted successfully!');
+        fetchData();
+      }
+      setDeleteId(null);
+    } catch (error) {
+      console.error('Error deleting property:', error);
+      toast.error(error.response?.data?.detail || 'Failed to delete property');
+      setDeleteId(null);
+    }
   };
 
   return (
