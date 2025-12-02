@@ -3,13 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { AdminLayout } from '../../components/admin/AdminLayout';
 import { ArrowLeft, Building2, Mail, Phone, MapPin, Calendar, Pencil, Home, UserPlus, Users } from 'lucide-react';
 import { Button } from '../../components/ui/button';
-import { getPropertiesByOrganisation } from '../../mockAdmin';
 import { OrganisationDialog } from '../../components/admin/OrganisationDialog';
 import { AdminLoginDialog } from '../../components/admin/AdminLoginDialog';
 import { toast } from 'sonner';
 import axios from 'axios';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
 export const OrganisationDetails = () => {
   const { id } = useParams();
@@ -19,35 +18,52 @@ export const OrganisationDetails = () => {
   const [organisation, setOrganisation] = useState(null);
   const [properties, setProperties] = useState([]);
   const [admins, setAdmins] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Fetch admins for this organisation
-  const fetchAdmins = async () => {
-    try {
-      const response = await axios.get(`${BACKEND_URL}/api/admin/list/organisation/${id}`);
-      if (response.data.success) {
-        setAdmins(response.data.admins);
-      }
-    } catch (error) {
-      console.error('Error fetching admins:', error);
-    }
-  };
-
-  // Get organisation and properties from localStorage
   useEffect(() => {
+    fetchData();
+  }, [id]);
+
+  const fetchData = async () => {
     try {
-      const stored = localStorage.getItem('smartflags_organisations');
-      const organisations = stored ? JSON.parse(stored) : [];
-      const foundOrg = organisations.find(org => org.id === id);
-      setOrganisation(foundOrg);
+      setLoading(true);
       
-      if (foundOrg) {
-        const orgProperties = getPropertiesByOrganisation(id);
-        setProperties(orgProperties);
-        // Fetch admins for this organisation
-        fetchAdmins();
+      // Fetch organisation
+      const orgResponse = await axios.get(`${BACKEND_URL}/api/organisations/${id}`);
+      if (orgResponse.data.success) {
+        setOrganisation(orgResponse.data.organisation);
+      }
+      
+      // Fetch properties for this organisation
+      const propsResponse = await axios.get(`${BACKEND_URL}/api/properties/organisation/${id}`);
+      if (propsResponse.data.success) {
+        setProperties(propsResponse.data.properties);
+      }
+      
+      // Fetch admins for this organisation
+      const adminsResponse = await axios.get(`${BACKEND_URL}/api/admin/list/organisation/${id}`);
+      if (adminsResponse.data.success) {
+        setAdmins(adminsResponse.data.admins);
       }
     } catch (error) {
       console.error('Error loading organisation:', error);
+      toast.error('Failed to load organisation details');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async (orgData) => {
+    try {
+      const response = await axios.put(`${BACKEND_URL}/api/organisations/${id}`, orgData);
+      if (response.data.success) {
+        toast.success('Organisation updated successfully!');
+        fetchData();
+        setIsEditDialogOpen(false);
+      }
+    } catch (error) {
+      console.error('Error updating organisation:', error);
+      toast.error(error.response?.data?.detail || 'Failed to update organisation');
     }
   }, [id]);
 
