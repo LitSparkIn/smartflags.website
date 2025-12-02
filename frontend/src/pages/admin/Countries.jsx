@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AdminLayout } from '../../components/admin/AdminLayout';
 import { Plus, Pencil, Trash2, Search, Globe } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { mockCountries as initialCountries } from '../../mockAdmin';
 import { CountryDialog } from '../../components/admin/CountryDialog';
 import { toast } from 'sonner';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import axios from 'axios';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,12 +17,34 @@ import {
   AlertDialogTitle,
 } from '../../components/ui/alert-dialog';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
+
 export const Countries = () => {
-  const [countries, setCountries] = useLocalStorage('smartflags_countries', initialCountries);
+  const [countries, setCountries] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingCountry, setEditingCountry] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCountries();
+  }, []);
+
+  const fetchCountries = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${BACKEND_URL}/api/countries`);
+      if (response.data.success) {
+        setCountries(response.data.countries);
+      }
+    } catch (error) {
+      console.error('Error fetching countries:', error);
+      toast.error('Failed to load countries');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredCountries = countries.filter((country) =>
     country.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -35,45 +56,69 @@ export const Countries = () => {
     setIsDialogOpen(true);
   };
 
-  const handleEdit = (country, e) => {
-    e.stopPropagation();
+  const handleEdit = (country) => {
     setEditingCountry(country);
     setIsDialogOpen(true);
   };
 
-  const handleSave = (countryData) => {
-    if (editingCountry) {
-      setCountries(countries.map(c =>
-        c.id === editingCountry.id ? { ...c, ...countryData } : c
-      ));
-      toast.success('Country updated successfully!');
-    } else {
-      const newCountry = {
-        id: `country-${Date.now()}`,
-        ...countryData,
-        createdAt: new Date().toISOString()
-      };
-      setCountries([...countries, newCountry]);
-      toast.success('Country created successfully!');
+  const handleSave = async (countryData) => {
+    try {
+      if (editingCountry) {
+        const response = await axios.put(`${BACKEND_URL}/api/countries/${editingCountry.id}`, countryData);
+        if (response.data.success) {
+          toast.success('Country updated successfully!');
+          fetchCountries();
+        }
+      } else {
+        const response = await axios.post(`${BACKEND_URL}/api/countries`, countryData);
+        if (response.data.success) {
+          toast.success('Country created successfully!');
+          fetchCountries();
+        }
+      }
+      setIsDialogOpen(false);
+      setEditingCountry(null);
+    } catch (error) {
+      console.error('Error saving country:', error);
+      toast.error(error.response?.data?.detail || 'Failed to save country');
     }
-    setIsDialogOpen(false);
-    setEditingCountry(null);
   };
 
-  const handleDelete = (id) => {
-    setCountries(countries.filter(c => c.id !== id));
-    toast.success('Country deleted successfully!');
-    setDeleteId(null);
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(`${BACKEND_URL}/api/countries/${id}`);
+      if (response.data.success) {
+        toast.success('Country deleted successfully!');
+        fetchCountries();
+      }
+      setDeleteId(null);
+    } catch (error) {
+      console.error('Error deleting country:', error);
+      toast.error(error.response?.data?.detail || 'Failed to delete country');
+      setDeleteId(null);
+    }
   };
+
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="p-8 flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-slate-600">Loading countries...</p>
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout>
       <div className="p-8">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-slate-900 mb-2">Countries</h1>
-            <p className="text-slate-600">Manage country master data</p>
+            <p className="text-slate-600">Manage countries in the system</p>
           </div>
           <Button
             onClick={handleCreate}
@@ -84,10 +129,9 @@ export const Countries = () => {
           </Button>
         </div>
 
-        {/* Search */}
         <div className="mb-6">
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
             <Input
               type="text"
               placeholder="Search countries..."
@@ -98,64 +142,71 @@ export const Countries = () => {
           </div>
         </div>
 
-        {/* Grid View */}
         {filteredCountries.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg border border-slate-100 p-12 text-center">
+          <div className="bg-white rounded-xl shadow-md p-12 text-center">
             <Globe className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-            <p className="text-slate-500 text-lg">No countries found</p>
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">No countries found</h3>
+            <p className="text-slate-600 mb-4">
+              {searchTerm ? 'Try adjusting your search terms' : 'Add your first country to get started'}
+            </p>
+            {!searchTerm && (
+              <Button onClick={handleCreate}>
+                <Plus className="w-4 h-4 mr-2" />
+                Add Country
+              </Button>
+            )}
           </div>
         ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredCountries.map((country) => (
-                <div
-                  key={country.id}
-                  className="bg-white rounded-xl shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 group overflow-hidden"
-                >
-                  {/* Header */}
-                  <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                        <Globe className="w-7 h-7 text-white" />
+          <div className="bg-white rounded-xl shadow-md overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-slate-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Country Name
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Code
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                {filteredCountries.map((country) => (
+                  <tr key={country.id} className="hover:bg-slate-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <Globe className="w-5 h-5 text-slate-400 mr-3" />
+                        <span className="text-sm font-medium text-slate-900">{country.name}</span>
                       </div>
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={(e) => handleEdit(country, e)}
-                          className="w-9 h-9 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg flex items-center justify-center transition-colors"
-                        >
-                          <Pencil className="w-4 h-4 text-white" />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setDeleteId(country.id);
-                          }}
-                          className="w-9 h-9 bg-white/20 hover:bg-red-500 backdrop-blur-sm rounded-lg flex items-center justify-center transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4 text-white" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-emerald-600 transition-colors">
-                      {country.name}
-                    </h3>
-                    
-                    <div className="inline-flex items-center space-x-2 bg-emerald-50 px-3 py-1 rounded-full">
-                      <span className="text-xs font-mono font-bold text-emerald-700">Code: {country.code}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 text-sm text-slate-500">
-              Showing {filteredCountries.length} of {countries.length} countries
-            </div>
-          </>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="text-sm text-slate-600">{country.code}</span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEdit(country)}
+                        className="text-blue-600 hover:text-blue-900 hover:bg-blue-50 mr-2"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setDeleteId(country.id)}
+                        className="text-red-600 hover:text-red-900 hover:bg-red-50"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 
