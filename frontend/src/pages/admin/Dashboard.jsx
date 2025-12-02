@@ -112,50 +112,23 @@ export const Dashboard = () => {
           })}
         </div>
 
-        {/* Recent Organisations */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-xl shadow-lg p-6 border border-slate-100">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Recent Organisations</h2>
-            <div className="space-y-3">
-              {mockOrganisations.length > 0 ? (
-                mockOrganisations.slice(0, 3).map((org) => (
-                  <div key={org.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
-                    <div>
-                      <p className="font-semibold text-slate-900">{org.name}</p>
-                      <p className="text-sm text-slate-600">{org.email}</p>
-                    </div>
-                    <Building2 className="w-5 h-5 text-teal-600" />
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-slate-500">
-                  <Building2 className="w-8 h-8 mx-auto mb-2 text-slate-300" />
-                  <p className="text-sm">No organisations yet</p>
-                </div>
-              )}
+        {/* System Overview */}
+        <div className="bg-white rounded-xl shadow-lg p-8 border border-slate-100">
+          <h2 className="text-xl font-bold text-slate-900 mb-4">System Overview</h2>
+          <div className="text-center py-8">
+            <div className="text-6xl font-bold text-gradient bg-gradient-to-r from-teal-500 to-cyan-600 bg-clip-text text-transparent mb-2">
+              {orgCount + propCount}
             </div>
-          </div>
-
-          {/* Recent Properties */}
-          <div className="bg-white rounded-xl shadow-lg p-6 border border-slate-100">
-            <h2 className="text-xl font-bold text-slate-900 mb-4">Recent Properties</h2>
-            <div className="space-y-3">
-              {mockProperties.length > 0 ? (
-                mockProperties.slice(0, 3).map((prop) => (
-                  <div key={prop.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
-                    <div>
-                      <p className="font-semibold text-slate-900">{prop.name}</p>
-                      <p className="text-sm text-slate-600">{prop.email}</p>
-                    </div>
-                    <Home className="w-5 h-5 text-cyan-600" />
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-slate-500">
-                  <Home className="w-8 h-8 mx-auto mb-2 text-slate-300" />
-                  <p className="text-sm">No properties yet</p>
-                </div>
-              )}
+            <p className="text-slate-600">Total Entities in System</p>
+            <div className="mt-6 flex justify-center gap-8">
+              <div>
+                <p className="text-2xl font-bold text-teal-600">{orgCount}</p>
+                <p className="text-sm text-slate-600">Organisations</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-cyan-600">{propCount}</p>
+                <p className="text-sm text-slate-600">Properties</p>
+              </div>
             </div>
           </div>
         </div>
