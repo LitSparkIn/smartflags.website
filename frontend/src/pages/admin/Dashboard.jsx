@@ -1,13 +1,43 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AdminLayout } from '../../components/admin/AdminLayout';
 import { Building2, Home, Users, TrendingUp } from 'lucide-react';
-import { mockOrganisations, mockProperties } from '../../mockAdmin';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
 export const Dashboard = () => {
+  const [orgCount, setOrgCount] = useState(0);
+  const [propCount, setPropCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      
+      const orgsResponse = await axios.get(`${BACKEND_URL}/api/organisations`);
+      if (orgsResponse.data.success) {
+        setOrgCount(orgsResponse.data.organisations.length);
+      }
+      
+      const propsResponse = await axios.get(`${BACKEND_URL}/api/properties`);
+      if (propsResponse.data.success) {
+        setPropCount(propsResponse.data.properties.length);
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const stats = [
     {
       label: 'Total Organisations',
-      value: mockOrganisations.length || 0,
+      value: orgCount,
       icon: Building2,
       color: 'from-teal-500 to-cyan-600',
       bgColor: 'bg-teal-50',
@@ -15,7 +45,7 @@ export const Dashboard = () => {
     },
     {
       label: 'Total Properties',
-      value: mockProperties.length || 0,
+      value: propCount,
       icon: Home,
       color: 'from-cyan-500 to-blue-600',
       bgColor: 'bg-cyan-50',
@@ -38,6 +68,19 @@ export const Dashboard = () => {
       textColor: 'text-emerald-600'
     }
   ];
+
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="p-8 flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-slate-600">Loading dashboard...</p>
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout>
