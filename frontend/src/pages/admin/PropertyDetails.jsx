@@ -325,6 +325,7 @@ export const PropertyDetails = () => {
         onOpenChange={setIsEditDialogOpen}
         property={property}
         onSave={handleSave}
+        organisations={organisations}
       />
 
       {/* Admin Login Dialog */}
