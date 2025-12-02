@@ -858,6 +858,270 @@ async def delete_property(property_id: str):
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
+# Master Data Endpoints - Countries
+@api_router.get("/countries")
+async def get_countries():
+    """Get all countries"""
+    try:
+        countries = await db.countries.find({}, {"_id": 0}).to_list(1000)
+        return {"success": True, "countries": countries}
+    except Exception as e:
+        logger.error(f"Error fetching countries: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.post("/countries")
+async def create_country(country_data: CountryCreate):
+    """Create a new country"""
+    try:
+        new_country = Country(**country_data.model_dump())
+        
+        country_dict = new_country.model_dump()
+        country_dict['createdAt'] = country_dict['createdAt'].isoformat()
+        
+        await db.countries.insert_one(country_dict)
+        
+        logger.info(f"Country created: {new_country.id}")
+        return {"success": True, "country": new_country}
+    except Exception as e:
+        logger.error(f"Error creating country: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.put("/countries/{country_id}")
+async def update_country(country_id: str, update_data: CountryUpdate):
+    """Update a country"""
+    try:
+        update_dict = {k: v for k, v in update_data.model_dump().items() if v is not None}
+        
+        if not update_dict:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        result = await db.countries.update_one(
+            {"id": country_id},
+            {"$set": update_dict}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Country not found")
+        
+        updated_country = await db.countries.find_one({"id": country_id}, {"_id": 0})
+        
+        logger.info(f"Country updated: {country_id}")
+        return {"success": True, "country": updated_country}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating country: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/countries/{country_id}")
+async def delete_country(country_id: str):
+    """Delete a country"""
+    try:
+        result = await db.countries.delete_one({"id": country_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Country not found")
+        
+        logger.info(f"Country deleted: {country_id}")
+        return {"success": True, "message": "Country deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting country: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+# Master Data Endpoints - States
+@api_router.get("/states")
+async def get_states():
+    """Get all states"""
+    try:
+        states = await db.states.find({}, {"_id": 0}).to_list(1000)
+        return {"success": True, "states": states}
+    except Exception as e:
+        logger.error(f"Error fetching states: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.get("/states/country/{country_id}")
+async def get_states_by_country(country_id: str):
+    """Get all states for a country"""
+    try:
+        states = await db.states.find({"countryId": country_id}, {"_id": 0}).to_list(1000)
+        return {"success": True, "states": states}
+    except Exception as e:
+        logger.error(f"Error fetching states: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.post("/states")
+async def create_state(state_data: StateCreate):
+    """Create a new state"""
+    try:
+        # Verify country exists
+        country = await db.countries.find_one({"id": state_data.countryId}, {"_id": 0})
+        if not country:
+            raise HTTPException(status_code=404, detail="Country not found")
+        
+        new_state = State(**state_data.model_dump())
+        
+        state_dict = new_state.model_dump()
+        state_dict['createdAt'] = state_dict['createdAt'].isoformat()
+        
+        await db.states.insert_one(state_dict)
+        
+        logger.info(f"State created: {new_state.id}")
+        return {"success": True, "state": new_state}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating state: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.put("/states/{state_id}")
+async def update_state(state_id: str, update_data: StateUpdate):
+    """Update a state"""
+    try:
+        update_dict = {k: v for k, v in update_data.model_dump().items() if v is not None}
+        
+        if not update_dict:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        # If countryId is being updated, verify it exists
+        if 'countryId' in update_dict:
+            country = await db.countries.find_one({"id": update_dict['countryId']}, {"_id": 0})
+            if not country:
+                raise HTTPException(status_code=404, detail="Country not found")
+        
+        result = await db.states.update_one(
+            {"id": state_id},
+            {"$set": update_dict}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="State not found")
+        
+        updated_state = await db.states.find_one({"id": state_id}, {"_id": 0})
+        
+        logger.info(f"State updated: {state_id}")
+        return {"success": True, "state": updated_state}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating state: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/states/{state_id}")
+async def delete_state(state_id: str):
+    """Delete a state"""
+    try:
+        result = await db.states.delete_one({"id": state_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="State not found")
+        
+        logger.info(f"State deleted: {state_id}")
+        return {"success": True, "message": "State deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting state: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+# Master Data Endpoints - Cities
+@api_router.get("/cities")
+async def get_cities():
+    """Get all cities"""
+    try:
+        cities = await db.cities.find({}, {"_id": 0}).to_list(1000)
+        return {"success": True, "cities": cities}
+    except Exception as e:
+        logger.error(f"Error fetching cities: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.get("/cities/state/{state_id}")
+async def get_cities_by_state(state_id: str):
+    """Get all cities for a state"""
+    try:
+        cities = await db.cities.find({"stateId": state_id}, {"_id": 0}).to_list(1000)
+        return {"success": True, "cities": cities}
+    except Exception as e:
+        logger.error(f"Error fetching cities: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.post("/cities")
+async def create_city(city_data: CityCreate):
+    """Create a new city"""
+    try:
+        # Verify state exists
+        state = await db.states.find_one({"id": city_data.stateId}, {"_id": 0})
+        if not state:
+            raise HTTPException(status_code=404, detail="State not found")
+        
+        new_city = City(**city_data.model_dump())
+        
+        city_dict = new_city.model_dump()
+        city_dict['createdAt'] = city_dict['createdAt'].isoformat()
+        
+        await db.cities.insert_one(city_dict)
+        
+        logger.info(f"City created: {new_city.id}")
+        return {"success": True, "city": new_city}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating city: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.put("/cities/{city_id}")
+async def update_city(city_id: str, update_data: CityUpdate):
+    """Update a city"""
+    try:
+        update_dict = {k: v for k, v in update_data.model_dump().items() if v is not None}
+        
+        if not update_dict:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        # If stateId is being updated, verify it exists
+        if 'stateId' in update_dict:
+            state = await db.states.find_one({"id": update_dict['stateId']}, {"_id": 0})
+            if not state:
+                raise HTTPException(status_code=404, detail="State not found")
+        
+        result = await db.cities.update_one(
+            {"id": city_id},
+            {"$set": update_dict}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="City not found")
+        
+        updated_city = await db.cities.find_one({"id": city_id}, {"_id": 0})
+        
+        logger.info(f"City updated: {city_id}")
+        return {"success": True, "city": updated_city}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating city: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/cities/{city_id}")
+async def delete_city(city_id: str):
+    """Delete a city"""
+    try:
+        result = await db.cities.delete_one({"id": city_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="City not found")
+        
+        logger.info(f"City deleted: {city_id}")
+        return {"success": True, "message": "City deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting city: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+
+
 @api_router.post("/user/request-otp", response_model=RequestOTPResponse)
 async def request_otp(request: RequestOTPRequest):
     """
