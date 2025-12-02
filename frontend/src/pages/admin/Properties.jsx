@@ -196,7 +196,7 @@ export const Properties = () => {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProperties.map((property) => {
-                const organisation = getOrganisationById(property.organisationId);
+                const organisation = organisations.find(org => org.id === property.organisationId);
                 return (
                   <div
                     key={property.id}
