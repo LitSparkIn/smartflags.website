@@ -65,7 +65,28 @@ export const OrganisationDetails = () => {
       console.error('Error updating organisation:', error);
       toast.error(error.response?.data?.detail || 'Failed to update organisation');
     }
-  }, [id]);
+  };
+
+  const handleSendOTP = (adminData) => {
+    // Mock OTP sending - in real app, this would call backend API
+    toast.success(`OTP sent successfully to ${adminData.email}!`, {
+      description: 'Admin login credentials have been emailed.'
+    });
+    setIsAdminLoginDialogOpen(false);
+  };
+
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="p-8 flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-slate-600">Loading organisation details...</p>
+          </div>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   if (!organisation) {
     return (
@@ -84,20 +105,6 @@ export const OrganisationDetails = () => {
       </AdminLayout>
     );
   }
-
-  const handleSave = (orgData) => {
-    // Mock update - in real app, this would update the backend
-    toast.success('Organisation updated successfully!');
-    setIsEditDialogOpen(false);
-  };
-
-  const handleSendOTP = (adminData) => {
-    // Mock OTP sending - in real app, this would call backend API
-    toast.success(`OTP sent successfully to ${adminData.email}!`, {
-      description: 'Admin login credentials have been emailed.'
-    });
-    setIsAdminLoginDialogOpen(false);
-  };
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
