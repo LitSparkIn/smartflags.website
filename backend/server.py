@@ -135,6 +135,58 @@ class PropertyUpdate(BaseModel):
     phone: Optional[str] = None
     address: Optional[str] = None
 
+# Master Data Models - Countries, States, Cities
+class Country(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    code: str
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class CountryCreate(BaseModel):
+    name: str
+    code: str
+
+class CountryUpdate(BaseModel):
+    name: Optional[str] = None
+    code: Optional[str] = None
+
+class State(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    countryId: str
+    name: str
+    code: str
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class StateCreate(BaseModel):
+    countryId: str
+    name: str
+    code: str
+
+class StateUpdate(BaseModel):
+    countryId: Optional[str] = None
+    name: Optional[str] = None
+    code: Optional[str] = None
+
+class City(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    stateId: str
+    name: str
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class CityCreate(BaseModel):
+    stateId: str
+    name: str
+
+class CityUpdate(BaseModel):
+    stateId: Optional[str] = None
+    name: Optional[str] = None
+
 # Seat Type Models
 class SeatType(BaseModel):
     model_config = ConfigDict(extra="ignore")
