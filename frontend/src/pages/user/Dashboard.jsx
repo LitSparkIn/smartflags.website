@@ -81,12 +81,42 @@ export const Dashboard = () => {
       <div className="space-y-6">
         {/* Welcome Section */}
         <div className="bg-gradient-to-r from-teal-500 to-cyan-600 rounded-2xl p-8 text-white shadow-lg">
-          <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.name}!</h1>
-          <p className="text-teal-50">
-            {user?.entityType === 'organisation' 
-              ? 'Manage your properties and monitor performance across your organization.'
-              : 'Manage your staff, seats, and groups for optimal pool and beach operations.'}
-          </p>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.name}!</h1>
+              <p className="text-teal-50">
+                {user?.entityType === 'organisation' 
+                  ? 'Manage your properties and monitor performance across your organization.'
+                  : 'Manage your staff, seats, and groups for optimal pool and beach operations.'}
+              </p>
+            </div>
+            
+            {/* Property ID Display - Only for Property Admins */}
+            {user?.entityType === 'property' && (
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border-2 border-white/30">
+                <p className="text-xs font-semibold text-teal-100 uppercase tracking-wide mb-1">Property ID</p>
+                <div className="flex items-center space-x-2">
+                  <code className="text-2xl font-bold font-mono bg-white/30 px-3 py-1 rounded-lg">
+                    {user?.entityId}
+                  </code>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(user?.entityId);
+                      // You could add a toast notification here
+                      alert('Property ID copied to clipboard!');
+                    }}
+                    className="bg-white/20 hover:bg-white/30 p-2 rounded-lg transition-colors"
+                    title="Copy Property ID"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </button>
+                </div>
+                <p className="text-xs text-teal-100 mt-2">Share this ID with staff for login</p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Stats Grid */}
