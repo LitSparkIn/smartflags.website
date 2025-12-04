@@ -285,6 +285,54 @@ export const StaffDialog = ({ open, onOpenChange, staff, onSave, propertyId, rol
               </div>
             </div>
 
+            {/* Username */}
+            <div className="space-y-2">
+              <Label htmlFor="username" className="text-slate-700 font-medium">
+                Staff Username *
+              </Label>
+              <div className="relative">
+                <UserCircle className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Input
+                  id="username"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  placeholder="Enter username (alphanumeric)"
+                  className="pl-10"
+                  required
+                />
+              </div>
+              <p className="text-xs text-slate-500">
+                Alphanumeric only (letters and numbers). Used for staff login.
+              </p>
+            </div>
+
+            {/* PIN */}
+            <div className="space-y-2">
+              <Label htmlFor="pin" className="text-slate-700 font-medium">
+                Staff PIN *
+              </Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <Input
+                  id="pin"
+                  name="pin"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  value={formData.pin}
+                  onChange={handleChange}
+                  placeholder="Enter 4-6 digit PIN"
+                  className="pl-10"
+                  maxLength="6"
+                  required
+                />
+              </div>
+              <p className="text-xs text-slate-500">
+                4-6 digit PIN for staff login
+              </p>
+            </div>
+
             {/* Password */}
             <div className="space-y-2">
               <Label htmlFor="password" className="text-slate-700 font-medium">
