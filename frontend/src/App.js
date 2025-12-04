@@ -140,6 +140,12 @@ function App() {
             
             {/* Redirect /user to dashboard */}
             <Route path="/user" element={<Navigate to="/user/dashboard" replace />} />
+            
+            {/* Staff Routes */}
+            <Route path="/staff/smartview" element={<StaffSmartView />} />
+            
+            {/* Redirect /staff to smartview */}
+            <Route path="/staff" element={<Navigate to="/staff/smartview" replace />} />
           </Routes>
         </BrowserRouter>
         <Toaster position="top-right" />
