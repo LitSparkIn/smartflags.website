@@ -31,6 +31,10 @@ import { Seats } from './pages/user/Seats';
 import { Groups } from './pages/user/Groups';
 import { Devices } from './pages/user/Devices';
 
+// Staff Pages
+import { StaffLogin } from './pages/staff/StaffLogin';
+import { StaffSmartView } from './pages/staff/StaffSmartView';
+
 function App() {
   return (
     <AuthProvider>
