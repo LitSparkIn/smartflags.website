@@ -109,6 +109,48 @@ export const StaffDialog = ({ open, onOpenChange, staff, onSave, propertyId, rol
       return;
     }
 
+    // Username validation
+    if (!formData.username.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Username is required",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Validate username is alphanumeric
+    const usernameRegex = /^[a-zA-Z0-9]+$/;
+    if (!usernameRegex.test(formData.username)) {
+      toast({
+        title: "Validation Error",
+        description: "Username must be alphanumeric (letters and numbers only)",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // PIN validation
+    if (!formData.pin.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "PIN is required",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // Validate PIN is numeric and 4-6 digits
+    const pinRegex = /^[0-9]{4,6}$/;
+    if (!pinRegex.test(formData.pin)) {
+      toast({
+        title: "Validation Error",
+        description: "PIN must be 4-6 digits",
+        variant: "destructive"
+      });
+      return;
+    }
+
     // Password validation (only for new staff or if password is being changed)
     if (!staff || formData.password) {
       if (!formData.password) {
