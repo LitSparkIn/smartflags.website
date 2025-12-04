@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { UserLayout } from '../../components/user/UserLayout';
 import { Button } from '../../components/ui/button';
-import { Plus, Armchair, Search, Pencil, Trash2, Filter, Smartphone } from 'lucide-react';
+import { Plus, Armchair, Search, Pencil, Trash2, Filter, Smartphone, Ban, CheckCircle } from 'lucide-react';
 import { Input } from '../../components/ui/input';
 import { SeatDialog } from '../../components/user/SeatDialog';
 import { AssignDeviceDialog } from '../../components/user/AssignDeviceDialog';
