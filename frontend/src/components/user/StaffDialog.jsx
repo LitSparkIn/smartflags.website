@@ -26,6 +26,8 @@ export const StaffDialog = ({ open, onOpenChange, staff, onSave, propertyId, rol
     name: '',
     email: '',
     phone: '',
+    username: '',
+    pin: '',
     password: ''
   });
   const [loading, setLoading] = useState(false);
@@ -38,6 +40,8 @@ export const StaffDialog = ({ open, onOpenChange, staff, onSave, propertyId, rol
         name: staff.name,
         email: staff.email,
         phone: staff.phone || '',
+        username: staff.username || '',
+        pin: staff.pin || '',
         password: '' // Don't prefill password on edit
       });
     } else {
@@ -46,6 +50,8 @@ export const StaffDialog = ({ open, onOpenChange, staff, onSave, propertyId, rol
         name: '',
         email: '',
         phone: '',
+        username: '',
+        pin: '',
         password: ''
       });
     }
