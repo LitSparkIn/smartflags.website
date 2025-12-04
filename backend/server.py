@@ -314,6 +314,20 @@ class StaffUpdate(BaseModel):
     pin: Optional[str] = None
     password: Optional[str] = None
 
+
+# Staff Login Models
+class StaffLoginRequest(BaseModel):
+    username: str
+    pin: str
+    propertyId: str
+
+class StaffLoginResponse(BaseModel):
+    success: bool
+    message: str
+    staff: Optional[dict] = None
+    propertyId: Optional[str] = None
+
+
 # Role Models
 class Role(BaseModel):
     model_config = ConfigDict(extra="ignore")
