@@ -234,7 +234,7 @@ export const Seats = () => {
   const handleAddNew = () => {
     setSelectedSeat(null);
     setIsDialogOpen(true);
-
+  };
 
   const handleToggleBlock = async (seat) => {
     try {
@@ -256,9 +256,6 @@ export const Seats = () => {
         variant: "destructive"
       });
     }
-  };
-
-
   };
 
   const getSeatTypeName = (seatTypeId) => {
