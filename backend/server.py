@@ -289,6 +289,8 @@ class Staff(BaseModel):
     name: str
     email: EmailStr
     phone: Optional[str] = None
+    username: str  # Alphanumeric username for login
+    pin: str  # PIN for staff login
     password: str  # In production, this should be hashed
     createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -299,6 +301,8 @@ class StaffCreate(BaseModel):
     name: str
     email: EmailStr
     phone: Optional[str] = None
+    username: str
+    pin: str
     password: str
 
 class StaffUpdate(BaseModel):
@@ -306,6 +310,8 @@ class StaffUpdate(BaseModel):
     name: Optional[str] = None
     email: Optional[EmailStr] = None
     phone: Optional[str] = None
+    username: Optional[str] = None
+    pin: Optional[str] = None
     password: Optional[str] = None
 
 # Role Models
