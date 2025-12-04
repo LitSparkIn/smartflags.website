@@ -1453,6 +1453,41 @@ async def update_seat_status(seat_id: str, status_update: SeatStatusUpdate):
         logger.error(f"Error updating seat status: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+
+@api_router.patch("/seats/{seat_id}/toggle-block")
+async def toggle_seat_block(seat_id: str):
+    """Toggle seat between Blocked and Free status"""
+    try:
+        # Get current seat
+        seat = await db.seats.find_one({"id": seat_id}, {"_id": 0})
+        if not seat:
+            raise HTTPException(status_code=404, detail="Seat not found")
+        
+        # Toggle status
+        current_status = seat.get('status', 'Free')
+        new_status = "Free" if current_status == "Blocked" else "Blocked"
+        
+        result = await db.seats.update_one(
+            {"id": seat_id},
+            {"$set": {
+                "status": new_status,
+                "updatedAt": datetime.now(timezone.utc).isoformat()
+            }}
+        )
+        
+        updated_seat = await db.seats.find_one({"id": seat_id}, {"_id": 0})
+        
+        logger.info(f"Seat block toggled: {seat_id} -> {new_status}")
+        return {"success": True, "seat": updated_seat, "status": new_status}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error toggling seat block: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+
+
 @api_router.patch("/seats/bulk-status")
 async def update_bulk_seat_status(seat_ids: List[str], status: str):
     """Update status for multiple seats"""
