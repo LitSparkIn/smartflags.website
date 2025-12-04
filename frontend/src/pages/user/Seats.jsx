@@ -390,11 +390,19 @@ export const Seats = () => {
                       <img 
                         src={getSeatTypeIcon(seat.seatTypeId)} 
                         alt={getSeatTypeName(seat.seatTypeId)}
-                        className="w-8 h-8 object-contain"
+                        className={`w-8 h-8 object-contain ${seat.status === 'Blocked' ? 'opacity-40' : ''}`}
                       />
                     )}
-                    <p className="font-bold text-slate-900 text-center text-sm">{seat.seatNumber}</p>
+                    <p className={`font-bold text-center text-sm ${seat.status === 'Blocked' ? 'text-red-600' : 'text-slate-900'}`}>
+                      {seat.seatNumber}
+                    </p>
                     <p className="text-xs text-slate-600 text-center">{getSeatTypeName(seat.seatTypeId)}</p>
+                    {seat.status === 'Blocked' && (
+                      <div className="flex items-center gap-1 text-xs text-red-600 bg-red-50 px-2 py-0.5 rounded-full font-semibold">
+                        <Ban className="w-3 h-3" />
+                        <span>Blocked</span>
+                      </div>
+                    )}
                     {seat.staticDeviceId && (
                       <div className="flex items-center gap-1 text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
                         <Smartphone className="w-3 h-3" />
