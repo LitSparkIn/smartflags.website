@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { UserLayout } from '../../components/user/UserLayout';
 import { Button } from '../../components/ui/button';
-import { Plus, Users, Search, Pencil, Trash2, Mail, Phone, Shield } from 'lucide-react';
+import { Plus, Users, Search, Pencil, Trash2, Mail, Phone, Shield, UserCircle } from 'lucide-react';
 import { Input } from '../../components/ui/input';
 import { StaffDialog } from '../../components/user/StaffDialog';
 import axios from 'axios';
