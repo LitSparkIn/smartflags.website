@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Building2, LogOut, Eye, Menu, X } from 'lucide-react';
 import { Button } from '../ui/button';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 export const StaffLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
