@@ -2459,6 +2459,57 @@ async def delete_allocation(allocation_id: str):
         logger.error(f"Error deleting allocation: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+
+# Staff Login Endpoint
+@api_router.post("/staff/login", response_model=StaffLoginResponse)
+async def staff_login(request: StaffLoginRequest):
+    """
+    Staff login with username and PIN
+    """
+    try:
+        # Find staff member by username and propertyId
+        staff = await db.staff.find_one(
+            {
+                "username": request.username,
+                "propertyId": request.propertyId
+            },
+            {"_id": 0}
+        )
+        
+        if not staff:
+            raise HTTPException(status_code=401, detail="Invalid username or PIN")
+        
+        # Verify PIN
+        if staff.get('pin') != request.pin:
+            raise HTTPException(status_code=401, detail="Invalid username or PIN")
+        
+        # Remove sensitive data before sending response
+        staff_data = {
+            "id": staff['id'],
+            "name": staff['name'],
+            "username": staff['username'],
+            "email": staff['email'],
+            "phone": staff.get('phone'),
+            "roleId": staff['roleId'],
+            "propertyId": staff['propertyId']
+        }
+        
+        logger.info(f"Staff login successful: {staff['username']} ({staff['name']})")
+        
+        return StaffLoginResponse(
+            success=True,
+            message="Login successful",
+            staff=staff_data,
+            propertyId=staff['propertyId']
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error during staff login: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+
 @api_router.post("/user/login", response_model=VerifyOTPResponse)
 async def verify_otp_login(request: VerifyOTPRequest):
     """
