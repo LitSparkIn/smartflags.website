@@ -50,6 +50,9 @@ function App() {
             {/* User Login (OTP-based) */}
             <Route path="/user/login" element={<UserLogin />} />
             
+            {/* Staff Login */}
+            <Route path="/staff/login" element={<StaffLogin />} />
+            
             {/* Protected Admin Routes */}
             <Route
               path="/admin/dashboard"
