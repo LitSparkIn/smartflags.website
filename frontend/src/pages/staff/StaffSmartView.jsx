@@ -203,8 +203,7 @@ export const StaffSmartView = () => {
                         )}
                         
                         <div
-                          onClick={() => allocation && navigate(`/user/allocation/${allocation.id}`)}
-                          className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg ${allocation ? 'cursor-pointer' : 'cursor-default'} flex flex-col items-center justify-center h-[88px] w-[60px] ${
+                          className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg cursor-default flex flex-col items-center justify-center h-[88px] w-[60px] ${
                             isCalling ? 'animate-pulse ring-4 ring-red-500 ring-offset-2 shadow-xl shadow-red-500/50' : ''
                           }`}
                         >
