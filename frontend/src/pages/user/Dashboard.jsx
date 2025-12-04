@@ -76,6 +76,19 @@ export const Dashboard = () => {
 
   const displayStats = user?.entityType === 'organisation' ? orgStats : propertyStats;
 
+  if (!user) {
+    return (
+      <UserLayout>
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-slate-600">Loading dashboard...</p>
+          </div>
+        </div>
+      </UserLayout>
+    );
+  }
+
   return (
     <UserLayout>
       <div className="space-y-6">
@@ -83,26 +96,25 @@ export const Dashboard = () => {
         <div className="bg-gradient-to-r from-teal-500 to-cyan-600 rounded-2xl p-8 text-white shadow-lg">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold mb-2">Welcome back, {user?.name}!</h1>
+              <h1 className="text-3xl font-bold mb-2">Welcome back, {user.name}!</h1>
               <p className="text-teal-50">
-                {user?.entityType === 'organisation' 
+                {user.entityType === 'organisation' 
                   ? 'Manage your properties and monitor performance across your organization.'
                   : 'Manage your staff, seats, and groups for optimal pool and beach operations.'}
               </p>
             </div>
             
             {/* Property ID Display - Only for Property Admins */}
-            {user?.entityType === 'property' && (
+            {user.entityType === 'property' && user.entityId && (
               <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border-2 border-white/30">
                 <p className="text-xs font-semibold text-teal-100 uppercase tracking-wide mb-1">Property ID</p>
                 <div className="flex items-center space-x-2">
                   <code className="text-2xl font-bold font-mono bg-white/30 px-3 py-1 rounded-lg">
-                    {user?.entityId}
+                    {user.entityId}
                   </code>
                   <button
                     onClick={() => {
-                      navigator.clipboard.writeText(user?.entityId);
-                      // You could add a toast notification here
+                      navigator.clipboard.writeText(user.entityId);
                       alert('Property ID copied to clipboard!');
                     }}
                     className="bg-white/20 hover:bg-white/30 p-2 rounded-lg transition-colors"
