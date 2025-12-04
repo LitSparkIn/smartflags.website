@@ -7,6 +7,7 @@ import axios from 'axios';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
 export const SmartView = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [seats, setSeats] = useState([]);
   const [groups, setGroups] = useState([]);
