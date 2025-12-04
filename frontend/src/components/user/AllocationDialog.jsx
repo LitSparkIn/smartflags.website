@@ -317,7 +317,7 @@ export const AllocationDialog = ({ open, onOpenChange, onSave, propertyId, guest
                   <p className="text-sm text-slate-500 text-center py-4">No seats available</p>
                 ) : (
                   <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                    {seats.map((seat) => {
+                    {seats.filter(seat => seat.status !== 'Blocked').map((seat) => {
                       const isAllocated = allocatedSeats.includes(seat.id);
                       const isSelected = formData.seatIds.includes(seat.id);
                       const seatType = seatTypes.find(st => st.id === seat.seatTypeId);
