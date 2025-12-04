@@ -412,32 +412,49 @@ export const Seats = () => {
                   </div>
                   
                   {/* Hover Actions */}
-                  <div className="absolute inset-0 bg-slate-900/90 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="bg-white"
-                      onClick={() => handleAssignDevice(seat)}
-                      title="Assign Device"
-                    >
-                      <Smartphone className="w-3 h-3" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="bg-white"
-                      onClick={() => handleEdit(seat)}
-                    >
-                      <Pencil className="w-3 h-3" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="bg-white text-red-600 hover:text-red-700"
-                      onClick={() => handleDelete(seat.id)}
-                    >
-                      <Trash2 className="w-3 h-3" />
-                    </Button>
+                  <div className="absolute inset-0 bg-slate-900/90 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center space-y-2 p-2">
+                    <div className="flex space-x-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="bg-white"
+                        onClick={() => handleAssignDevice(seat)}
+                        title="Assign Device"
+                      >
+                        <Smartphone className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className={seat.status === 'Blocked' ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-red-500 text-white hover:bg-red-600'}
+                        onClick={() => handleToggleBlock(seat)}
+                        title={seat.status === 'Blocked' ? 'Unblock Seat' : 'Block Seat'}
+                      >
+                        {seat.status === 'Blocked' ? (
+                          <CheckCircle className="w-3 h-3" />
+                        ) : (
+                          <Ban className="w-3 h-3" />
+                        )}
+                      </Button>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="bg-white"
+                        onClick={() => handleEdit(seat)}
+                      >
+                        <Pencil className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="bg-white text-red-600 hover:text-red-700"
+                        onClick={() => handleDelete(seat.id)}
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
