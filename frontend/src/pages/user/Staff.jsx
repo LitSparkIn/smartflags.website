@@ -281,6 +281,12 @@ export const Staff = () => {
                       <span>{staff.phone}</span>
                     </div>
                   )}
+                  {staff.username && (
+                    <div className="flex items-center text-sm text-slate-600">
+                      <UserCircle className="w-4 h-4 mr-2 text-slate-400" />
+                      <span className="font-mono">@{staff.username}</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-slate-200">
