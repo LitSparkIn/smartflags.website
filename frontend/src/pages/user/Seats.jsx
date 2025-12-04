@@ -234,6 +234,31 @@ export const Seats = () => {
   const handleAddNew = () => {
     setSelectedSeat(null);
     setIsDialogOpen(true);
+
+
+  const handleToggleBlock = async (seat) => {
+    try {
+      const response = await axios.patch(`${BACKEND_URL}/api/seats/${seat.id}/toggle-block`);
+      
+      if (response.data.success) {
+        const newStatus = response.data.status;
+        toast({
+          title: "Success",
+          description: `Seat ${newStatus === 'Blocked' ? 'blocked' : 'unblocked'} successfully`
+        });
+        fetchSeats(user.entityId);
+      }
+    } catch (error) {
+      console.error('Error toggling seat block:', error);
+      toast({
+        title: "Error",
+        description: error.response?.data?.detail || "Failed to toggle seat block",
+        variant: "destructive"
+      });
+    }
+  };
+
+
   };
 
   const getSeatTypeName = (seatTypeId) => {
