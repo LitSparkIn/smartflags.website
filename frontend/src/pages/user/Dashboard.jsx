@@ -149,6 +149,61 @@ export const Dashboard = () => {
           })}
         </div>
 
+        {/* Public Menu Link - Only for Property Admins */}
+        {user?.entityType === 'property' && (
+          <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl shadow-lg p-6 text-white">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1">
+                <h2 className="text-xl font-bold mb-2 flex items-center">
+                  <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                  Your Public Menu Link
+                </h2>
+                <p className="text-blue-100 mb-4">
+                  Share this link with your guests to let them view your menu from their mobile devices.
+                </p>
+                <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 border-2 border-white/30">
+                  <p className="text-xs font-semibold text-blue-100 uppercase tracking-wide mb-2">Shareable Link</p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <code className="text-sm md:text-base font-mono bg-white/30 px-4 py-2 rounded-lg break-all flex-1">
+                      {window.location.origin}/menu/{user.entityId}
+                    </code>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(`${window.location.origin}/menu/${user.entityId}`);
+                        alert('Menu link copied to clipboard!');
+                      }}
+                      className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors flex items-center gap-2 whitespace-nowrap"
+                      title="Copy Menu Link"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      <span className="hidden sm:inline">Copy</span>
+                    </button>
+                    <a
+                      href={`/menu/${user.entityId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-white text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-lg transition-colors flex items-center gap-2 font-semibold whitespace-nowrap"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                      <span className="hidden sm:inline">Open Menu</span>
+                      <span className="sm:hidden">View</span>
+                    </a>
+                  </div>
+                  <p className="text-xs text-blue-100 mt-3">
+                    💡 Tip: Print QR codes with this link and place them on tables, or share directly via WhatsApp/Email
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Quick Info */}
         <div className="bg-white rounded-xl shadow-md p-6">
           <h2 className="text-xl font-semibold text-slate-800 mb-4">Getting Started</h2>
