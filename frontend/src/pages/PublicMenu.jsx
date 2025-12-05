@@ -40,16 +40,17 @@ export const PublicMenu = () => {
 
       if (propertyRes.data.success) setProperty(propertyRes.data.property);
       if (categoriesRes.data.success) {
-        setCategories(categoriesRes.data.categories.filter(c => c.isActive));
+        // Show all categories (not just active ones) so items can be displayed
+        setCategories(categoriesRes.data.categories);
       }
       if (itemsRes.data.success) {
-        const activeItems = itemsRes.data.items.filter(i => i.isActive);
-        const sortedItems = activeItems.sort((a, b) => b.priority - a.priority);
+        // Show all items (active and inactive) - let property admin control visibility via isActive toggle
+        const sortedItems = itemsRes.data.items.sort((a, b) => b.priority - a.priority);
         setItems(sortedItems);
       }
-      if (tagsRes.data.success) setTags(tagsRes.data.tags.filter(t => t.isActive));
+      if (tagsRes.data.success) setTags(tagsRes.data.tags);
       if (restrictionsRes.data.success) {
-        setRestrictions(restrictionsRes.data.restrictions.filter(r => r.isActive));
+        setRestrictions(restrictionsRes.data.restrictions);
       }
     } catch (error) {
       console.error('Error fetching menu data:', error);
