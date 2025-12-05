@@ -2319,6 +2319,85 @@ async def delete_dietary_restriction(restriction_id: str):
         logger.error(f"Error deleting dietary restriction: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+# Menu Item Endpoints
+@api_router.get("/menu-items/{property_id}")
+async def get_menu_items(property_id: str):
+    """Get all menu items for a property"""
+    try:
+        items = await db.menu_items.find(
+            {"propertyId": property_id},
+            {"_id": 0}
+        ).to_list(1000)
+        
+        return {"success": True, "items": items}
+    except Exception as e:
+        logger.error(f"Error fetching menu items: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.post("/menu-items")
+async def create_menu_item(item: MenuItemCreate):
+    """Create a new menu item"""
+    try:
+        new_item = MenuItem(**item.model_dump())
+        
+        item_dict = new_item.model_dump()
+        item_dict['createdAt'] = item_dict['createdAt'].isoformat()
+        item_dict['updatedAt'] = item_dict['updatedAt'].isoformat()
+        
+        await db.menu_items.insert_one(item_dict)
+        
+        logger.info(f"Menu item created: {new_item.id}")
+        return {"success": True, "item": new_item}
+    except Exception as e:
+        logger.error(f"Error creating menu item: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.put("/menu-items/{item_id}")
+async def update_menu_item(item_id: str, update_data: MenuItemUpdate):
+    """Update a menu item"""
+    try:
+        update_dict = {k: v for k, v in update_data.model_dump().items() if v is not None}
+        
+        if not update_dict:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        update_dict['updatedAt'] = datetime.now(timezone.utc).isoformat()
+        
+        result = await db.menu_items.update_one(
+            {"id": item_id},
+            {"$set": update_dict}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Item not found")
+        
+        updated_item = await db.menu_items.find_one({"id": item_id}, {"_id": 0})
+        
+        logger.info(f"Menu item updated: {item_id}")
+        return {"success": True, "item": updated_item}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating menu item: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/menu-items/{item_id}")
+async def delete_menu_item(item_id: str):
+    """Delete a menu item"""
+    try:
+        result = await db.menu_items.delete_one({"id": item_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Item not found")
+        
+        logger.info(f"Menu item deleted: {item_id}")
+        return {"success": True, "message": "Menu item deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting menu item: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 
         logger.info(f"Role deleted: {role_id}")
         return {"success": True, "message": "Role deleted successfully"}
