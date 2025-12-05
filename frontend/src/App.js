@@ -50,6 +50,7 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
+            <Route path="/menu/:propertyId" element={<PublicMenu />} />
             
             {/* Admin Login */}
             <Route path="/admin/login" element={<Login />} />
