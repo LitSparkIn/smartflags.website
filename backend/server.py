@@ -1979,6 +1979,88 @@ async def delete_role(role_id: str):
         if result.deleted_count == 0:
             raise HTTPException(status_code=404, detail="Role not found")
         
+
+
+# Menu Category Endpoints
+@api_router.get("/menu-categories/{property_id}")
+async def get_menu_categories(property_id: str):
+    """Get all menu categories for a property"""
+    try:
+        categories = await db.menu_categories.find(
+            {"propertyId": property_id},
+            {"_id": 0}
+        ).sort("displayOrder", 1).to_list(1000)
+        
+        return {"success": True, "categories": categories}
+    except Exception as e:
+        logger.error(f"Error fetching menu categories: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.post("/menu-categories")
+async def create_menu_category(category: MenuCategoryCreate):
+    """Create a new menu category"""
+    try:
+        new_category = MenuCategory(**category.model_dump())
+        
+        category_dict = new_category.model_dump()
+        category_dict['createdAt'] = category_dict['createdAt'].isoformat()
+        category_dict['updatedAt'] = category_dict['updatedAt'].isoformat()
+        
+        await db.menu_categories.insert_one(category_dict)
+        
+        logger.info(f"Menu category created: {new_category.id}")
+        return {"success": True, "category": new_category}
+    except Exception as e:
+        logger.error(f"Error creating menu category: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.put("/menu-categories/{category_id}")
+async def update_menu_category(category_id: str, update_data: MenuCategoryUpdate):
+    """Update a menu category"""
+    try:
+        update_dict = {k: v for k, v in update_data.model_dump().items() if v is not None}
+        
+        if not update_dict:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        update_dict['updatedAt'] = datetime.now(timezone.utc).isoformat()
+        
+        result = await db.menu_categories.update_one(
+            {"id": category_id},
+            {"$set": update_dict}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Category not found")
+        
+        updated_category = await db.menu_categories.find_one({"id": category_id}, {"_id": 0})
+        
+        logger.info(f"Menu category updated: {category_id}")
+        return {"success": True, "category": updated_category}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating menu category: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/menu-categories/{category_id}")
+async def delete_menu_category(category_id: str):
+    """Delete a menu category"""
+    try:
+        result = await db.menu_categories.delete_one({"id": category_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Category not found")
+        
+        logger.info(f"Menu category deleted: {category_id}")
+        return {"success": True, "message": "Category deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting menu category: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+
         logger.info(f"Role deleted: {role_id}")
         return {"success": True, "message": "Role deleted successfully"}
         
