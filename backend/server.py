@@ -1979,7 +1979,14 @@ async def delete_role(role_id: str):
         if result.deleted_count == 0:
             raise HTTPException(status_code=404, detail="Role not found")
         
-
+        logger.info(f"Role deleted: {role_id}")
+        return {"success": True, "message": "Role deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting role: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 # Menu Category Endpoints
 @api_router.get("/menu-categories/{property_id}")
