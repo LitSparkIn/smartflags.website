@@ -31,6 +31,8 @@ import { Seats } from './pages/user/Seats';
 import { Groups } from './pages/user/Groups';
 import { Devices } from './pages/user/Devices';
 import { MenuCategories } from './pages/user/MenuCategories';
+import { MenuTags } from './pages/user/MenuTags';
+import { DietaryRestrictions } from './pages/user/DietaryRestrictions';
 
 // Staff Pages
 import { StaffLogin } from './pages/staff/StaffLogin';
