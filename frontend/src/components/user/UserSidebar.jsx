@@ -32,6 +32,8 @@ export const UserSidebar = ({ user }) => {
   // Menu sub-items
   const menuSubItems = [
     { name: 'Categories', path: '/user/menu/categories', icon: ChefHat },
+    { name: 'Tags', path: '/user/menu/tags', icon: Tag },
+    { name: 'Dietary Restrictions', path: '/user/menu/dietary', icon: Salad },
     { name: 'Items', path: '/user/menu/items', icon: UtensilsCrossed }
   ];
   
