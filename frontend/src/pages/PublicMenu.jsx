@@ -212,6 +212,8 @@ export const PublicMenu = () => {
               </button>
               {categories.map((category) => {
                 const count = items.filter(item => item.categoryId === category.id).length;
+                // Only show categories that have items
+                if (count === 0) return null;
                 return (
                   <button
                     key={category.id}
