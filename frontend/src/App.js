@@ -39,6 +39,9 @@ import { MenuItems } from './pages/user/MenuItems';
 import { StaffLogin } from './pages/staff/StaffLogin';
 import { StaffSmartView } from './pages/staff/StaffSmartView';
 
+// Public Pages
+import { PublicMenu } from './pages/PublicMenu';
+
 function App() {
   return (
     <AuthProvider>
