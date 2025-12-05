@@ -370,6 +370,58 @@ class MenuCategoryUpdate(BaseModel):
     isActive: Optional[bool] = None
 
 
+# Menu Tag Models
+class MenuTag(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    propertyId: str
+    name: str
+    color: str = "#3B82F6"  # Hex color code for badge
+    isActive: bool = True
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class MenuTagCreate(BaseModel):
+    propertyId: str
+    name: str
+    color: str = "#3B82F6"
+    isActive: bool = True
+
+class MenuTagUpdate(BaseModel):
+    name: Optional[str] = None
+    color: Optional[str] = None
+    isActive: Optional[bool] = None
+
+# Dietary Restriction Models
+class DietaryRestriction(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    propertyId: str
+    name: str
+    icon: Optional[str] = None  # Emoji or icon identifier
+    description: Optional[str] = None
+    isActive: bool = True
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class DietaryRestrictionCreate(BaseModel):
+    propertyId: str
+    name: str
+    icon: Optional[str] = None
+    description: Optional[str] = None
+    isActive: bool = True
+
+class DietaryRestrictionUpdate(BaseModel):
+    name: Optional[str] = None
+    icon: Optional[str] = None
+    description: Optional[str] = None
+    isActive: Optional[bool] = None
+
+
+
+
 
 class RoleUpdate(BaseModel):
     name: Optional[str] = None
