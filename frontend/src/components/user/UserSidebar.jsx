@@ -28,6 +28,12 @@ export const UserSidebar = ({ user }) => {
     { name: 'Seats', path: '/user/seats', icon: Armchair },
     { name: 'Groups', path: '/user/groups', icon: UsersRound }
   ];
+
+  // Menu sub-items
+  const menuSubItems = [
+    { name: 'Categories', path: '/user/menu/categories', icon: ChefHat },
+    { name: 'Items', path: '/user/menu/items', icon: UtensilsCrossed }
+  ];
   
   // Select menu based on user type
   const menuItems = user?.entityType === 'organisation' ? orgAdminMenu : propertyAdminMenu;
