@@ -138,6 +138,7 @@ function App() {
             <Route path="/user/seat-types" element={<SeatTypes />} />
             <Route path="/user/seats" element={<Seats />} />
             <Route path="/user/groups" element={<Groups />} />
+            <Route path="/user/menu/categories" element={<MenuCategories />} />
             
             {/* Redirect /user to dashboard */}
             <Route path="/user" element={<Navigate to="/user/dashboard" replace />} />
