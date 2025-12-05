@@ -342,6 +342,35 @@ class RoleCreate(BaseModel):
     name: str
     description: Optional[str] = None
 
+
+# Menu Category Models
+class MenuCategory(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    propertyId: str
+    name: str
+    description: Optional[str] = None
+    displayOrder: int = 0
+    isActive: bool = True
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class MenuCategoryCreate(BaseModel):
+    propertyId: str
+    name: str
+    description: Optional[str] = None
+    displayOrder: int = 0
+    isActive: bool = True
+
+class MenuCategoryUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    displayOrder: Optional[int] = None
+    isActive: Optional[bool] = None
+
+
+
 class RoleUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
