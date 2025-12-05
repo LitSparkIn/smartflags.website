@@ -149,21 +149,21 @@ The frontend `Staff.jsx` component was trying to fetch roles from `localStorage`
 #### API Testing (via curl)
 ✅ **Test 1: Roles Endpoint**
 ```bash
-curl -s https://pool-service-app-2.preview.emergentagent.com/api/roles
+curl -s https://smartflags-preview.preview.emergentagent.com/api/roles
 ```
 - Status: SUCCESS
 - Result: 5 roles returned correctly
 
 ✅ **Test 2: Role Seeding**
 ```bash
-curl -s -X POST https://pool-service-app-2.preview.emergentagent.com/api/roles/seed
+curl -s -X POST https://smartflags-preview.preview.emergentagent.com/api/roles/seed
 ```
 - Status: SUCCESS
 - Result: 5 initial roles created in MongoDB
 
 ✅ **Test 3: Admin Creation**
 ```bash
-curl -X POST https://pool-service-app-2.preview.emergentagent.com/api/admin/create \
+curl -X POST https://smartflags-preview.preview.emergentagent.com/api/admin/create \
   -d '{"name": "Test Property Admin", "email": "testproperty@example.com", "entityType": "property", "entityId": "test-property-1"}'
 ```
 - Status: SUCCESS
@@ -171,7 +171,7 @@ curl -X POST https://pool-service-app-2.preview.emergentagent.com/api/admin/crea
 
 ✅ **Test 4: OTP Request**
 ```bash
-curl -X POST https://pool-service-app-2.preview.emergentagent.com/api/user/request-otp \
+curl -X POST https://smartflags-preview.preview.emergentagent.com/api/user/request-otp \
   -d '{"email": "testproperty@example.com"}'
 ```
 - Status: SUCCESS

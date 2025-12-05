@@ -57,7 +57,7 @@
     "zod": "^3.24.4"
   },
   "scripts": {
-    "start": "cross-env REACT_APP_BACKEND_URL=https://pool-service-app-2.preview.emergentagent.com craco start",
+    "start": "cross-env REACT_APP_BACKEND_URL=https://smartflags-preview.preview.emergentagent.com craco start",
     "build:staging": "cross-env REACT_APP_BACKEND_URL=https://api.smartflags.tech craco build",
     "build:production": "cross-env REACT_APP_BACKEND_URL=https://api.smartflags.tech craco build"
   },
