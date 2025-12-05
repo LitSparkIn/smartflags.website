@@ -122,6 +122,19 @@ export const UserSidebar = ({ user }) => {
                       </li>
                     );
                   })}
+                  
+                  {/* View Public Menu Link */}
+                  <li className="pt-2 border-t border-slate-700">
+                    <a
+                      href={`/menu/${user?.entityId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-3 px-4 py-2 rounded-lg transition-all text-sm bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      <span>View Public Menu</span>
+                    </a>
+                  </li>
                 </ul>
               )}
             </li>
