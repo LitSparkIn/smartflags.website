@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Building2, Users, Armchair, Grid3x3, UsersRound, Waves, Eye, UserCheck, MapPin, Smartphone, Shield } from 'lucide-react';
+import { LayoutDashboard, Building2, Users, Armchair, Grid3x3, UsersRound, Waves, Eye, UserCheck, MapPin, Smartphone, Shield, ChefHat, ChevronDown, ChevronRight, UtensilsCrossed } from 'lucide-react';
 
 export const UserSidebar = ({ user }) => {
   const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(true);
   
   const isActive = (path) => location.pathname === path;
+  const isMenuActive = () => location.pathname.startsWith('/user/menu');
   
   // Menu items for Organisation Admin
   const orgAdminMenu = [
