@@ -40,12 +40,13 @@ export const PublicMenu = () => {
 
       if (propertyRes.data.success) setProperty(propertyRes.data.property);
       if (categoriesRes.data.success) {
-        // Show all categories (not just active ones) so items can be displayed
+        // Keep all categories to properly display items, but we'll filter by active items
         setCategories(categoriesRes.data.categories);
       }
       if (itemsRes.data.success) {
-        // Show all items (active and inactive) - let property admin control visibility via isActive toggle
-        const sortedItems = itemsRes.data.items.sort((a, b) => b.priority - a.priority);
+        // Only show active items on public menu
+        const activeItems = itemsRes.data.items.filter(i => i.isActive);
+        const sortedItems = activeItems.sort((a, b) => b.priority - a.priority);
         setItems(sortedItems);
       }
       if (tagsRes.data.success) setTags(tagsRes.data.tags);
