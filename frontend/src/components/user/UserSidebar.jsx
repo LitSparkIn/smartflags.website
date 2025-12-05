@@ -56,7 +56,7 @@ export const UserSidebar = ({ user }) => {
       </div>
 
       {/* Navigation Menu */}
-      <nav className="flex-1 p-4">
+      <nav className="flex-1 p-4 overflow-y-auto">
         <ul className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -76,6 +76,54 @@ export const UserSidebar = ({ user }) => {
               </li>
             );
           })}
+
+          {/* Menu Section - Only for Property Admin */}
+          {user?.entityType === 'property' && (
+            <li>
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all ${
+                  isMenuActive()
+                    ? 'bg-teal-600 text-white shadow-lg'
+                    : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                }`}
+              >
+                <div className="flex items-center space-x-3">
+                  <ChefHat className="w-5 h-5" />
+                  <span className="font-medium">Menu</span>
+                </div>
+                {menuOpen ? (
+                  <ChevronDown className="w-4 h-4" />
+                ) : (
+                  <ChevronRight className="w-4 h-4" />
+                )}
+              </button>
+
+              {/* Sub-menu */}
+              {menuOpen && (
+                <ul className="mt-2 ml-4 space-y-1">
+                  {menuSubItems.map((subItem) => {
+                    const SubIcon = subItem.icon;
+                    return (
+                      <li key={subItem.path}>
+                        <Link
+                          to={subItem.path}
+                          className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition-all text-sm ${
+                            isActive(subItem.path)
+                              ? 'bg-teal-500 text-white'
+                              : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                          }`}
+                        >
+                          <SubIcon className="w-4 h-4" />
+                          <span>{subItem.name}</span>
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </li>
+          )}
         </ul>
       </nav>
 
