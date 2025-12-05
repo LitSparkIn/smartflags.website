@@ -2120,6 +2120,167 @@ async def delete_menu_category(category_id: str):
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
+
+
+# Menu Tag Endpoints
+@api_router.get("/menu-tags/{property_id}")
+async def get_menu_tags(property_id: str):
+    """Get all menu tags for a property"""
+    try:
+        tags = await db.menu_tags.find(
+            {"propertyId": property_id},
+            {"_id": 0}
+        ).to_list(1000)
+        
+        return {"success": True, "tags": tags}
+    except Exception as e:
+        logger.error(f"Error fetching menu tags: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.post("/menu-tags")
+async def create_menu_tag(tag: MenuTagCreate):
+    """Create a new menu tag"""
+    try:
+        new_tag = MenuTag(**tag.model_dump())
+        
+        tag_dict = new_tag.model_dump()
+        tag_dict['createdAt'] = tag_dict['createdAt'].isoformat()
+        tag_dict['updatedAt'] = tag_dict['updatedAt'].isoformat()
+        
+        await db.menu_tags.insert_one(tag_dict)
+        
+        logger.info(f"Menu tag created: {new_tag.id}")
+        return {"success": True, "tag": new_tag}
+    except Exception as e:
+        logger.error(f"Error creating menu tag: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.put("/menu-tags/{tag_id}")
+async def update_menu_tag(tag_id: str, update_data: MenuTagUpdate):
+    """Update a menu tag"""
+    try:
+        update_dict = {k: v for k, v in update_data.model_dump().items() if v is not None}
+        
+        if not update_dict:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        update_dict['updatedAt'] = datetime.now(timezone.utc).isoformat()
+        
+        result = await db.menu_tags.update_one(
+            {"id": tag_id},
+            {"$set": update_dict}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Tag not found")
+        
+        updated_tag = await db.menu_tags.find_one({"id": tag_id}, {"_id": 0})
+        
+        logger.info(f"Menu tag updated: {tag_id}")
+        return {"success": True, "tag": updated_tag}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating menu tag: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/menu-tags/{tag_id}")
+async def delete_menu_tag(tag_id: str):
+    """Delete a menu tag"""
+    try:
+        result = await db.menu_tags.delete_one({"id": tag_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Tag not found")
+        
+        logger.info(f"Menu tag deleted: {tag_id}")
+        return {"success": True, "message": "Tag deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting menu tag: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+# Dietary Restriction Endpoints
+@api_router.get("/dietary-restrictions/{property_id}")
+async def get_dietary_restrictions(property_id: str):
+    """Get all dietary restrictions for a property"""
+    try:
+        restrictions = await db.dietary_restrictions.find(
+            {"propertyId": property_id},
+            {"_id": 0}
+        ).to_list(1000)
+        
+        return {"success": True, "restrictions": restrictions}
+    except Exception as e:
+        logger.error(f"Error fetching dietary restrictions: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.post("/dietary-restrictions")
+async def create_dietary_restriction(restriction: DietaryRestrictionCreate):
+    """Create a new dietary restriction"""
+    try:
+        new_restriction = DietaryRestriction(**restriction.model_dump())
+        
+        restriction_dict = new_restriction.model_dump()
+        restriction_dict['createdAt'] = restriction_dict['createdAt'].isoformat()
+        restriction_dict['updatedAt'] = restriction_dict['updatedAt'].isoformat()
+        
+        await db.dietary_restrictions.insert_one(restriction_dict)
+        
+        logger.info(f"Dietary restriction created: {new_restriction.id}")
+        return {"success": True, "restriction": new_restriction}
+    except Exception as e:
+        logger.error(f"Error creating dietary restriction: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.put("/dietary-restrictions/{restriction_id}")
+async def update_dietary_restriction(restriction_id: str, update_data: DietaryRestrictionUpdate):
+    """Update a dietary restriction"""
+    try:
+        update_dict = {k: v for k, v in update_data.model_dump().items() if v is not None}
+        
+        if not update_dict:
+            raise HTTPException(status_code=400, detail="No fields to update")
+        
+        update_dict['updatedAt'] = datetime.now(timezone.utc).isoformat()
+        
+        result = await db.dietary_restrictions.update_one(
+            {"id": restriction_id},
+            {"$set": update_dict}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Restriction not found")
+        
+        updated_restriction = await db.dietary_restrictions.find_one({"id": restriction_id}, {"_id": 0})
+        
+        logger.info(f"Dietary restriction updated: {restriction_id}")
+        return {"success": True, "restriction": updated_restriction}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating dietary restriction: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.delete("/dietary-restrictions/{restriction_id}")
+async def delete_dietary_restriction(restriction_id: str):
+    """Delete a dietary restriction"""
+    try:
+        result = await db.dietary_restrictions.delete_one({"id": restriction_id})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Restriction not found")
+        
+        logger.info(f"Dietary restriction deleted: {restriction_id}")
+        return {"success": True, "message": "Dietary restriction deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting dietary restriction: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+
         logger.info(f"Role deleted: {role_id}")
         return {"success": True, "message": "Role deleted successfully"}
         
