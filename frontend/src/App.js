@@ -33,6 +33,7 @@ import { Devices } from './pages/user/Devices';
 import { MenuCategories } from './pages/user/MenuCategories';
 import { MenuTags } from './pages/user/MenuTags';
 import { DietaryRestrictions } from './pages/user/DietaryRestrictions';
+import { MenuItems } from './pages/user/MenuItems';
 
 // Staff Pages
 import { StaffLogin } from './pages/staff/StaffLogin';
