@@ -30,17 +30,24 @@ export const PublicMenu = () => {
   const fetchMenuData = async () => {
     try {
       setLoading(true);
-      const [propertyRes, categoriesRes, itemsRes, tagsRes, restrictionsRes] = await Promise.all([
-        axios.get(`${BACKEND_URL}/api/properties/${propertyId}`),
+      
+      // Fetch property details (optional - menu works without it)
+      try {
+        const propertyRes = await axios.get(`${BACKEND_URL}/api/properties/${propertyId}`);
+        if (propertyRes.data.success) setProperty(propertyRes.data.property);
+      } catch (err) {
+        console.log('Property not found, using default name');
+      }
+
+      // Fetch menu data
+      const [categoriesRes, itemsRes, tagsRes, restrictionsRes] = await Promise.all([
         axios.get(`${BACKEND_URL}/api/menu-categories/${propertyId}`),
         axios.get(`${BACKEND_URL}/api/menu-items/${propertyId}`),
         axios.get(`${BACKEND_URL}/api/menu-tags/${propertyId}`),
         axios.get(`${BACKEND_URL}/api/dietary-restrictions/${propertyId}`)
       ]);
 
-      if (propertyRes.data.success) setProperty(propertyRes.data.property);
       if (categoriesRes.data.success) {
-        // Keep all categories to properly display items, but we'll filter by active items
         setCategories(categoriesRes.data.categories);
       }
       if (itemsRes.data.success) {
@@ -48,6 +55,7 @@ export const PublicMenu = () => {
         const activeItems = itemsRes.data.items.filter(i => i.isActive);
         const sortedItems = activeItems.sort((a, b) => b.priority - a.priority);
         setItems(sortedItems);
+        console.log('Active items loaded:', activeItems.length);
       }
       if (tagsRes.data.success) setTags(tagsRes.data.tags);
       if (restrictionsRes.data.success) {
