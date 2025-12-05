@@ -144,6 +144,7 @@ function App() {
             <Route path="/user/menu/categories" element={<MenuCategories />} />
             <Route path="/user/menu/tags" element={<MenuTags />} />
             <Route path="/user/menu/dietary" element={<DietaryRestrictions />} />
+            <Route path="/user/menu/items" element={<MenuItems />} />
             
             {/* Redirect /user to dashboard */}
             <Route path="/user" element={<Navigate to="/user/dashboard" replace />} />
