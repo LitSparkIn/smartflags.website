@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Building2, Home, LogOut, Waves, Database, ChevronDown, ChevronRight, Globe, MapPin, Map, Shield } from 'lucide-react';
+import { LayoutDashboard, Building2, Home, LogOut, Waves, Database, ChevronDown, ChevronRight, Globe, MapPin, Map, Shield, Users } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../ui/button';
 
