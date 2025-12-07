@@ -83,10 +83,10 @@ export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
       
       // Load states and cities for existing property
       if (property.countryId) {
-        setAvailableStates(getStatesByCountry(property.countryId));
+        fetchStatesByCountry(property.countryId);
       }
       if (property.stateId) {
-        setAvailableCities(getCitiesByState(property.stateId));
+        fetchCitiesByState(property.stateId);
       }
     } else {
       setFormData({
