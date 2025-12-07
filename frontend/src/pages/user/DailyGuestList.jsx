@@ -303,10 +303,17 @@ export const DailyGuestList = () => {
             <FileSpreadsheet className="w-5 h-5 text-blue-600 mt-0.5" />
             <div>
               <p className="text-sm font-semibold text-blue-900 mb-1">Excel File Format</p>
-              <p className="text-sm text-blue-800">
-                Your Excel file should have the following columns: <strong>Room Number</strong>, <strong>Guest Name</strong>, 
-                <strong>Category</strong> (optional), <strong>Check-in Date</strong> (YYYY-MM-DD format), and <strong>Check-out Date</strong> (YYYY-MM-DD format)
+              <p className="text-sm text-blue-800 mb-2">
+                Your Excel file must have these exact column names:
               </p>
+              <ul className="text-sm text-blue-800 list-disc list-inside space-y-1">
+                <li><strong>Room Number</strong> (required)</li>
+                <li><strong>Guest Name</strong> (required)</li>
+                <li><strong>Category</strong> (optional)</li>
+                <li><strong>Description</strong> (optional)</li>
+                <li><strong>Checkin Date</strong> (MM-DD-YYYY format, e.g., 12-27-2024)</li>
+                <li><strong>Checkout Date</strong> (MM-DD-YYYY format, e.g., 12-30-2024)</li>
+              </ul>
             </div>
           </div>
         </div>
