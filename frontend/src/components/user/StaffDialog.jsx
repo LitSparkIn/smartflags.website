@@ -27,8 +27,7 @@ export const StaffDialog = ({ open, onOpenChange, staff, onSave, propertyId, rol
     email: '',
     phone: '',
     username: '',
-    pin: '',
-    password: ''
+    pin: ''
   });
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
