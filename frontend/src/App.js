@@ -129,6 +129,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute>
+                  <Users />
+                </ProtectedRoute>
+              }
+            />
             
             {/* Redirect /admin to dashboard */}
             <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
