@@ -10,6 +10,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 export const PublicMenu = () => {
   const { propertyId, menuSlug } = useParams();
   const [property, setProperty] = useState(null);
+  const [menu, setMenu] = useState(null);
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
   const [tags, setTags] = useState([]);
@@ -22,10 +23,10 @@ export const PublicMenu = () => {
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    if (propertyId) {
+    if (propertyId && menuSlug) {
       fetchMenuData();
     }
-  }, [propertyId]);
+  }, [propertyId, menuSlug]);
 
   const fetchMenuData = async () => {
     try {
@@ -39,6 +40,17 @@ export const PublicMenu = () => {
         console.log('Property not found, using default name');
       }
 
+      // Fetch the specific menu by menuSlug (menu ID)
+      const menuRes = await axios.get(`${BACKEND_URL}/api/menus/by-id/${menuSlug}`);
+      if (!menuRes.data.success || !menuRes.data.menu) {
+        console.error('Menu not found');
+        setLoading(false);
+        return;
+      }
+      
+      const menuData = menuRes.data.menu;
+      setMenu(menuData);
+
       // Fetch menu data
       const [categoriesRes, itemsRes, tagsRes, restrictionsRes] = await Promise.all([
         axios.get(`${BACKEND_URL}/api/menu-categories/${propertyId}`),
@@ -51,11 +63,15 @@ export const PublicMenu = () => {
         setCategories(categoriesRes.data.categories);
       }
       if (itemsRes.data.success) {
-        // Only show active items on public menu
-        const activeItems = itemsRes.data.items.filter(i => i.isActive);
-        const sortedItems = activeItems.sort((a, b) => b.priority - a.priority);
+        // Filter items to only include those in this menu
+        const allItems = itemsRes.data.items;
+        const menuItemIds = menuData.itemIds || [];
+        const filteredItems = allItems.filter(item => 
+          menuItemIds.includes(item.id) && item.isActive
+        );
+        const sortedItems = filteredItems.sort((a, b) => b.priority - a.priority);
         setItems(sortedItems);
-        console.log('Active items loaded:', activeItems.length);
+        console.log('Active menu items loaded:', sortedItems.length);
       }
       if (tagsRes.data.success) setTags(tagsRes.data.tags);
       if (restrictionsRes.data.success) {
