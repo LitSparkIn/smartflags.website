@@ -53,7 +53,7 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
-            <Route path="/menu/:propertyId" element={<PublicMenu />} />
+            <Route path="/menu/:propertyId/:menuSlug" element={<PublicMenu />} />
             
             {/* Admin Login */}
             <Route path="/admin/login" element={<Login />} />
