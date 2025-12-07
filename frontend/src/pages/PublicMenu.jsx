@@ -8,7 +8,7 @@ import axios from 'axios';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
 export const PublicMenu = () => {
-  const { propertyId } = useParams();
+  const { propertyId, menuSlug } = useParams();
   const [property, setProperty] = useState(null);
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
