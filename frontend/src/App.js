@@ -12,6 +12,7 @@ import { PropertyDetails } from './pages/admin/PropertyDetails';
 import { Countries } from './pages/admin/Countries';
 import { States } from './pages/admin/States';
 import { Cities } from './pages/admin/Cities';
+import { Users } from './pages/admin/Users';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Toaster } from './components/ui/sonner';
