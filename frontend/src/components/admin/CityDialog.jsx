@@ -27,19 +27,26 @@ export const CityDialog = ({ open, onOpenChange, city, onSave }) => {
     name: ''
   });
 
-  // Get states from localStorage - called each time dialog opens
+  // Fetch states from backend API
   const [states, setStates] = useState([]);
 
   useEffect(() => {
     if (open) {
-      try {
-        const stored = localStorage.getItem('smartflags_states');
-        setStates(stored ? JSON.parse(stored) : []);
-      } catch (error) {
-        setStates([]);
-      }
+      fetchStates();
     }
   }, [open]);
+
+  const fetchStates = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/states`);
+      if (response.data.success) {
+        setStates(response.data.states);
+      }
+    } catch (error) {
+      console.error('Error fetching states:', error);
+      setStates([]);
+    }
+  };
 
   useEffect(() => {
     if (city) {
