@@ -335,34 +335,59 @@ export const DailyGuestList = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200">
-                  {filteredGuests.map((guest) => (
-                    <tr key={guest.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-6 py-4 text-sm font-semibold text-slate-900">{guest.roomNumber}</td>
-                      <td className="px-6 py-4 text-sm text-slate-900">{guest.guestName}</td>
-                      <td className="px-6 py-4 text-sm text-slate-600">
-                        {guest.category ? (
-                          <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-semibold">
-                            {guest.category}
-                          </span>
-                        ) : (
-                          <span className="text-slate-400">-</span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-slate-600">
-                        {new Date(guest.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                          onClick={() => handleDelete(guest.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
+                  {filteredGuests.map((guest) => {
+                    const eligibility = isGuestEligible(guest);
+                    return (
+                      <tr key={guest.id} className="hover:bg-slate-50 transition-colors">
+                        <td className="px-6 py-4 text-sm font-semibold text-slate-900">{guest.roomNumber}</td>
+                        <td className="px-6 py-4 text-sm text-slate-900">{guest.guestName}</td>
+                        <td className="px-6 py-4 text-sm text-slate-600">
+                          {guest.category ? (
+                            <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-semibold">
+                              {guest.category}
+                            </span>
+                          ) : (
+                            <span className="text-slate-400">-</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-slate-600">
+                          {guest.checkInDate ? (
+                            new Date(guest.checkInDate).toLocaleDateString()
+                          ) : (
+                            <span className="text-slate-400">-</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-slate-600">
+                          {guest.checkOutDate ? (
+                            new Date(guest.checkOutDate).toLocaleDateString()
+                          ) : (
+                            <span className="text-slate-400">-</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
+                          {eligibility.eligible ? (
+                            <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">
+                              ✓ Can allocate
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold" title={eligibility.reason}>
+                              ✗ Not eligible
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            onClick={() => handleDelete(guest.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
