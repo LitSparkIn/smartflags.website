@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Building2, Users, Armchair, Grid3x3, UsersRound, Waves, Eye, UserCheck, MapPin, Smartphone, Shield, ChefHat, ChevronDown, ChevronRight, UtensilsCrossed, Tag, Salad, ExternalLink } from 'lucide-react';
+import { LayoutDashboard, Building2, Users, Armchair, Grid3x3, UsersRound, Waves, Eye, UserCheck, MapPin, Smartphone, Shield, ChefHat, ChevronDown, ChevronRight, UtensilsCrossed, Tag, Salad, ExternalLink, Settings } from 'lucide-react';
 
 export const UserSidebar = ({ user }) => {
   const location = useLocation();
