@@ -123,20 +123,30 @@ export const DailyGuestList = () => {
 
       // Validate and transform data
       const guests = jsonData.map(row => {
-        // Extract dates with multiple possible column name variations
-        const checkInDate = row['Check-in Date'] || row['Check-In Date'] || row['check_in_date'] || 
-                           row['CheckInDate'] || row['checkin_date'] || row['Checkin Date'] || null;
-        const checkOutDate = row['Check-out Date'] || row['Check-Out Date'] || row['check_out_date'] || 
-                            row['CheckOutDate'] || row['checkout_date'] || row['Checkout Date'] || null;
+        // Extract dates - exact column names
+        const checkInDateRaw = row['Checkin Date'] || null;
+        const checkOutDateRaw = row['Checkout Date'] || null;
         
-        // Format dates to YYYY-MM-DD if they're in a different format
+        // Format dates from MM-DD-YYYY to YYYY-MM-DD
         const formatDate = (dateStr) => {
           if (!dateStr) return null;
           try {
-            // If it's already a valid date string, return it
-            const date = new Date(dateStr);
+            // Handle MM-DD-YYYY format
+            const dateString = String(dateStr).trim();
+            
+            // Check if it's in MM-DD-YYYY format
+            if (dateString.match(/^\d{1,2}-\d{1,2}-\d{4}$/)) {
+              const [month, day, year] = dateString.split('-');
+              return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+            }
+            
+            // Try parsing as a date
+            const date = new Date(dateString);
             if (!isNaN(date.getTime())) {
-              return date.toISOString().split('T')[0]; // YYYY-MM-DD
+              const year = date.getFullYear();
+              const month = String(date.getMonth() + 1).padStart(2, '0');
+              const day = String(date.getDate()).padStart(2, '0');
+              return `${year}-${month}-${day}`;
             }
           } catch (e) {
             console.error('Invalid date:', dateStr);
@@ -145,11 +155,12 @@ export const DailyGuestList = () => {
         };
 
         return {
-          roomNumber: String(row['Room Number'] || row['room_number'] || row['RoomNumber'] || '').trim(),
-          guestName: String(row['Guest Name'] || row['guest_name'] || row['GuestName'] || '').trim(),
-          category: row['Category'] || row['category'] || null,
-          checkInDate: formatDate(checkInDate),
-          checkOutDate: formatDate(checkOutDate)
+          roomNumber: String(row['Room Number'] || '').trim(),
+          guestName: String(row['Guest Name'] || '').trim(),
+          category: row['Category'] || null,
+          description: row['Description'] || null,
+          checkInDate: formatDate(checkInDateRaw),
+          checkOutDate: formatDate(checkOutDateRaw)
         };
       }).filter(g => g.roomNumber && g.guestName);
 
