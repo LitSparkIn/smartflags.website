@@ -119,9 +119,32 @@ export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
     });
   };
 
+  const fetchStatesByCountry = async (countryId) => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/states/country/${countryId}`);
+      if (response.data.success) {
+        setAvailableStates(response.data.states);
+      }
+    } catch (error) {
+      console.error('Error fetching states:', error);
+      setAvailableStates([]);
+    }
+  };
+
+  const fetchCitiesByState = async (stateId) => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/cities/state/${stateId}`);
+      if (response.data.success) {
+        setAvailableCities(response.data.cities);
+      }
+    } catch (error) {
+      console.error('Error fetching cities:', error);
+      setAvailableCities([]);
+    }
+  };
+
   const handleCountryChange = (value) => {
-    const states = getStatesByCountry(value);
-    setAvailableStates(states);
+    fetchStatesByCountry(value);
     setAvailableCities([]);
     setFormData({
       ...formData,
@@ -132,8 +155,7 @@ export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
   };
 
   const handleStateChange = (value) => {
-    const cities = getCitiesByState(value);
-    setAvailableCities(cities);
+    fetchCitiesByState(value);
     setFormData({
       ...formData,
       stateId: value,
