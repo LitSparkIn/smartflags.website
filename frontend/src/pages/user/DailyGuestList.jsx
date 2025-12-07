@@ -15,6 +15,7 @@ export const DailyGuestList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [user, setUser] = useState(null);
   const [importing, setImporting] = useState(false);
+  const [configuration, setConfiguration] = useState(null);
   const { toast } = useToast();
 
   useEffect(() => {
