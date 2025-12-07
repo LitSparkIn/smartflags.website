@@ -517,6 +517,7 @@ class Guest(BaseModel):
     roomNumber: str
     guestName: str
     category: Optional[str] = None
+    description: Optional[str] = None
     checkInDate: Optional[str] = None  # Format: "YYYY-MM-DD"
     checkOutDate: Optional[str] = None  # Format: "YYYY-MM-DD"
     createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -527,6 +528,7 @@ class GuestCreate(BaseModel):
     roomNumber: str
     guestName: str
     category: Optional[str] = None
+    description: Optional[str] = None
     checkInDate: Optional[str] = None
     checkOutDate: Optional[str] = None
 
@@ -534,6 +536,7 @@ class GuestUpdate(BaseModel):
     roomNumber: Optional[str] = None
     guestName: Optional[str] = None
     category: Optional[str] = None
+    description: Optional[str] = None
     checkInDate: Optional[str] = None
     checkOutDate: Optional[str] = None
     guestName: Optional[str] = None
