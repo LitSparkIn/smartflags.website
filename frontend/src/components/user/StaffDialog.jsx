@@ -305,15 +305,6 @@ export const StaffDialog = ({ open, onOpenChange, staff, onSave, propertyId, rol
                 4-6 digit PIN for staff login (used with username to access Staff Portal)
               </p>
             </div>
-
-            {/* Password field removed - Staff login uses Username + PIN only */}
-                  required={!staff}
-                />
-              </div>
-              <p className="text-xs text-slate-500">
-                {staff ? "Only fill if you want to change the password" : "Must be at least 6 characters long"}
-              </p>
-            </div>
           </div>
 
           <DialogFooter>
