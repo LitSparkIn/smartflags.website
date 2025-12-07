@@ -134,6 +134,8 @@ export const DailyGuestList = () => {
             // Handle MM-DD-YYYY format
             const dateString = String(dateStr).trim();
             
+            if (!dateString) return null;
+            
             // Check if it's in MM-DD-YYYY format
             if (dateString.match(/^\d{1,2}-\d{1,2}-\d{4}$/)) {
               const [month, day, year] = dateString.split('-');
@@ -154,14 +156,23 @@ export const DailyGuestList = () => {
           return null;
         };
 
-        return {
+        const guest = {
           roomNumber: String(row['Room Number'] || '').trim(),
           guestName: String(row['Guest Name'] || '').trim(),
-          category: row['Category'] || null,
-          description: row['Description'] || null,
+          category: (row['Category'] && String(row['Category']).trim()) || null,
+          description: (row['Description'] && String(row['Description']).trim()) || null,
           checkInDate: formatDate(checkInDateRaw),
           checkOutDate: formatDate(checkOutDateRaw)
         };
+
+        // Debug log for first guest
+        if (guest.roomNumber === '101') {
+          console.log('Sample guest data:', guest);
+          console.log('Raw check-in:', checkInDateRaw);
+          console.log('Raw check-out:', checkOutDateRaw);
+        }
+
+        return guest;
       }).filter(g => g.roomNumber && g.guestName);
 
       if (guests.length === 0) {
