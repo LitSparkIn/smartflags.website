@@ -31,19 +31,26 @@ export const OrganisationDialog = ({ open, onOpenChange, organisation, onSave })
     address: ''
   });
 
-  // Get countries from localStorage - called each time dialog opens
+  // Fetch countries from backend API
   const [countries, setCountries] = useState([]);
 
   useEffect(() => {
     if (open) {
-      try {
-        const stored = localStorage.getItem('smartflags_countries');
-        setCountries(stored ? JSON.parse(stored) : []);
-      } catch (error) {
-        setCountries([]);
-      }
+      fetchCountries();
     }
   }, [open]);
+
+  const fetchCountries = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/countries`);
+      if (response.data.success) {
+        setCountries(response.data.countries);
+      }
+    } catch (error) {
+      console.error('Error fetching countries:', error);
+      setCountries([]);
+    }
+  };
 
   useEffect(() => {
     if (organisation) {
