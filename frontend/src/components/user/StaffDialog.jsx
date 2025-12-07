@@ -40,8 +40,7 @@ export const StaffDialog = ({ open, onOpenChange, staff, onSave, propertyId, rol
         email: staff.email,
         phone: staff.phone || '',
         username: staff.username || '',
-        pin: staff.pin || '',
-        password: '' // Don't prefill password on edit
+        pin: staff.pin || ''
       });
     } else {
       setFormData({
@@ -50,8 +49,7 @@ export const StaffDialog = ({ open, onOpenChange, staff, onSave, propertyId, rol
         email: '',
         phone: '',
         username: '',
-        pin: '',
-        password: ''
+        pin: ''
       });
     }
   }, [staff, open]);
