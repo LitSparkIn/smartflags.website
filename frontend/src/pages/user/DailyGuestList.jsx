@@ -122,13 +122,36 @@ export const DailyGuestList = () => {
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
       // Validate and transform data
-      const guests = jsonData.map(row => ({
-        roomNumber: String(row['Room Number'] || row['room_number'] || row['RoomNumber'] || '').trim(),
-        guestName: String(row['Guest Name'] || row['guest_name'] || row['GuestName'] || '').trim(),
-        category: row['Category'] || row['category'] || null,
-        checkInDate: row['Check-in Date'] || row['Check-In Date'] || row['check_in_date'] || row['CheckInDate'] || row['checkin_date'] || null,
-        checkOutDate: row['Check-out Date'] || row['Check-Out Date'] || row['check_out_date'] || row['CheckOutDate'] || row['checkout_date'] || null
-      })).filter(g => g.roomNumber && g.guestName);
+      const guests = jsonData.map(row => {
+        // Extract dates with multiple possible column name variations
+        const checkInDate = row['Check-in Date'] || row['Check-In Date'] || row['check_in_date'] || 
+                           row['CheckInDate'] || row['checkin_date'] || row['Checkin Date'] || null;
+        const checkOutDate = row['Check-out Date'] || row['Check-Out Date'] || row['check_out_date'] || 
+                            row['CheckOutDate'] || row['checkout_date'] || row['Checkout Date'] || null;
+        
+        // Format dates to YYYY-MM-DD if they're in a different format
+        const formatDate = (dateStr) => {
+          if (!dateStr) return null;
+          try {
+            // If it's already a valid date string, return it
+            const date = new Date(dateStr);
+            if (!isNaN(date.getTime())) {
+              return date.toISOString().split('T')[0]; // YYYY-MM-DD
+            }
+          } catch (e) {
+            console.error('Invalid date:', dateStr);
+          }
+          return null;
+        };
+
+        return {
+          roomNumber: String(row['Room Number'] || row['room_number'] || row['RoomNumber'] || '').trim(),
+          guestName: String(row['Guest Name'] || row['guest_name'] || row['GuestName'] || '').trim(),
+          category: row['Category'] || row['category'] || null,
+          checkInDate: formatDate(checkInDate),
+          checkOutDate: formatDate(checkOutDate)
+        };
+      }).filter(g => g.roomNumber && g.guestName);
 
       if (guests.length === 0) {
         toast({
