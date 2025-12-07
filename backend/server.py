@@ -3183,6 +3183,7 @@ async def clear_all_data():
             'menu_tags',
             'dietary_restrictions',
             'menu_items',
+            'menus',
             'guests',
             'countries',
             'states',
