@@ -393,6 +393,13 @@ export const DailyGuestList = () => {
                           )}
                         </td>
                         <td className="px-6 py-4 text-sm text-slate-600">
+                          {guest.description ? (
+                            <span className="text-slate-700">{guest.description}</span>
+                          ) : (
+                            <span className="text-slate-400">-</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-slate-600">
                           {guest.checkInDate ? (
                             new Date(guest.checkInDate).toLocaleDateString()
                           ) : (
