@@ -48,6 +48,35 @@ export const Dashboard = () => {
     }
   };
 
+  const handleClearAllData = async () => {
+    try {
+      setClearing(true);
+      const response = await axios.post(`${BACKEND_URL}/api/admin/clear-all-data`);
+      
+      if (response.data.success) {
+        toast({
+          title: "Success",
+          description: "All data has been cleared successfully",
+        });
+        
+        // Refresh stats
+        setOrgCount(0);
+        setPropCount(0);
+        fetchStats();
+      }
+    } catch (error) {
+      console.error('Error clearing data:', error);
+      toast({
+        title: "Error",
+        description: error.response?.data?.detail || "Failed to clear data",
+        variant: "destructive",
+      });
+    } finally {
+      setClearing(false);
+      setShowClearDialog(false);
+    }
+  };
+
   const stats = [
     {
       label: 'Total Organisations',
