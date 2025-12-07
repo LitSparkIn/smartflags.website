@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { AdminLayout } from '../../components/admin/AdminLayout';
-import { Building2, Home, Users, TrendingUp } from 'lucide-react';
+import { Building2, Home, Users, TrendingUp, Trash2, AlertTriangle } from 'lucide-react';
 import axios from 'axios';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '../../components/ui/alert-dialog';
+import { useToast } from '../../hooks/use-toast';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
@@ -9,6 +20,9 @@ export const Dashboard = () => {
   const [orgCount, setOrgCount] = useState(0);
   const [propCount, setPropCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [showClearDialog, setShowClearDialog] = useState(false);
+  const [clearing, setClearing] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchStats();
