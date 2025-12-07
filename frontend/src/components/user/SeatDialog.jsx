@@ -226,28 +226,7 @@ export const SeatDialog = ({ open, onOpenChange, seat, onSave, propertyId, seatT
               </Select>
             </div>
 
-            {/* Group */}
-            <div className="space-y-2">
-              <Label className="text-slate-700 font-medium">
-                Group (Optional)
-              </Label>
-              <Select 
-                value={formData.groupId || 'no-group'} 
-                onValueChange={(value) => setFormData(prev => ({ ...prev, groupId: value === 'no-group' ? '' : value }))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select group or leave unassigned" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="no-group">No Group</SelectItem>
-                  {groups && groups.map((group) => (
-                    <SelectItem key={group.id} value={group.id}>
-                      {group.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {/* Group assignment removed - assign seats to groups via Groups page */}
 
             {seat ? (
               // Edit mode - single seat number
