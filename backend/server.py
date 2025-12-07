@@ -3105,6 +3105,71 @@ async def clear_all_data():
         logger.error(f"Error clearing data: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+@api_router.get("/admin/users")
+async def get_all_users():
+    """Get all users (Organisation Admins, Property Admins, and Staff) for admin dashboard"""
+    try:
+        users_list = []
+        
+        # Get Organisation and Property Admins from admin_otps
+        admin_otps = await db.admin_otps.find({}, {"_id": 0}).to_list(10000)
+        
+        # Group by email to get unique admins (avoid duplicates from multiple OTPs)
+        admins_by_email = {}
+        for otp in admin_otps:
+            email = otp.get('email')
+            if email and email not in admins_by_email:
+                entity_type = otp.get('entityType', 'unknown')
+                entity_id = otp.get('entityId', '')
+                
+                # Get organisation or property name
+                entity_name = ''
+                if entity_type == 'organisation' and entity_id:
+                    org = await db.organisations.find_one({"id": entity_id}, {"_id": 0, "name": 1})
+                    entity_name = org.get('name', '') if org else ''
+                elif entity_type == 'property' and entity_id:
+                    prop = await db.properties.find_one({"id": entity_id}, {"_id": 0, "name": 1})
+                    entity_name = prop.get('name', '') if prop else ''
+                
+                admins_by_email[email] = {
+                    'email': email,
+                    'name': otp.get('name', ''),
+                    'userType': 'Organisation Admin' if entity_type == 'organisation' else 'Property Admin',
+                    'entityType': entity_type,
+                    'entityId': entity_id,
+                    'entityName': entity_name,
+                    'createdAt': otp.get('createdAt', '')
+                }
+        
+        users_list.extend(admins_by_email.values())
+        
+        # Get all Staff
+        staff_members = await db.staff.find({}, {"_id": 0}).to_list(10000)
+        for staff in staff_members:
+            property_id = staff.get('propertyId', '')
+            property_name = ''
+            if property_id:
+                prop = await db.properties.find_one({"id": property_id}, {"_id": 0, "name": 1})
+                property_name = prop.get('name', '') if prop else ''
+            
+            users_list.append({
+                'email': staff.get('email', ''),
+                'name': staff.get('name', ''),
+                'userType': 'Staff',
+                'entityType': 'property',
+                'entityId': property_id,
+                'entityName': property_name,
+                'username': staff.get('username', ''),
+                'createdAt': staff.get('createdAt', '')
+            })
+        
+        logger.info(f"Fetched {len(users_list)} users")
+        return {"success": True, "users": users_list}
+        
+    except Exception as e:
+        logger.error(f"Error fetching users: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 
