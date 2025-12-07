@@ -43,17 +43,29 @@ export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
   // Load organisations and countries when dialog opens
   useEffect(() => {
     if (open) {
-      try {
-        const storedOrgs = localStorage.getItem('smartflags_organisations');
-        const storedCountries = localStorage.getItem('smartflags_countries');
-        setOrganisations(storedOrgs ? JSON.parse(storedOrgs) : []);
-        setCountries(storedCountries ? JSON.parse(storedCountries) : []);
-      } catch (error) {
-        setOrganisations([]);
-        setCountries([]);
-      }
+      fetchOrganisationsAndCountries();
     }
   }, [open]);
+
+  const fetchOrganisationsAndCountries = async () => {
+    try {
+      const [orgsResponse, countriesResponse] = await Promise.all([
+        axios.get(`${BACKEND_URL}/api/organisations`),
+        axios.get(`${BACKEND_URL}/api/countries`)
+      ]);
+
+      if (orgsResponse.data.success) {
+        setOrganisations(orgsResponse.data.organisations);
+      }
+      if (countriesResponse.data.success) {
+        setCountries(countriesResponse.data.countries);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setOrganisations([]);
+      setCountries([]);
+    }
+  };
 
   useEffect(() => {
     if (property) {
