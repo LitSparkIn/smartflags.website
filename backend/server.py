@@ -303,7 +303,7 @@ class StaffCreate(BaseModel):
     phone: Optional[str] = None
     username: str
     pin: str
-    password: str
+    password: Optional[str] = None
 
 class StaffUpdate(BaseModel):
     roleId: Optional[str] = None
