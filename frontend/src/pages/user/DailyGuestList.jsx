@@ -75,7 +75,9 @@ export const DailyGuestList = () => {
       const guests = jsonData.map(row => ({
         roomNumber: String(row['Room Number'] || row['room_number'] || row['RoomNumber'] || '').trim(),
         guestName: String(row['Guest Name'] || row['guest_name'] || row['GuestName'] || '').trim(),
-        category: row['Category'] || row['category'] || null
+        category: row['Category'] || row['category'] || null,
+        checkInDate: row['Check-in Date'] || row['check_in_date'] || row['CheckInDate'] || null,
+        checkOutDate: row['Check-out Date'] || row['check_out_date'] || row['CheckOutDate'] || null
       })).filter(g => g.roomNumber && g.guestName);
 
       if (guests.length === 0) {
