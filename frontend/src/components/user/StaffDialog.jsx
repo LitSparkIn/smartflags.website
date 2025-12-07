@@ -148,34 +148,10 @@ export const StaffDialog = ({ open, onOpenChange, staff, onSave, propertyId, rol
       return;
     }
 
-    // Password validation (only for new staff or if password is being changed)
-    if (!staff || formData.password) {
-      if (!formData.password) {
-        toast({
-          title: "Validation Error",
-          description: "Password is required",
-          variant: "destructive"
-        });
-        return;
-      }
-
-      if (formData.password.length < 6) {
-        toast({
-          title: "Validation Error",
-          description: "Password must be at least 6 characters long",
-          variant: "destructive"
-        });
-        return;
-      }
-    }
-
     setLoading(true);
     
-    // Prepare data (exclude password if not provided in edit mode)
+    // Prepare data
     const dataToSend = { ...formData, propertyId };
-    if (staff && !formData.password) {
-      delete dataToSend.password;
-    }
     
     await onSave(dataToSend);
     setLoading(false);
