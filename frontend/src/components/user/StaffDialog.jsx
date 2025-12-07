@@ -302,25 +302,11 @@ export const StaffDialog = ({ open, onOpenChange, staff, onSave, propertyId, rol
                 />
               </div>
               <p className="text-xs text-slate-500">
-                4-6 digit PIN for staff login
+                4-6 digit PIN for staff login (used with username to access Staff Portal)
               </p>
             </div>
 
-            {/* Password */}
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-slate-700 font-medium">
-                Password {staff ? '(leave blank to keep current)' : '*'}
-              </Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder={staff ? "Enter new password" : "Minimum 6 characters"}
-                  className="pl-10"
+            {/* Password field removed - Staff login uses Username + PIN only */}
                   required={!staff}
                 />
               </div>
