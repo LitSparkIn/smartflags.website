@@ -3082,7 +3082,10 @@ async def clear_all_data():
             'menu_tags',
             'dietary_restrictions',
             'menu_items',
-            'guests'
+            'guests',
+            'countries',
+            'states',
+            'cities'
         ]
         
         deleted_counts = {}
