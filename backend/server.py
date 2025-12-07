@@ -488,6 +488,26 @@ class RoleUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
 
+# Configuration Models
+class Configuration(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    propertyId: str
+    checkInTime: str  # Format: "HH:MM" (24-hour)
+    checkOutTime: str  # Format: "HH:MM" (24-hour)
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class ConfigurationCreate(BaseModel):
+    propertyId: str
+    checkInTime: str
+    checkOutTime: str
+
+class ConfigurationUpdate(BaseModel):
+    checkInTime: Optional[str] = None
+    checkOutTime: Optional[str] = None
+
 # Guest Models
 class Guest(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -497,6 +517,8 @@ class Guest(BaseModel):
     roomNumber: str
     guestName: str
     category: Optional[str] = None
+    checkInDate: Optional[str] = None  # Format: "YYYY-MM-DD"
+    checkOutDate: Optional[str] = None  # Format: "YYYY-MM-DD"
     createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -505,6 +527,8 @@ class GuestCreate(BaseModel):
     roomNumber: str
     guestName: str
     category: Optional[str] = None
+    checkInDate: Optional[str] = None
+    checkOutDate: Optional[str] = None
 
 class GuestUpdate(BaseModel):
     roomNumber: Optional[str] = None
