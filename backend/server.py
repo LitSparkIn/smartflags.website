@@ -2560,6 +2560,67 @@ async def delete_menu(menu_id: str):
         logger.error(f"Error deleting menu: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+# Configuration Endpoints
+@api_router.get("/configuration/{property_id}")
+async def get_configuration(property_id: str):
+    """Get configuration for a property"""
+    try:
+        config = await db.configurations.find_one(
+            {"propertyId": property_id},
+            {"_id": 0}
+        )
+        
+        if not config:
+            # Return default configuration if none exists
+            return {
+                "success": True,
+                "configuration": {
+                    "propertyId": property_id,
+                    "checkInTime": "14:00",
+                    "checkOutTime": "11:00"
+                }
+            }
+        
+        return {"success": True, "configuration": config}
+    except Exception as e:
+        logger.error(f"Error fetching configuration: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+@api_router.post("/configuration")
+async def create_or_update_configuration(config: ConfigurationCreate):
+    """Create or update configuration for a property"""
+    try:
+        # Check if configuration exists
+        existing = await db.configurations.find_one({"propertyId": config.propertyId})
+        
+        if existing:
+            # Update existing
+            update_dict = config.model_dump()
+            del update_dict['propertyId']
+            update_dict['updatedAt'] = datetime.now(timezone.utc).isoformat()
+            
+            await db.configurations.update_one(
+                {"propertyId": config.propertyId},
+                {"$set": update_dict}
+            )
+            
+            updated_config = await db.configurations.find_one({"propertyId": config.propertyId}, {"_id": 0})
+            logger.info(f"Configuration updated for property: {config.propertyId}")
+            return {"success": True, "configuration": updated_config}
+        else:
+            # Create new
+            new_config = Configuration(**config.model_dump())
+            config_dict = new_config.model_dump()
+            config_dict['createdAt'] = config_dict['createdAt'].isoformat()
+            config_dict['updatedAt'] = config_dict['updatedAt'].isoformat()
+            
+            await db.configurations.insert_one(config_dict)
+            logger.info(f"Configuration created for property: {config.propertyId}")
+            return {"success": True, "configuration": new_config}
+    except Exception as e:
+        logger.error(f"Error saving configuration: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 
         logger.info(f"Role deleted: {role_id}")
         return {"success": True, "message": "Role deleted successfully"}
