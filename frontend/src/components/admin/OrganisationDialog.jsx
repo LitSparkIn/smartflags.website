@@ -18,6 +18,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
 export const OrganisationDialog = ({ open, onOpenChange, organisation, onSave }) => {
   const [formData, setFormData] = useState({
