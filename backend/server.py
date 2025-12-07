@@ -1804,6 +1804,11 @@ async def get_groups(property_id: str):
 async def update_group(group_id: str, update_data: GroupUpdate):
     """Update a group"""
     try:
+        # Get the old group to compare seat assignments
+        old_group = await db.groups.find_one({"id": group_id}, {"_id": 0})
+        if not old_group:
+            raise HTTPException(status_code=404, detail="Group not found")
+        
         update_dict = {k: v for k, v in update_data.model_dump().items() if v is not None}
         
         if not update_dict:
@@ -1816,8 +1821,28 @@ async def update_group(group_id: str, update_data: GroupUpdate):
             {"$set": update_dict}
         )
         
-        if result.matched_count == 0:
-            raise HTTPException(status_code=404, detail="Group not found")
+        # Handle seat assignments if seatIds was updated
+        if 'seatIds' in update_dict:
+            new_seat_ids = update_dict['seatIds']
+            old_seat_ids = old_group.get('seatIds', [])
+            
+            # Remove groupId from seats that are no longer in this group
+            removed_seats = [sid for sid in old_seat_ids if sid not in new_seat_ids]
+            if removed_seats:
+                await db.seats.update_many(
+                    {"id": {"$in": removed_seats}, "groupId": group_id},
+                    {"$set": {"groupId": ""}}
+                )
+                logger.info(f"Removed groupId from {len(removed_seats)} seats")
+            
+            # Add groupId to new seats
+            added_seats = [sid for sid in new_seat_ids if sid not in old_seat_ids]
+            if added_seats:
+                await db.seats.update_many(
+                    {"id": {"$in": added_seats}},
+                    {"$set": {"groupId": group_id}}
+                )
+                logger.info(f"Added groupId to {len(added_seats)} seats")
         
         # Get updated group
         updated_group = await db.groups.find_one({"id": group_id}, {"_id": 0})
