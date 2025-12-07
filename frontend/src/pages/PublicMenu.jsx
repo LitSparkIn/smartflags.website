@@ -178,9 +178,9 @@ export const PublicMenu = () => {
               </div>
               <div>
                 <h1 className="text-xl md:text-2xl font-bold text-slate-800">
-                  {property?.name || 'Menu'}
+                  {menu?.name || property?.name || 'Menu'}
                 </h1>
-                <p className="text-xs md:text-sm text-slate-500">Our delicious offerings</p>
+                <p className="text-xs md:text-sm text-slate-500">{property?.name || 'Our delicious offerings'}</p>
               </div>
             </div>
             <Button
