@@ -2875,6 +2875,52 @@ async def create_allocation(allocation: AllocationCreate):
                 detail=f"No guest found in room number {allocation.roomNumber}"
             )
         
+        # Check guest eligibility based on check-in/check-out times
+        if guest.get('checkInDate') and guest.get('checkOutDate'):
+            # Fetch property configuration for check-in/check-out times
+            configuration = await db.configurations.find_one(
+                {"propertyId": allocation.propertyId},
+                {"_id": 0}
+            )
+            
+            if configuration:
+                now = datetime.now(timezone.utc)
+                current_date = now.strftime('%Y-%m-%d')  # YYYY-MM-DD
+                current_time = now.strftime('%H:%M')  # HH:MM
+                
+                check_in_date = guest['checkInDate']
+                check_out_date = guest['checkOutDate']
+                check_in_time = configuration.get('checkInTime', '14:00')
+                check_out_time = configuration.get('checkOutTime', '11:00')
+                
+                # Check if current date is before check-in date
+                if current_date < check_in_date:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Guest is not eligible. Check-in is on {check_in_date}"
+                    )
+                
+                # Check if current date is the check-in date but before check-in time
+                if current_date == check_in_date and current_time < check_in_time:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Guest is not eligible. Check-in time is {check_in_time}"
+                    )
+                
+                # Check if current date is after check-out date
+                if current_date > check_out_date:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Guest is not eligible. Already checked out on {check_out_date}"
+                    )
+                
+                # Check if current date is the check-out date and past check-out time
+                if current_date == check_out_date and current_time >= check_out_time:
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Guest is not eligible. Check-out time was {check_out_time}"
+                    )
+        
         # Verify F&B Manager exists
         fb_manager = await db.staff.find_one(
             {"id": allocation.fbManagerId, "propertyId": allocation.propertyId},
