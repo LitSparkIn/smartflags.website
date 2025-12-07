@@ -127,12 +127,25 @@ export const DailyGuestList = () => {
         const checkInDateRaw = row['Checkin Date'] || null;
         const checkOutDateRaw = row['Checkout Date'] || null;
         
-        // Format dates from MM-DD-YYYY to YYYY-MM-DD
-        const formatDate = (dateStr) => {
-          if (!dateStr) return null;
+        // Format dates - handles Excel serial numbers and text formats
+        const formatDate = (dateValue) => {
+          if (!dateValue) return null;
           try {
-            // Handle MM-DD-YYYY format
-            const dateString = String(dateStr).trim();
+            // Check if it's an Excel serial number (number type)
+            if (typeof dateValue === 'number') {
+              // Excel serial date: days since January 1, 1900
+              // Note: Excel incorrectly treats 1900 as a leap year, so we adjust
+              const excelEpoch = new Date(1899, 11, 30); // December 30, 1899
+              const date = new Date(excelEpoch.getTime() + dateValue * 86400000); // 86400000 ms in a day
+              
+              const year = date.getFullYear();
+              const month = String(date.getMonth() + 1).padStart(2, '0');
+              const day = String(date.getDate()).padStart(2, '0');
+              return `${year}-${month}-${day}`;
+            }
+            
+            // Handle text format
+            const dateString = String(dateValue).trim();
             
             if (!dateString) return null;
             
@@ -151,7 +164,7 @@ export const DailyGuestList = () => {
               return `${year}-${month}-${day}`;
             }
           } catch (e) {
-            console.error('Invalid date:', dateStr);
+            console.error('Invalid date:', dateValue);
           }
           return null;
         };
