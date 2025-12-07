@@ -534,6 +534,10 @@ class GuestUpdate(BaseModel):
     roomNumber: Optional[str] = None
     guestName: Optional[str] = None
     category: Optional[str] = None
+    checkInDate: Optional[str] = None
+    checkOutDate: Optional[str] = None
+    guestName: Optional[str] = None
+    category: Optional[str] = None
 
 class GuestBulkCreate(BaseModel):
     propertyId: str
