@@ -72,6 +72,43 @@ export const DailyGuestList = () => {
     }
   };
 
+  const isGuestEligible = (guest) => {
+    if (!guest.checkInDate || !guest.checkOutDate || !configuration) {
+      return { eligible: true, reason: '' };
+    }
+
+    const now = new Date();
+    const currentDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
+    const currentTime = now.toTimeString().slice(0, 5); // HH:MM
+
+    const checkInDate = guest.checkInDate;
+    const checkOutDate = guest.checkOutDate;
+    const checkInTime = configuration.checkInTime || '14:00';
+    const checkOutTime = configuration.checkOutTime || '11:00';
+
+    // If current date is before check-in date
+    if (currentDate < checkInDate) {
+      return { eligible: false, reason: `Check-in is on ${new Date(checkInDate).toLocaleDateString()}` };
+    }
+
+    // If current date is the check-in date, check if it's past check-in time
+    if (currentDate === checkInDate && currentTime < checkInTime) {
+      return { eligible: false, reason: `Check-in time is ${checkInTime}` };
+    }
+
+    // If current date is after check-out date
+    if (currentDate > checkOutDate) {
+      return { eligible: false, reason: `Checked out on ${new Date(checkOutDate).toLocaleDateString()}` };
+    }
+
+    // If current date is the check-out date, check if it's past check-out time
+    if (currentDate === checkOutDate && currentTime >= checkOutTime) {
+      return { eligible: false, reason: `Check-out time was ${checkOutTime}` };
+    }
+
+    return { eligible: true, reason: '' };
+  };
+
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
