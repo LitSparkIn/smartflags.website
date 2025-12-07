@@ -24,8 +24,20 @@ export const DailyGuestList = () => {
       const parsedUser = JSON.parse(userData);
       setUser(parsedUser);
       fetchGuests(parsedUser.entityId);
+      fetchConfiguration(parsedUser.entityId);
     }
   }, []);
+
+  const fetchConfiguration = async (propertyId) => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/configuration/${propertyId}`);
+      if (response.data.success) {
+        setConfiguration(response.data.configuration);
+      }
+    } catch (error) {
+      console.error('Error fetching configuration:', error);
+    }
+  };
 
   const fetchGuests = async (propertyId) => {
     try {
