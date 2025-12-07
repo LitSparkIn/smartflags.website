@@ -18,7 +18,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { getStatesByCountry, getCitiesByState } from '../../mockAdmin';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
 export const PropertyDialog = ({ open, onOpenChange, property, onSave }) => {
   const [formData, setFormData] = useState({
