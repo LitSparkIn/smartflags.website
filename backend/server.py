@@ -2664,7 +2664,10 @@ async def create_guests_bulk(data: GuestBulkCreate):
                 propertyId=property_id,
                 roomNumber=guest_data.get('roomNumber', ''),
                 guestName=guest_data.get('guestName', ''),
-                category=guest_data.get('category')
+                category=guest_data.get('category'),
+                description=guest_data.get('description'),
+                checkInDate=guest_data.get('checkInDate'),
+                checkOutDate=guest_data.get('checkOutDate')
             )
             
             guest_dict = guest.model_dump()
