@@ -460,6 +460,28 @@ class MenuItemUpdate(BaseModel):
     dietaryRestrictionIds: Optional[List[str]] = None
     priority: Optional[int] = None
 
+# Menu Models (Collection of items)
+class Menu(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    propertyId: str
+    name: str
+    itemIds: List[str] = []
+    isActive: bool = True
+    createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class MenuCreate(BaseModel):
+    propertyId: str
+    name: str
+    itemIds: List[str] = []
+    isActive: bool = True
+
+class MenuUpdate(BaseModel):
+    name: Optional[str] = None
+    itemIds: Optional[List[str]] = None
+    isActive: Optional[bool] = None
 
 
 class RoleUpdate(BaseModel):
