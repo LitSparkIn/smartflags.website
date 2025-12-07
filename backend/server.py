@@ -3062,6 +3062,44 @@ async def verify_otp_login(request: VerifyOTPRequest):
         logger.error(f"Error verifying OTP: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+# ============= ADMIN UTILITIES =============
+
+@api_router.post("/admin/clear-all-data")
+async def clear_all_data():
+    """Clear all data from the database - USE WITH CAUTION"""
+    try:
+        collections = [
+            'organisations',
+            'properties',
+            'seats',
+            'groups',
+            'seat_types',
+            'staff',
+            'roles',
+            'allocations',
+            'devices',
+            'menu_categories',
+            'menu_tags',
+            'dietary_restrictions',
+            'menu_items',
+            'guests'
+        ]
+        
+        deleted_counts = {}
+        for collection in collections:
+            result = await db[collection].delete_many({})
+            deleted_counts[collection] = result.deleted_count
+        
+        logger.warning("All data cleared from database by admin")
+        return {
+            "success": True,
+            "message": "All data has been cleared successfully",
+            "deleted": deleted_counts
+        }
+    except Exception as e:
+        logger.error(f"Error clearing data: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 
