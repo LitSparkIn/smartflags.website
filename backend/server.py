@@ -291,7 +291,7 @@ class Staff(BaseModel):
     phone: Optional[str] = None
     username: str  # Alphanumeric username for login
     pin: str  # PIN for staff login
-    password: str  # In production, this should be hashed
+    password: Optional[str] = None  # Optional - staff login uses username + PIN
     createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
