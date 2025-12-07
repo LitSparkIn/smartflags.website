@@ -126,8 +126,8 @@ export const DailyGuestList = () => {
         roomNumber: String(row['Room Number'] || row['room_number'] || row['RoomNumber'] || '').trim(),
         guestName: String(row['Guest Name'] || row['guest_name'] || row['GuestName'] || '').trim(),
         category: row['Category'] || row['category'] || null,
-        checkInDate: row['Check-in Date'] || row['check_in_date'] || row['CheckInDate'] || null,
-        checkOutDate: row['Check-out Date'] || row['check_out_date'] || row['CheckOutDate'] || null
+        checkInDate: row['Check-in Date'] || row['Check-In Date'] || row['check_in_date'] || row['CheckInDate'] || row['checkin_date'] || null,
+        checkOutDate: row['Check-out Date'] || row['Check-Out Date'] || row['check_out_date'] || row['CheckOutDate'] || row['checkout_date'] || null
       })).filter(g => g.roomNumber && g.guestName);
 
       if (guests.length === 0) {
