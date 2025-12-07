@@ -43,6 +43,7 @@ export const DailyGuestList = () => {
     try {
       const response = await axios.get(`${BACKEND_URL}/api/guests/${propertyId}`);
       if (response.data.success) {
+        console.log('Fetched guests from backend:', response.data.guests);
         setGuestList(response.data.guests);
         setFilteredGuests(response.data.guests);
       }
