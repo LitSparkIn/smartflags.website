@@ -232,6 +232,7 @@ export const Dashboard = () => {
                 <ul className="list-disc list-inside space-y-1 text-sm">
                   <li>All Organisations</li>
                   <li>All Properties</li>
+                  <li>All Organisation & Property Admin Accounts</li>
                   <li>All Countries, States & Cities</li>
                   <li>All Seats & Groups</li>
                   <li>All Seat Types</li>
