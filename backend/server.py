@@ -2499,6 +2499,25 @@ async def get_menus(property_id: str):
         logger.error(f"Error fetching menus: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+@api_router.get("/menus/by-id/{menu_id}")
+async def get_menu_by_id(menu_id: str):
+    """Get a specific menu by its ID"""
+    try:
+        menu = await db.menus.find_one(
+            {"id": menu_id},
+            {"_id": 0}
+        )
+        
+        if not menu:
+            raise HTTPException(status_code=404, detail="Menu not found")
+        
+        return {"success": True, "menu": menu}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching menu: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 @api_router.post("/menus")
 async def create_menu(menu: MenuCreate):
     """Create a new menu"""
