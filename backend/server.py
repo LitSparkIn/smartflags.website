@@ -3085,7 +3085,9 @@ async def clear_all_data():
             'guests',
             'countries',
             'states',
-            'cities'
+            'cities',
+            'admin_otps',
+            'admin_sessions'
         ]
         
         deleted_counts = {}
