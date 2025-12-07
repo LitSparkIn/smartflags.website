@@ -3307,6 +3307,7 @@ async def clear_all_data():
             'menu_items',
             'menus',
             'guests',
+            'configurations',
             'countries',
             'states',
             'cities',
