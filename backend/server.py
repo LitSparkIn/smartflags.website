@@ -1770,6 +1770,14 @@ async def create_group(group: GroupCreate):
         
         await db.groups.insert_one(doc)
         
+        # Update seats with this group ID
+        if group_obj.seatIds:
+            await db.seats.update_many(
+                {"id": {"$in": group_obj.seatIds}},
+                {"$set": {"groupId": group_obj.id}}
+            )
+            logger.info(f"Updated {len(group_obj.seatIds)} seats with groupId: {group_obj.id}")
+        
         logger.info(f"Group created: {group_obj.id}")
         return {"success": True, "group": group_obj}
         
