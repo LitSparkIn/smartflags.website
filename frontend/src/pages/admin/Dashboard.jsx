@@ -194,6 +194,76 @@ export const Dashboard = () => {
             </button>
           </div>
         </div>
+
+        {/* Danger Zone */}
+        <div className="mt-8 bg-red-50 border-2 border-red-200 rounded-xl shadow-lg p-8">
+          <div className="flex items-start space-x-4">
+            <div className="flex-shrink-0">
+              <AlertTriangle className="w-8 h-8 text-red-600" />
+            </div>
+            <div className="flex-1">
+              <h2 className="text-xl font-bold text-red-900 mb-2">Danger Zone</h2>
+              <p className="text-red-700 mb-4">
+                Clear all data from the database. This action cannot be undone and will permanently delete all organisations, properties, seats, groups, staff, and menu data.
+              </p>
+              <button
+                onClick={() => setShowClearDialog(true)}
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg flex items-center space-x-2 transition-colors"
+              >
+                <Trash2 className="w-5 h-5" />
+                <span>Clear All Data</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Clear Data Confirmation Dialog */}
+        <AlertDialog open={showClearDialog} onOpenChange={setShowClearDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center space-x-2 text-red-600">
+                <AlertTriangle className="w-6 h-6" />
+                <span>Are you absolutely sure?</span>
+              </AlertDialogTitle>
+              <AlertDialogDescription className="space-y-3 pt-2">
+                <p className="font-semibold text-slate-900">
+                  This action will permanently delete:
+                </p>
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  <li>All Organisations</li>
+                  <li>All Properties</li>
+                  <li>All Seats & Groups</li>
+                  <li>All Seat Types</li>
+                  <li>All Staff & Roles</li>
+                  <li>All Allocations</li>
+                  <li>All Devices</li>
+                  <li>All Menu Items, Categories, Tags & Dietary Restrictions</li>
+                  <li>All Guests</li>
+                </ul>
+                <p className="font-semibold text-red-600 mt-3">
+                  This action cannot be undone. All data will be lost forever.
+                </p>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={clearing}>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleClearAllData}
+                disabled={clearing}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                {clearing ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Clearing...
+                  </>
+                ) : (
+                  'Yes, Clear All Data'
+                )}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </AdminLayout>
   );
