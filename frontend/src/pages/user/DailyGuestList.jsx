@@ -328,7 +328,9 @@ export const DailyGuestList = () => {
                     <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Room Number</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Guest Name</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Category</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Added</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Check-in</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Check-out</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">Status</th>
                     <th className="px-6 py-4 text-right text-sm font-semibold text-slate-700">Actions</th>
                   </tr>
                 </thead>
