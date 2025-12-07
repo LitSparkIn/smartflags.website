@@ -12,7 +12,8 @@ export const Sidebar = () => {
   const mainMenuItems = [
     { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { path: '/admin/organisations', label: 'Organisations', icon: Building2 },
-    { path: '/admin/properties', label: 'Properties', icon: Home }
+    { path: '/admin/properties', label: 'Properties', icon: Home },
+    { path: '/admin/users', label: 'Users', icon: Users }
   ];
 
   const masterDataItems = [
