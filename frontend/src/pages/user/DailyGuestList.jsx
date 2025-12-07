@@ -220,7 +220,8 @@ export const DailyGuestList = () => {
             <div>
               <p className="text-sm font-semibold text-blue-900 mb-1">Excel File Format</p>
               <p className="text-sm text-blue-800">
-                Your Excel file should have three columns: <strong>Room Number</strong>, <strong>Guest Name</strong>, and <strong>Category</strong> (optional)
+                Your Excel file should have the following columns: <strong>Room Number</strong>, <strong>Guest Name</strong>, 
+                <strong>Category</strong> (optional), <strong>Check-in Date</strong> (YYYY-MM-DD format), and <strong>Check-out Date</strong> (YYYY-MM-DD format)
               </p>
             </div>
           </div>
