@@ -232,14 +232,14 @@ export const SeatDialog = ({ open, onOpenChange, seat, onSave, propertyId, seatT
                 Group (Optional)
               </Label>
               <Select 
-                value={formData.groupId} 
-                onValueChange={(value) => setFormData(prev => ({ ...prev, groupId: value }))}
+                value={formData.groupId || 'no-group'} 
+                onValueChange={(value) => setFormData(prev => ({ ...prev, groupId: value === 'no-group' ? '' : value }))}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select group or leave unassigned" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No Group</SelectItem>
+                  <SelectItem value="no-group">No Group</SelectItem>
                   {groups && groups.map((group) => (
                     <SelectItem key={group.id} value={group.id}>
                       {group.name}
