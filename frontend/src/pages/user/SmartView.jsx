@@ -641,18 +641,15 @@ export const SmartView = () => {
                             <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-slate-900"></div>
                           </div>
                         </div>
-                                );
-                              })}
+                                  );
+                                })}
+                              </div>
                             </div>
                           </div>
                         ))}
                         
                         {/* Free seats (not allocated) */}
-                        {seatsWithoutAllocation.length > 0 && (
-                          <div>
-                            <h3 className="text-sm font-semibold text-slate-600 mb-3">Available Seats</h3>
-                            <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-16 xl:grid-cols-20 gap-y-2 gap-x-4">
-                              {seatsWithoutAllocation.map(seat => {
+                        {seatsWithoutAllocation.map(seat => {
                                 const { status, color } = getSeatStatus(seat.id);
                                 const seatType = getSeatType(seat.seatTypeId);
                                 
