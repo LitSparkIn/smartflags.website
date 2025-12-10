@@ -510,7 +510,7 @@ export const SmartView = () => {
 
             {/* Ungrouped Seats */}
             {ungroupedSeats.length > 0 && (
-              <div className="bg-white rounded-xl shadow-md overflow-hidden">
+              <div className="bg-white rounded-xl shadow-md overflow-visible">
                 <div className="bg-gradient-to-r from-slate-500 to-slate-400 px-6 py-4">
                   <h2 className="text-xl font-bold text-white">Ungrouped Seats</h2>
                   <p className="text-slate-200 text-sm">{ungroupedSeats.length} seats</p>
