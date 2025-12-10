@@ -508,16 +508,68 @@ export const SmartView = () => {
                 </div>
                 
                 <div className="p-6">
-                  <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-16 xl:grid-cols-20 gap-y-2 gap-x-4">
-                    {ungroupedSeats.map(seat => {
-                      const { status, color, allocation, isCalling, callingDuration } = getSeatStatus(seat.id);
-                      const seatType = getSeatType(seat.seatTypeId);
-                      
-                      return (
-                        <div
-                          key={seat.id}
-                          className="group relative"
-                        >
+                  {(() => {
+                    // Group ungrouped seats by allocation
+                    const seatsWithAllocation = [];
+                    const seatsWithoutAllocation = [];
+                    
+                    ungroupedSeats.forEach(seat => {
+                      const { allocation } = getSeatStatus(seat.id);
+                      if (allocation) {
+                        seatsWithAllocation.push({ seat, allocation });
+                      } else {
+                        seatsWithoutAllocation.push(seat);
+                      }
+                    });
+                    
+                    // Group by allocation ID
+                    const allocationGroups = {};
+                    seatsWithAllocation.forEach(({ seat, allocation }) => {
+                      if (!allocationGroups[allocation.id]) {
+                        allocationGroups[allocation.id] = {
+                          allocation,
+                          seats: []
+                        };
+                      }
+                      allocationGroups[allocation.id].seats.push(seat);
+                    });
+                    
+                    return (
+                      <div className="space-y-4">
+                        {/* Allocated seats grouped by allocation */}
+                        {Object.values(allocationGroups).map(({ allocation, seats: allocSeats }) => (
+                          <div 
+                            key={allocation.id}
+                            className="border-3 border-dashed border-blue-400 bg-blue-50/30 rounded-lg p-4 cursor-pointer hover:bg-blue-50/50 transition-colors"
+                            onClick={() => navigate(`/user/allocation/${allocation.id}`)}
+                          >
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center space-x-2">
+                                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                <span className="text-sm font-semibold text-slate-700">
+                                  {allocation.guestName} - Room {allocation.roomNumber}
+                                </span>
+                                {allocation.guestCategory && (
+                                  <span className="bg-amber-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                                    {allocation.guestCategory}
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-xs text-slate-500">
+                                {allocSeats.length} seat{allocSeats.length > 1 ? 's' : ''}
+                              </span>
+                            </div>
+                            
+                            <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-16 xl:grid-cols-20 gap-y-2 gap-x-4">
+                              {allocSeats.map(seat => {
+                                const { status, color, isCalling } = getSeatStatus(seat.id);
+                                const seatType = getSeatType(seat.seatTypeId);
+                                
+                                return (
+                                  <div
+                                    key={seat.id}
+                                    className="group relative"
+                                  >
                           {/* Category Badge (VIP, etc.) */}
                           {allocation && allocation.guestCategory && (
                             <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 z-10">
