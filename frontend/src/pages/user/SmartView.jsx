@@ -651,9 +651,63 @@ export const SmartView = () => {
                             <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-slate-900"></div>
                           </div>
                         </div>
-                      );
-                    })}
-                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ))}
+                        
+                        {/* Free seats (not allocated) */}
+                        {seatsWithoutAllocation.length > 0 && (
+                          <div>
+                            <h3 className="text-sm font-semibold text-slate-600 mb-3">Available Seats</h3>
+                            <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-16 xl:grid-cols-20 gap-y-2 gap-x-4">
+                              {seatsWithoutAllocation.map(seat => {
+                                const { status, color } = getSeatStatus(seat.id);
+                                const seatType = getSeatType(seat.seatTypeId);
+                                
+                                return (
+                                  <div
+                                    key={seat.id}
+                                    className="group relative"
+                                  >
+                                    <div
+                                      className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg cursor-default flex flex-col items-center justify-center h-[88px] w-[60px]`}
+                                    >
+                                      {seatType.icon ? (
+                                        <img 
+                                          src={seatType.icon} 
+                                          alt={seatType.name}
+                                          className="w-6 h-6 object-contain mb-1"
+                                        />
+                                      ) : (
+                                        <Armchair className="w-5 h-5 mb-1 text-slate-400" />
+                                      )}
+                                      <span className="text-[11px] font-semibold text-slate-700">
+                                        {seat.seatNumber}
+                                      </span>
+                                    </div>
+                                    
+                                    {/* Tooltip */}
+                                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                                      <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl min-w-[180px]">
+                                        <p className="font-bold text-sm mb-1">{seat.seatNumber}</p>
+                                        <p className="text-slate-300 mb-2">{seatType.name}</p>
+                                        <div className="border-t border-slate-700 pt-2">
+                                          <p className="text-slate-300 italic">Available</p>
+                                        </div>
+                                      </div>
+                                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-slate-900"></div>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
               </div>
             )}
