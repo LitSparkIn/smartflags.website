@@ -62,15 +62,14 @@ export const SmartView = () => {
         setSeatTypes(seatTypesResponse.data.seatTypes);
       }
 
-      // Fetch today's non-complete allocations
-      const today = new Date().toISOString().split('T')[0];
+      // Fetch all non-complete allocations (regardless of date)
       const allocationsResponse = await axios.get(`${BACKEND_URL}/api/allocations/${propertyId}`);
       if (allocationsResponse.data.success) {
-        // Filter for today's non-complete allocations
-        const todayAllocations = allocationsResponse.data.allocations.filter(
-          alloc => alloc.allocationDate === today && alloc.status !== 'Complete'
+        // Filter for non-complete allocations only (show active allocations regardless of date)
+        const activeAllocations = allocationsResponse.data.allocations.filter(
+          alloc => alloc.status !== 'Complete'
         );
-        setAllocations(todayAllocations);
+        setAllocations(activeAllocations);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
