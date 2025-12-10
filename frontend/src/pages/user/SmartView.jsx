@@ -551,39 +551,36 @@ export const SmartView = () => {
                     });
                     
                     return (
-                      <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-16 xl:grid-cols-20 gap-y-2 gap-x-4">
+                      <div className="flex flex-wrap gap-y-2 gap-x-4">
                         {/* Allocated seats grouped by allocation */}
                         {Object.values(allocationGroups).map(({ allocation, seats: allocSeats }) => (
                           <div 
                             key={allocation.id}
-                            className="col-span-full flex items-start"
+                            className="border-2 border-dashed border-blue-400 bg-blue-50/30 rounded-lg p-2 cursor-pointer hover:bg-blue-50/50 transition-colors inline-flex flex-col gap-2 relative group"
+                            onClick={() => navigate(`/user/allocation/${allocation.id}`)}
                           >
-                            <div 
-                              className="border-2 border-dashed border-blue-400 bg-blue-50/30 rounded-lg p-2 cursor-pointer hover:bg-blue-50/50 transition-colors inline-flex flex-col gap-2"
-                              onClick={() => navigate(`/user/allocation/${allocation.id}`)}
-                            >
-                              <div className="flex items-center space-x-2 px-1">
-                                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                                <span className="text-xs font-semibold text-slate-700">
-                                  {allocation.guestName} - Room {allocation.roomNumber}
+                            <div className="flex items-center space-x-2 px-1">
+                              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                              <span className="text-xs font-semibold text-slate-700">
+                                {allocation.guestName} - Room {allocation.roomNumber}
+                              </span>
+                              {allocation.guestCategory && (
+                                <span className="bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                                  {allocation.guestCategory}
                                 </span>
-                                {allocation.guestCategory && (
-                                  <span className="bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                                    {allocation.guestCategory}
-                                  </span>
-                                )}
-                              </div>
-                              
-                              <div className="flex flex-wrap gap-y-2 gap-x-4">
-                                {allocSeats.map(seat => {
-                                  const { status, color, isCalling } = getSeatStatus(seat.id);
-                                  const seatType = getSeatType(seat.seatTypeId);
-                                  
-                                  return (
-                                    <div
-                                      key={seat.id}
-                                      className="group relative"
-                                    >
+                              )}
+                            </div>
+                            
+                            <div className="flex flex-wrap gap-y-2 gap-x-4">
+                              {allocSeats.map(seat => {
+                                const { status, color, isCalling } = getSeatStatus(seat.id);
+                                const seatType = getSeatType(seat.seatTypeId);
+                                
+                                return (
+                                  <div
+                                    key={seat.id}
+                                    className="relative"
+                                  >
                           {/* Category Badge (VIP, etc.) */}
                           {allocation && allocation.guestCategory && (
                             <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 z-10">
