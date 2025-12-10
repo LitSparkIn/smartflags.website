@@ -281,7 +281,7 @@ export const SmartView = () => {
               if (group.seats.length === 0) return null;
               
               return (
-                <div key={group.id} className="bg-white rounded-xl shadow-md overflow-hidden">
+                <div key={group.id} className="bg-white rounded-xl shadow-md overflow-visible">
                   <div className="bg-gradient-to-r from-slate-700 to-slate-600 px-6 py-4">
                     <h2 className="text-xl font-bold text-white">{group.name}</h2>
                     <p className="text-slate-300 text-sm">{group.seats.length} seats</p>
