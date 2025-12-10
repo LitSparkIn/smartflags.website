@@ -319,10 +319,10 @@ export const SmartView = () => {
                           {Object.values(allocationGroups).map(({ allocation, seats: allocSeats }) => (
                             <div 
                               key={allocation.id}
-                              className="col-span-full flex items-start"
+                              className="contents"
                             >
                               <div 
-                                className="border-2 border-dashed border-blue-400 bg-blue-50/30 rounded-lg p-2 cursor-pointer hover:bg-blue-50/50 transition-colors inline-flex flex-col gap-2"
+                                className="border-2 border-dashed border-blue-400 bg-blue-50/30 rounded-lg p-2 cursor-pointer hover:bg-blue-50/50 transition-colors inline-flex flex-col gap-2 relative group col-span-1"
                                 onClick={() => navigate(`/user/allocation/${allocation.id}`)}
                               >
                                 <div className="flex items-center space-x-2 px-1">
