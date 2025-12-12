@@ -64,15 +64,15 @@ export const StaffLogin = () => {
         const roleName = roleResponse.data.role?.name || '';
         
         // Roles that require section selection
-        const rolesRequiringGroupSelection = [
+        const rolesRequiringSectionSelection = [
           'Pool And Beach Attendant',
           'Food and Beverages Server'
         ];
         
         console.log('Staff role name:', roleName);
-        console.log('Requires section selection:', rolesRequiringGroupSelection.includes(roleName));
+        console.log('Requires section selection:', rolesRequiringSectionSelection.includes(roleName));
         
-        if (rolesRequiringGroupSelection.includes(roleName)) {
+        if (rolesRequiringSectionSelection.includes(roleName)) {
           // Navigate to section selection page with staff data
           navigate('/staff/section-selection', { state: { staffData } });
         } else {

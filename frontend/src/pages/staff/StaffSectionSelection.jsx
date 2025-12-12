@@ -8,8 +8,8 @@ import { useAuth } from '../../context/AuthContext';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
 export const StaffSectionSelection = () => {
-  const [sections, setGroups] = useState([]);
-  const [selectedGroup, setSelectedGroup] = useState('');
+  const [sections, setSections] = useState([]);
+  const [selectedSection, setSelectedSection] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -32,16 +32,16 @@ export const StaffSectionSelection = () => {
       return;
     }
     
-    fetchGroups();
+    fetchSections();
   }, []);
 
-  const fetchGroups = async () => {
+  const fetchSections = async () => {
     try {
       setLoading(true);
       const response = await axios.get(`${BACKEND_URL}/api/sections/${staffData.propertyId}`);
       
       if (response.data.success) {
-        setGroups(response.data.sections || []);
+        setSections(response.data.sections || []);
       }
     } catch (error) {
       console.error('Error fetching sections:', error);
@@ -54,7 +54,7 @@ export const StaffSectionSelection = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    if (!selectedGroup) {
+    if (!selectedSection) {
       setError('Please select a section');
       return;
     }
@@ -62,8 +62,8 @@ export const StaffSectionSelection = () => {
     // Add selected section to staff data
     const updatedStaffData = {
       ...staffData,
-      selectedGroupId: selectedGroup,
-      selectedGroupName: sections.find(g => g.id === selectedGroup)?.name
+      selectedSectionId: selectedSection,
+      selectedSectionName: sections.find(g => g.id === selectedSection)?.name
     };
 
     // Store in localStorage and login
@@ -94,10 +94,10 @@ export const StaffSectionSelection = () => {
             <MapPin className="w-10 h-10 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-slate-900 mb-2">
-            {staffData?.selectedGroupId ? 'Switch Your Group' : 'Select Your Group'}
+            {staffData?.selectedSectionId ? 'Switch Your Section' : 'Select Your Section'}
           </h1>
           <p className="text-slate-600">
-            {staffData?.selectedGroupId 
+            {staffData?.selectedSectionId 
               ? 'Choose a different area to serve' 
               : 'Choose which area you\'ll be serving today'}
           </p>
@@ -110,14 +110,14 @@ export const StaffSectionSelection = () => {
               Welcome, {staffData?.name}!
             </h2>
             <p className="text-slate-600 text-sm">
-              {staffData?.selectedGroupId 
-                ? `Currently serving: ${staffData?.selectedGroupName || 'Unknown'}` 
+              {staffData?.selectedSectionId 
+                ? `Currently serving: ${staffData?.selectedSectionName || 'Unknown'}` 
                 : 'Select your service area below'}
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Groups Selection */}
+            {/* Sections Selection */}
             {sections.length === 0 ? (
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-center">
                 <Users className="w-8 h-8 text-amber-500 mx-auto mb-2" />
@@ -130,11 +130,11 @@ export const StaffSectionSelection = () => {
                     key={section.id}
                     type="button"
                     onClick={() => {
-                      setSelectedGroup(section.id);
+                      setSelectedSection(section.id);
                       setError('');
                     }}
                     className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
-                      selectedGroup === section.id
+                      selectedSection === section.id
                         ? 'border-blue-500 bg-blue-50'
                         : 'border-slate-200 hover:border-slate-300 bg-white'
                     }`}
@@ -142,12 +142,12 @@ export const StaffSectionSelection = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          selectedGroup === section.id
+                          selectedSection === section.id
                             ? 'bg-blue-500'
                             : 'bg-slate-100'
                         }`}>
                           <MapPin className={`w-5 h-5 ${
-                            selectedGroup === section.id ? 'text-white' : 'text-slate-600'
+                            selectedSection === section.id ? 'text-white' : 'text-slate-600'
                           }`} />
                         </div>
                         <div>
@@ -157,7 +157,7 @@ export const StaffSectionSelection = () => {
                           )}
                         </div>
                       </div>
-                      {selectedGroup === section.id && (
+                      {selectedSection === section.id && (
                         <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
                           <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

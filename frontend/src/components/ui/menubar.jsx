@@ -10,10 +10,10 @@ function MenubarMenu({
   return <MenubarPrimitive.Menu {...props} />;
 }
 
-function MenubarGroup({
+function MenubarSection({
   ...props
 }) {
-  return <MenubarPrimitive.Group {...props} />;
+  return <MenubarPrimitive.Section {...props} />;
 }
 
 function MenubarPortal({
@@ -22,10 +22,10 @@ function MenubarPortal({
   return <MenubarPrimitive.Portal {...props} />;
 }
 
-function MenubarRadioGroup({
+function MenubarRadioSection({
   ...props
 }) {
-  return <MenubarPrimitive.RadioGroup {...props} />;
+  return <MenubarPrimitive.RadioSection {...props} />;
 }
 
 function MenubarSub({
@@ -187,12 +187,12 @@ export {
   MenubarSeparator,
   MenubarLabel,
   MenubarCheckboxItem,
-  MenubarRadioGroup,
+  MenubarRadioSection,
   MenubarRadioItem,
   MenubarPortal,
   MenubarSubContent,
   MenubarSubTrigger,
-  MenubarGroup,
+  MenubarSection,
   MenubarSub,
   MenubarShortcut,
 }

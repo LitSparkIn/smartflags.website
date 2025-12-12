@@ -62,8 +62,8 @@ const CommandEmpty = React.forwardRef((props, ref) => (
 
 CommandEmpty.displayName = CommandPrimitive.Empty.displayName
 
-const CommandGroup = React.forwardRef(({ className, ...props }, ref) => (
-  <CommandPrimitive.Group
+const CommandSection = React.forwardRef(({ className, ...props }, ref) => (
+  <CommandPrimitive.Section
     ref={ref}
     className={cn(
       "overflow-hidden p-1 text-foreground [&_[cmdk-section-heading]]:px-2 [&_[cmdk-section-heading]]:py-1.5 [&_[cmdk-section-heading]]:text-xs [&_[cmdk-section-heading]]:font-medium [&_[cmdk-section-heading]]:text-muted-foreground",
@@ -72,7 +72,7 @@ const CommandGroup = React.forwardRef(({ className, ...props }, ref) => (
     {...props} />
 ))
 
-CommandGroup.displayName = CommandPrimitive.Group.displayName
+CommandSection.displayName = CommandPrimitive.Section.displayName
 
 const CommandSeparator = React.forwardRef(({ className, ...props }, ref) => (
   <CommandPrimitive.Separator ref={ref} className={cn("-mx-1 h-px bg-border", className)} {...props} />
@@ -109,7 +109,7 @@ export {
   CommandInput,
   CommandList,
   CommandEmpty,
-  CommandGroup,
+  CommandSection,
   CommandItem,
   CommandShortcut,
   CommandSeparator,

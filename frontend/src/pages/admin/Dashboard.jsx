@@ -234,7 +234,7 @@ export const Dashboard = () => {
                   <li>All Properties</li>
                   <li>All Organisation & Property Admin Accounts</li>
                   <li>All Countries, States & Cities</li>
-                  <li>All Seats & Groups</li>
+                  <li>All Seats & Sections</li>
                   <li>All Seat Types</li>
                   <li>All Staff & Roles</li>
                   <li>All Allocations</li>

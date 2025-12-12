@@ -29,7 +29,7 @@ import { Staff } from './pages/user/Staff';
 import { Roles as UserRoles } from './pages/user/Roles';
 import { SeatTypes } from './pages/user/SeatTypes';
 import { Seats } from './pages/user/Seats';
-import { Groups } from './Sections';
+import { Sections } from './Sections';
 import { Devices } from './pages/user/Devices';
 import { MenuCategories } from './pages/user/MenuCategories';
 import { MenuTags } from './pages/user/MenuTags';
@@ -156,7 +156,7 @@ function App() {
             <Route path="/user/roles" element={<UserRoles />} />
             <Route path="/user/seat-types" element={<SeatTypes />} />
             <Route path="/user/seats" element={<Seats />} />
-            <Route path="/user/sections" element={<Groups />} />
+            <Route path="/user/sections" element={<Sections />} />
             <Route path="/user/menu/categories" element={<MenuCategories />} />
             <Route path="/user/menu/tags" element={<MenuTags />} />
             <Route path="/user/menu/dietary" element={<DietaryRestrictions />} />

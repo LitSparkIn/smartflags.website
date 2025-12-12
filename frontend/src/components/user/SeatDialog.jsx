@@ -226,7 +226,7 @@ export const SeatDialog = ({ open, onOpenChange, seat, onSave, propertyId, seatT
               </Select>
             </div>
 
-            {/* Group assignment removed - assign seats to sections via Groups page */}
+            {/* Section assignment removed - assign seats to sections via Sections page */}
 
             {seat ? (
               // Edit mode - single seat number

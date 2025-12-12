@@ -9,7 +9,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
 export const StaffSmartView = () => {
   const [seats, setSeats] = useState([]);
-  const [sections, setGroups] = useState([]);
+  const [sections, setSections] = useState([]);
   const [seatTypes, setSeatTypes] = useState([]);
   const [allocations, setAllocations] = useState([]);
   const [currentTime, setCurrentTime] = useState(Date.now());
@@ -32,7 +32,7 @@ export const StaffSmartView = () => {
 
       const parsedUser = JSON.parse(userData);
       const propertyId = parsedUser.entityId;
-      const selectedGroupId = parsedUser.selectedGroupId; // Get selected section from staff data
+      const selectedSectionId = parsedUser.selectedSectionId; // Get selected section from staff data
 
       const [seatsRes, groupsRes, typesRes, allocsRes] = await Promise.all([
         axios.get(`${BACKEND_URL}/api/seats/${propertyId}`),
@@ -44,9 +44,9 @@ export const StaffSmartView = () => {
       // Filter seats to only show those from the selected section
       if (seatsRes.data.success) {
         const allSeats = seatsRes.data.seats;
-        if (selectedGroupId) {
+        if (selectedSectionId) {
           // Staff has selected a section - show only that section's seats
-          const filteredSeats = allSeats.filter(seat => seat.sectionId === selectedGroupId);
+          const filteredSeats = allSeats.filter(seat => seat.sectionId === selectedSectionId);
           setSeats(filteredSeats);
         } else {
           // No section selected (e.g., Pool and Beach Manager) - show all seats
@@ -56,14 +56,14 @@ export const StaffSmartView = () => {
       
       // Filter sections to only show the selected section
       if (groupsRes.data.success) {
-        const allGroups = groupsRes.data.sections;
-        if (selectedGroupId) {
+        const allSections = groupsRes.data.sections;
+        if (selectedSectionId) {
           // Show only the selected section
-          const filteredGroups = allGroups.filter(section => section.id === selectedGroupId);
-          setGroups(filteredGroups);
+          const filteredSections = allSections.filter(section => section.id === selectedSectionId);
+          setSections(filteredSections);
         } else {
           // Show all sections
-          setGroups(allGroups);
+          setSections(allSections);
         }
       }
       
@@ -157,7 +157,7 @@ export const StaffSmartView = () => {
 
   // Get selected section info
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-  const selectedGroupName = userData.selectedGroupName;
+  const selectedSectionName = userData.selectedSectionName;
 
   return (
     <StaffLayout>
@@ -167,18 +167,18 @@ export const StaffSmartView = () => {
           <div>
             <h1 className="text-2xl font-bold text-slate-800">SmartView Dashboard</h1>
             <p className="text-slate-600 mt-1">
-              {selectedGroupName ? `Viewing: ${selectedGroupName}` : 'Real-time seat allocation overview'}
+              {selectedSectionName ? `Viewing: ${selectedSectionName}` : 'Real-time seat allocation overview'}
             </p>
           </div>
           <div className="flex items-center space-x-3">
-            {selectedGroupName && (
+            {selectedSectionName && (
               <Button 
                 onClick={() => navigate('/staff/section-selection', { state: { staffData: userData } })}
                 variant="outline"
                 className="border-blue-500 text-blue-600 hover:bg-blue-50"
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
-                Switch Group
+                Switch Section
               </Button>
             )}
             <Button onClick={fetchData} variant="outline">
@@ -221,7 +221,7 @@ export const StaffSmartView = () => {
           </div>
         </div>
 
-        {/* Grouped Seats */}
+        {/* Sectioned Seats */}
         {groupedSeats.map(section => (
           section.seats.length > 0 && (
             <div key={section.id} className="bg-white rounded-xl shadow-md overflow-visible">
@@ -231,7 +231,7 @@ export const StaffSmartView = () => {
               </div>
               <div className="p-6">
                 {(() => {
-                  // Group seats by allocation
+                  // Section seats by allocation
                   const seatsWithAllocation = [];
                   const seatsWithoutAllocation = [];
                   
@@ -244,22 +244,22 @@ export const StaffSmartView = () => {
                     }
                   });
                   
-                  // Group by allocation ID
-                  const allocationGroups = {};
+                  // Section by allocation ID
+                  const allocationSections = {};
                   seatsWithAllocation.forEach(({ seat, allocation }) => {
-                    if (!allocationGroups[allocation.id]) {
-                      allocationGroups[allocation.id] = {
+                    if (!allocationSections[allocation.id]) {
+                      allocationSections[allocation.id] = {
                         allocation,
                         seats: []
                       };
                     }
-                    allocationGroups[allocation.id].seats.push(seat);
+                    allocationSections[allocation.id].seats.push(seat);
                   });
                   
                   return (
                     <div className="flex flex-wrap gap-y-2 gap-x-4">
                       {/* Allocated seats grouped by allocation */}
-                      {Object.values(allocationGroups).map(({ allocation, seats: allocSeats }) => (
+                      {Object.values(allocationSections).map(({ allocation, seats: allocSeats }) => (
                         <div 
                           key={allocation.id}
                           className="border-2 border-dashed border-blue-400 bg-blue-50/30 rounded-lg p-2 cursor-pointer hover:bg-blue-50/50 transition-colors inline-flex flex-col gap-2 relative section"
@@ -384,7 +384,7 @@ export const StaffSmartView = () => {
             </div>
             <div className="p-6">
               {(() => {
-                // Group ungrouped seats by allocation
+                // Section ungrouped seats by allocation
                 const seatsWithAllocation = [];
                 const seatsWithoutAllocation = [];
                 
@@ -397,22 +397,22 @@ export const StaffSmartView = () => {
                   }
                 });
                 
-                // Group by allocation ID
-                const allocationGroups = {};
+                // Section by allocation ID
+                const allocationSections = {};
                 seatsWithAllocation.forEach(({ seat, allocation }) => {
-                  if (!allocationGroups[allocation.id]) {
-                    allocationGroups[allocation.id] = {
+                  if (!allocationSections[allocation.id]) {
+                    allocationSections[allocation.id] = {
                       allocation,
                       seats: []
                     };
                   }
-                  allocationGroups[allocation.id].seats.push(seat);
+                  allocationSections[allocation.id].seats.push(seat);
                 });
                 
                 return (
                   <div className="flex flex-wrap gap-y-2 gap-x-4">
                     {/* Allocated seats grouped by allocation */}
-                    {Object.values(allocationGroups).map(({ allocation, seats: allocSeats }) => (
+                    {Object.values(allocationSections).map(({ allocation, seats: allocSeats }) => (
                       <div 
                         key={allocation.id}
                         className="border-2 border-dashed border-blue-400 bg-blue-50/30 rounded-lg p-2 cursor-pointer hover:bg-blue-50/50 transition-colors inline-flex flex-col gap-2 relative section"

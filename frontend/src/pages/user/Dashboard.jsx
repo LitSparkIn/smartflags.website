@@ -9,7 +9,7 @@ export const Dashboard = () => {
     totalStaff: 0,
     totalSeats: 0,
     totalSeatTypes: 0,
-    totalGroups: 0
+    totalSections: 0
   });
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export const Dashboard = () => {
         totalStaff: 0,
         totalSeatTypes: 0,
         totalSeats: 0,
-        totalGroups: 0
+        totalSections: 0
       });
     } catch (error) {
       console.error('Error fetching property stats:', error);
@@ -71,7 +71,7 @@ export const Dashboard = () => {
     { label: 'Total Staff', value: (stats.totalStaff || 0).toString(), icon: Users, color: 'from-blue-500 to-blue-600' },
     { label: 'Seat Types', value: (stats.totalSeatTypes || 0).toString(), icon: Armchair, color: 'from-green-500 to-green-600' },
     { label: 'Total Seats', value: (stats.totalSeats || 0).toString(), icon: Armchair, color: 'from-purple-500 to-purple-600' },
-    { label: 'Active Groups', value: (stats.totalGroups || 0).toString(), icon: Users, color: 'from-orange-500 to-orange-600' }
+    { label: 'Active Sections', value: (stats.totalSections || 0).toString(), icon: Users, color: 'from-orange-500 to-orange-600' }
   ];
 
   const displayStats = user?.entityType === 'organisation' ? orgStats : propertyStats;
@@ -189,7 +189,7 @@ export const Dashboard = () => {
                 <div className="flex items-start space-x-3 p-4 bg-purple-50 rounded-lg">
                   <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0">3</div>
                   <div>
-                    <h3 className="font-semibold text-slate-800">Create Seats & Groups</h3>
+                    <h3 className="font-semibold text-slate-800">Create Seats & Sections</h3>
                     <p className="text-sm text-slate-600">Add individual seats and organize them into sections for better management.</p>
                   </div>
                 </div>

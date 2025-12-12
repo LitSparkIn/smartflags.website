@@ -10,7 +10,7 @@ export const SmartView = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [seats, setSeats] = useState([]);
-  const [sections, setGroups] = useState([]);
+  const [sections, setSections] = useState([]);
   const [seatTypes, setSeatTypes] = useState([]);
   const [allocations, setAllocations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -53,7 +53,7 @@ export const SmartView = () => {
       // Fetch sections
       const groupsResponse = await axios.get(`${BACKEND_URL}/api/sections/${propertyId}`);
       if (groupsResponse.data.success) {
-        setGroups(groupsResponse.data.sections);
+        setSections(groupsResponse.data.sections);
       }
 
       // Fetch seat types
@@ -175,7 +175,7 @@ export const SmartView = () => {
     return `${flagText} ${elapsedSeconds}s`;
   };
 
-  // Group seats by section
+  // Section seats by section
   const groupedSeats = sections.map(section => {
     const groupSeats = seats.filter(seat => seat.sectionId === section.id);
     return {
@@ -267,7 +267,7 @@ export const SmartView = () => {
           </div>
         </div>
 
-        {/* Seats by Group */}
+        {/* Seats by Section */}
         {seats.length === 0 ? (
           <div className="bg-white rounded-xl shadow-md p-12 text-center">
             <Armchair className="w-16 h-16 text-slate-300 mx-auto mb-4" />
@@ -276,7 +276,7 @@ export const SmartView = () => {
           </div>
         ) : (
           <>
-            {/* Grouped Seats */}
+            {/* Sectioned Seats */}
             {groupedSeats.map(section => {
               if (section.seats.length === 0) return null;
               
@@ -288,7 +288,7 @@ export const SmartView = () => {
                   </div>
                   <div className="p-6">
                     {(() => {
-                      // Group seats by allocation
+                      // Section seats by allocation
                       const seatsWithAllocation = [];
                       const seatsWithoutAllocation = [];
                       
@@ -301,22 +301,22 @@ export const SmartView = () => {
                         }
                       });
                       
-                      // Group by allocation ID
-                      const allocationGroups = {};
+                      // Section by allocation ID
+                      const allocationSections = {};
                       seatsWithAllocation.forEach(({ seat, allocation }) => {
-                        if (!allocationGroups[allocation.id]) {
-                          allocationGroups[allocation.id] = {
+                        if (!allocationSections[allocation.id]) {
+                          allocationSections[allocation.id] = {
                             allocation,
                             seats: []
                           };
                         }
-                        allocationGroups[allocation.id].seats.push(seat);
+                        allocationSections[allocation.id].seats.push(seat);
                       });
                       
                       return (
                         <div className="flex flex-wrap gap-y-2 gap-x-4">
                           {/* Allocated seats grouped by allocation */}
-                          {Object.values(allocationGroups).map(({ allocation, seats: allocSeats }) => (
+                          {Object.values(allocationSections).map(({ allocation, seats: allocSeats }) => (
                             <div 
                               key={allocation.id}
                               className="border-2 border-dashed border-blue-400 bg-blue-50/30 rounded-lg p-2 cursor-pointer hover:bg-blue-50/50 transition-colors inline-flex flex-col gap-2 relative section"
@@ -488,7 +488,7 @@ export const SmartView = () => {
                 
                 <div className="p-6">
                   {(() => {
-                    // Group ungrouped seats by allocation
+                    // Section ungrouped seats by allocation
                     const seatsWithAllocation = [];
                     const seatsWithoutAllocation = [];
                     
@@ -501,22 +501,22 @@ export const SmartView = () => {
                       }
                     });
                     
-                    // Group by allocation ID
-                    const allocationGroups = {};
+                    // Section by allocation ID
+                    const allocationSections = {};
                     seatsWithAllocation.forEach(({ seat, allocation }) => {
-                      if (!allocationGroups[allocation.id]) {
-                        allocationGroups[allocation.id] = {
+                      if (!allocationSections[allocation.id]) {
+                        allocationSections[allocation.id] = {
                           allocation,
                           seats: []
                         };
                       }
-                      allocationGroups[allocation.id].seats.push(seat);
+                      allocationSections[allocation.id].seats.push(seat);
                     });
                     
                     return (
                       <div className="flex flex-wrap gap-y-2 gap-x-4">
                         {/* Allocated seats grouped by allocation */}
-                        {Object.values(allocationGroups).map(({ allocation, seats: allocSeats }) => (
+                        {Object.values(allocationSections).map(({ allocation, seats: allocSeats }) => (
                           <div 
                             key={allocation.id}
                             className="border-2 border-dashed border-blue-400 bg-blue-50/30 rounded-lg p-2 cursor-pointer hover:bg-blue-50/50 transition-colors inline-flex flex-col gap-2 relative section"

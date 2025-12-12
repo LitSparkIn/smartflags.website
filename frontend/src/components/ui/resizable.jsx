@@ -3,11 +3,11 @@ import * as ResizablePrimitive from "react-resizable-panels"
 
 import { cn } from "@/lib/utils"
 
-const ResizablePanelGroup = ({
+const ResizablePanelSection = ({
   className,
   ...props
 }) => (
-  <ResizablePrimitive.PanelGroup
+  <ResizablePrimitive.PanelSection
     className={cn(
       "flex h-full w-full data-[panel-section-direction=vertical]:flex-col",
       className
@@ -37,4 +37,4 @@ const ResizableHandle = ({
   </ResizablePrimitive.PanelResizeHandle>
 )
 
-export { ResizablePanelGroup, ResizablePanel, ResizableHandle }
+export { ResizablePanelSection, ResizablePanel, ResizableHandle }

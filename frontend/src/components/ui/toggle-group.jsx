@@ -1,32 +1,32 @@
 import * as React from "react"
-import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-section"
+import * as ToggleSectionPrimitive from "@radix-ui/react-toggle-section"
 
 import { cn } from "@/lib/utils"
 import { toggleVariants } from "@/components/ui/toggle"
 
-const ToggleGroupContext = React.createContext({
+const ToggleSectionContext = React.createContext({
   size: "default",
   variant: "default",
 })
 
-const ToggleGroup = React.forwardRef(({ className, variant, size, children, ...props }, ref) => (
-  <ToggleGroupPrimitive.Root
+const ToggleSection = React.forwardRef(({ className, variant, size, children, ...props }, ref) => (
+  <ToggleSectionPrimitive.Root
     ref={ref}
     className={cn("flex items-center justify-center gap-1", className)}
     {...props}>
-    <ToggleGroupContext.Provider value={{ variant, size }}>
+    <ToggleSectionContext.Provider value={{ variant, size }}>
       {children}
-    </ToggleGroupContext.Provider>
-  </ToggleGroupPrimitive.Root>
+    </ToggleSectionContext.Provider>
+  </ToggleSectionPrimitive.Root>
 ))
 
-ToggleGroup.displayName = ToggleGroupPrimitive.Root.displayName
+ToggleSection.displayName = ToggleSectionPrimitive.Root.displayName
 
-const ToggleGroupItem = React.forwardRef(({ className, children, variant, size, ...props }, ref) => {
-  const context = React.useContext(ToggleGroupContext)
+const ToggleSectionItem = React.forwardRef(({ className, children, variant, size, ...props }, ref) => {
+  const context = React.useContext(ToggleSectionContext)
 
   return (
-    <ToggleGroupPrimitive.Item
+    <ToggleSectionPrimitive.Item
       ref={ref}
       className={cn(toggleVariants({
         variant: context.variant || variant,
@@ -34,10 +34,10 @@ const ToggleGroupItem = React.forwardRef(({ className, children, variant, size, 
       }), className)}
       {...props}>
       {children}
-    </ToggleGroupPrimitive.Item>
+    </ToggleSectionPrimitive.Item>
   );
 })
 
-ToggleGroupItem.displayName = ToggleGroupPrimitive.Item.displayName
+ToggleSectionItem.displayName = ToggleSectionPrimitive.Item.displayName
 
-export { ToggleGroup, ToggleGroupItem }
+export { ToggleSection, ToggleSectionItem }

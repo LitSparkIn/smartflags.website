@@ -80,7 +80,7 @@ export const SectionDialog = ({ open, onOpenChange, section, onSave, propertyId,
     if (!formData.name.trim()) {
       toast({
         title: "Validation Error",
-        description: "Group name is required",
+        description: "Section name is required",
         variant: "destructive"
       });
       return;
@@ -112,7 +112,7 @@ export const SectionDialog = ({ open, onOpenChange, section, onSave, propertyId,
               <UsersRound className="w-6 h-6 text-white" />
             </div>
             <div>
-              <DialogTitle>{section ? 'Edit Group' : 'Add Group'}</DialogTitle>
+              <DialogTitle>{section ? 'Edit Section' : 'Add Section'}</DialogTitle>
               <DialogDescription>
                 {section ? 'Update section details and seats' : 'Create a new section and assign seats'}
               </DialogDescription>
@@ -122,10 +122,10 @@ export const SectionDialog = ({ open, onOpenChange, section, onSave, propertyId,
 
         <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
           <div className="space-y-4 py-4 overflow-y-auto">
-            {/* Group Name */}
+            {/* Section Name */}
             <div className="space-y-2">
               <Label htmlFor="name" className="text-slate-700 font-medium">
-                Group Name *
+                Section Name *
               </Label>
               <Input
                 id="name"
@@ -237,7 +237,7 @@ export const SectionDialog = ({ open, onOpenChange, section, onSave, propertyId,
               ) : section ? (
                 'Update'
               ) : (
-                'Create Group'
+                'Create Section'
               )}
             </Button>
           </DialogFooter>

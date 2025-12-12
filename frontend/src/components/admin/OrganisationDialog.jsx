@@ -109,7 +109,7 @@ export const OrganisationDialog = ({ open, onOpenChange, organisation, onSave })
                 value={formData.name}
                 onChange={handleChange}
                 required
-                placeholder="e.g., Paradise Resorts Group"
+                placeholder="e.g., Paradise Resorts Section"
               />
             </div>
 

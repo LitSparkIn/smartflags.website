@@ -9,13 +9,13 @@ import { useToast } from '../../hooks/use-toast';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
-export const Groups = () => {
-  const [sections, setGroups] = useState([]);
+export const Sections = () => {
+  const [sections, setSections] = useState([]);
   const [seats, setSeats] = useState([]);
-  const [filteredGroups, setFilteredGroups] = useState([]);
+  const [filteredSections, setFilteredSections] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [selectedSection, setSelectedSection] = useState(null);
   const [user, setUser] = useState(null);
   const { toast } = useToast();
 
@@ -25,7 +25,7 @@ export const Groups = () => {
       const parsedUser = JSON.parse(userData);
       setUser(parsedUser);
       fetchSeats(parsedUser.entityId);
-      fetchGroups(parsedUser.entityId);
+      fetchSections(parsedUser.entityId);
     }
   }, []);
 
@@ -40,12 +40,12 @@ export const Groups = () => {
     }
   };
 
-  const fetchGroups = async (propertyId) => {
+  const fetchSections = async (propertyId) => {
     try {
       const response = await axios.get(`${BACKEND_URL}/api/sections/${propertyId}`);
       if (response.data.success) {
-        setGroups(response.data.sections);
-        setFilteredGroups(response.data.sections);
+        setSections(response.data.sections);
+        setFilteredSections(response.data.sections);
       }
     } catch (error) {
       console.error('Error fetching sections:', error);
@@ -62,30 +62,30 @@ export const Groups = () => {
     setSearchTerm(term);
     
     if (term === '') {
-      setFilteredGroups(sections);
+      setFilteredSections(sections);
     } else {
       const filtered = sections.filter(section => 
         section.name.toLowerCase().includes(term)
       );
-      setFilteredGroups(filtered);
+      setFilteredSections(filtered);
     }
   };
 
   const handleSave = async (data) => {
     try {
-      if (selectedGroup) {
+      if (selectedSection) {
         // Update existing
         const response = await axios.put(
-          `${BACKEND_URL}/api/sections/${selectedGroup.id}`,
+          `${BACKEND_URL}/api/sections/${selectedSection.id}`,
           { name: data.name, seatIds: data.seatIds }
         );
         
         if (response.data.success) {
           toast({
             title: "Success",
-            description: "Group updated successfully"
+            description: "Section updated successfully"
           });
-          fetchGroups(user.entityId);
+          fetchSections(user.entityId);
         }
       } else {
         // Create new
@@ -94,14 +94,14 @@ export const Groups = () => {
         if (response.data.success) {
           toast({
             title: "Success",
-            description: "Group created successfully"
+            description: "Section created successfully"
           });
-          fetchGroups(user.entityId);
+          fetchSections(user.entityId);
         }
       }
       
       setIsDialogOpen(false);
-      setSelectedGroup(null);
+      setSelectedSection(null);
     } catch (error) {
       console.error('Error saving section:', error);
       toast({
@@ -113,7 +113,7 @@ export const Groups = () => {
   };
 
   const handleEdit = (section) => {
-    setSelectedGroup(section);
+    setSelectedSection(section);
     setIsDialogOpen(true);
   };
 
@@ -128,9 +128,9 @@ export const Groups = () => {
       if (response.data.success) {
         toast({
           title: "Success",
-          description: "Group deleted successfully"
+          description: "Section deleted successfully"
         });
-        fetchGroups(user.entityId);
+        fetchSections(user.entityId);
       }
     } catch (error) {
       console.error('Error deleting section:', error);
@@ -143,7 +143,7 @@ export const Groups = () => {
   };
 
   const handleAddNew = () => {
-    setSelectedGroup(null);
+    setSelectedSection(null);
     setIsDialogOpen(true);
   };
 
@@ -158,7 +158,7 @@ export const Groups = () => {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">Groups</h1>
+            <h1 className="text-2xl font-bold text-slate-800">Sections</h1>
             <p className="text-slate-600 mt-1">Organize seats into manageable sections</p>
           </div>
           <Button 
@@ -167,7 +167,7 @@ export const Groups = () => {
             disabled={seats.length === 0}
           >
             <Plus className="w-4 h-4 mr-2" />
-            Add Group
+            Add Section
           </Button>
         </div>
 
@@ -196,8 +196,8 @@ export const Groups = () => {
           </div>
         )}
 
-        {/* Groups Grid or Empty State */}
-        {filteredGroups.length === 0 ? (
+        {/* Sections Grid or Empty State */}
+        {filteredSections.length === 0 ? (
           <div className="bg-white rounded-xl shadow-md p-12">
             <div className="text-center max-w-md mx-auto">
               <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -209,7 +209,7 @@ export const Groups = () => {
               <p className="text-slate-600 mb-6">
                 {searchTerm 
                   ? 'Try adjusting your search terms'
-                  : 'Create sections to organize seats by area, section, or any other criteria. Groups help in better crowd management.'}
+                  : 'Create sections to organize seats by area, section, or any other criteria. Sections help in better crowd management.'}
               </p>
               {!searchTerm && seats.length > 0 && (
                 <Button 
@@ -217,14 +217,14 @@ export const Groups = () => {
                   className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700"
                 >
                   <Plus className="w-4 h-4 mr-2" />
-                  Add First Group
+                  Add First Section
                 </Button>
               )}
             </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredGroups.map((section) => (
+            {filteredSections.map((section) => (
               <div
                 key={section.id}
                 className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-6 border border-slate-200"
@@ -295,9 +295,9 @@ export const Groups = () => {
         open={isDialogOpen}
         onOpenChange={(open) => {
           setIsDialogOpen(open);
-          if (!open) setSelectedGroup(null);
+          if (!open) setSelectedSection(null);
         }}
-        section={selectedGroup}
+        section={selectedSection}
         onSave={handleSave}
         propertyId={user?.entityId}
         seats={seats}

@@ -8,13 +8,13 @@ const ContextMenu = ContextMenuPrimitive.Root
 
 const ContextMenuTrigger = ContextMenuPrimitive.Trigger
 
-const ContextMenuGroup = ContextMenuPrimitive.Group
+const ContextMenuSection = ContextMenuPrimitive.Section
 
 const ContextMenuPortal = ContextMenuPrimitive.Portal
 
 const ContextMenuSub = ContextMenuPrimitive.Sub
 
-const ContextMenuRadioGroup = ContextMenuPrimitive.RadioGroup
+const ContextMenuRadioSection = ContextMenuPrimitive.RadioSection
 
 const ContextMenuSubTrigger = React.forwardRef(({ className, inset, children, ...props }, ref) => (
   <ContextMenuPrimitive.SubTrigger
@@ -147,10 +147,10 @@ export {
   ContextMenuLabel,
   ContextMenuSeparator,
   ContextMenuShortcut,
-  ContextMenuGroup,
+  ContextMenuSection,
   ContextMenuPortal,
   ContextMenuSub,
   ContextMenuSubContent,
   ContextMenuSubTrigger,
-  ContextMenuRadioGroup,
+  ContextMenuRadioSection,
 }
