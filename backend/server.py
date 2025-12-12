@@ -3076,6 +3076,43 @@ async def create_allocation(allocation: AllocationCreate):
                 detail=f"The following seats are already allocated: {', '.join(seat_numbers)}. Currently allocated to: {conflict_details}"
             )
         
+        # Determine which groups the allocated seats belong to
+        seat_groups = set()
+        for seat_id in allocation.seatIds:
+            seat = await db.seats.find_one({"id": seat_id}, {"_id": 0})
+            if seat and seat.get('groupId'):
+                seat_groups.add(seat.get('groupId'))
+        
+        # Find Pool And Beach Attendants and Food and Beverages Servers for these groups
+        # Get role IDs for the roles we need
+        pool_beach_attendant_role = await db.roles.find_one({"name": "Pool And Beach Attendant"}, {"_id": 0})
+        fb_server_role = await db.roles.find_one({"name": "Food and Beverages Server"}, {"_id": 0})
+        
+        pool_beach_attendant_ids = []
+        fb_server_ids = []
+        
+        # Note: We're checking all staff with these roles
+        # In a real system, you might want to track which staff are currently "on duty" for each group
+        if pool_beach_attendant_role:
+            attendants = await db.staff.find(
+                {
+                    "propertyId": allocation.propertyId,
+                    "roleId": pool_beach_attendant_role['id']
+                },
+                {"_id": 0}
+            ).to_list(1000)
+            pool_beach_attendant_ids = [s['id'] for s in attendants]
+        
+        if fb_server_role:
+            servers = await db.staff.find(
+                {
+                    "propertyId": allocation.propertyId,
+                    "roleId": fb_server_role['id']
+                },
+                {"_id": 0}
+            ).to_list(1000)
+            fb_server_ids = [s['id'] for s in servers]
+        
         # Create initial event
         initial_event = {
             "eventType": "Created",
@@ -3092,6 +3129,8 @@ async def create_allocation(allocation: AllocationCreate):
             guestName=guest['guestName'],
             guestCategory=guest.get('category'),
             fbManagerId=allocation.fbManagerId,
+            poolBeachAttendantIds=pool_beach_attendant_ids,
+            fbServerIds=fb_server_ids,
             seatIds=allocation.seatIds,
             deviceIds=allocation.deviceIds or [],
             allocationDate=allocation_date,
