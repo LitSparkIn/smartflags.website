@@ -436,24 +436,23 @@ export const StaffSmartView = () => {
                             const seatType = getSeatType(seat.seatTypeId);
                             
                             return (
-                                <div
-                                  className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg cursor-pointer flex flex-col items-center justify-center h-[88px] w-[60px] ${
-                                    isCalling ? 'animate-pulse ring-4 ring-red-500 ring-offset-2 shadow-xl shadow-red-500/50' : ''
-                                  }`}
-                                >
-                                  {seatType.icon ? (
-                                    <img 
-                                      src={seatType.icon} 
-                                      alt={seatType.name}
-                                      className="w-6 h-6 object-contain mb-1 brightness-0 invert"
-                                    />
-                                  ) : (
-                                    <Armchair className="w-5 h-5 mb-1 text-white" />
-                                  )}
-                                  <span className="text-[11px] font-semibold text-white">
-                                    {seat.seatNumber}
-                                  </span>
-                                </div>
+                              <div
+                                className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg cursor-pointer flex flex-col items-center justify-center h-[88px] w-[60px] ${
+                                  isCalling ? 'animate-pulse ring-4 ring-red-500 ring-offset-2 shadow-xl shadow-red-500/50' : ''
+                                }`}
+                              >
+                                {seatType.icon ? (
+                                  <img 
+                                    src={seatType.icon} 
+                                    alt={seatType.name}
+                                    className="w-6 h-6 object-contain mb-1 brightness-0 invert"
+                                  />
+                                ) : (
+                                  <Armchair className="w-5 h-5 mb-1 text-white" />
+                                )}
+                                <span className="text-[11px] font-semibold text-white">
+                                  {seat.seatNumber}
+                                </span>
                               </div>
                             );
                           })}
