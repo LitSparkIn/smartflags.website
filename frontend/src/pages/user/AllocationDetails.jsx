@@ -344,6 +344,47 @@ export const AllocationDetails = () => {
               </div>
             </div>
           </div>
+
+          {/* Additional Staff Information */}
+          {(getPoolBeachAttendantNames().length > 0 || getFBServerNames().length > 0) && (
+            <div className="mt-6 pt-6 border-t border-slate-200">
+              <h3 className="text-md font-semibold text-slate-700 mb-4">Assigned Staff</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {getPoolBeachAttendantNames().length > 0 && (
+                  <div className="flex items-start space-x-3">
+                    <User className="w-5 h-5 text-blue-500 mt-1" />
+                    <div>
+                      <p className="text-sm text-slate-600">Pool And Beach Attendant</p>
+                      <div className="font-semibold text-slate-800">
+                        {getPoolBeachAttendantNames().map((name, index) => (
+                          <span key={index}>
+                            {name}
+                            {index < getPoolBeachAttendantNames().length - 1 && ', '}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {getFBServerNames().length > 0 && (
+                  <div className="flex items-start space-x-3">
+                    <User className="w-5 h-5 text-green-500 mt-1" />
+                    <div>
+                      <p className="text-sm text-slate-600">Food and Beverages Server</p>
+                      <div className="font-semibold text-slate-800">
+                        {getFBServerNames().map((name, index) => (
+                          <span key={index}>
+                            {name}
+                            {index < getFBServerNames().length - 1 && ', '}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Analytics Cards */}
