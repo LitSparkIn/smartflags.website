@@ -1790,7 +1790,7 @@ async def delete_device(device_id: str):
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 # Group CRUD Endpoints
-@api_router.post("/groups")
+@api_router.post("/sections")
 async def create_group(group: GroupCreate):
     """Create a new group"""
     try:
@@ -1801,7 +1801,7 @@ async def create_group(group: GroupCreate):
         doc['createdAt'] = doc['createdAt'].isoformat()
         doc['updatedAt'] = doc['updatedAt'].isoformat()
         
-        await db.groups.insert_one(doc)
+        await db.sections.insert_one(doc)
         
         # Update seats with this group ID
         if group_obj.seatIds:
@@ -1818,11 +1818,11 @@ async def create_group(group: GroupCreate):
         logger.error(f"Error creating group: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
-@api_router.get("/groups/{property_id}")
+@api_router.get("/sections/{property_id}")
 async def get_groups(property_id: str):
     """Get all groups for a property"""
     try:
-        groups = await db.groups.find(
+        groups = await db.sections.find(
             {"propertyId": property_id},
             {"_id": 0}
         ).to_list(1000)
@@ -1833,12 +1833,12 @@ async def get_groups(property_id: str):
         logger.error(f"Error fetching groups: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
-@api_router.put("/groups/{group_id}")
+@api_router.put("/sections/{group_id}")
 async def update_group(group_id: str, update_data: GroupUpdate):
     """Update a group"""
     try:
         # Get the old group to compare seat assignments
-        old_group = await db.groups.find_one({"id": group_id}, {"_id": 0})
+        old_group = await db.sections.find_one({"id": group_id}, {"_id": 0})
         if not old_group:
             raise HTTPException(status_code=404, detail="Group not found")
         
@@ -1849,7 +1849,7 @@ async def update_group(group_id: str, update_data: GroupUpdate):
         
         update_dict['updatedAt'] = datetime.now(timezone.utc).isoformat()
         
-        result = await db.groups.update_one(
+        result = await db.sections.update_one(
             {"id": group_id},
             {"$set": update_dict}
         )
@@ -1878,7 +1878,7 @@ async def update_group(group_id: str, update_data: GroupUpdate):
                 logger.info(f"Added groupId to {len(added_seats)} seats")
         
         # Get updated group
-        updated_group = await db.groups.find_one({"id": group_id}, {"_id": 0})
+        updated_group = await db.sections.find_one({"id": group_id}, {"_id": 0})
         
         logger.info(f"Group updated: {group_id}")
         return {"success": True, "group": updated_group}
@@ -1889,11 +1889,11 @@ async def update_group(group_id: str, update_data: GroupUpdate):
         logger.error(f"Error updating group: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
-@api_router.delete("/groups/{group_id}")
+@api_router.delete("/sections/{group_id}")
 async def delete_group(group_id: str):
     """Delete a group"""
     try:
-        result = await db.groups.delete_one({"id": group_id})
+        result = await db.sections.delete_one({"id": group_id})
         
         if result.deleted_count == 0:
             raise HTTPException(status_code=404, detail="Group not found")
