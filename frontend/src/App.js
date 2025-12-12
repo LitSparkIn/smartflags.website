@@ -40,6 +40,7 @@ import { Configuration } from './pages/user/Configuration';
 
 // Staff Pages
 import { StaffLogin } from './pages/staff/StaffLogin';
+import { StaffGroupSelection } from './pages/staff/StaffGroupSelection';
 import { StaffSmartView } from './pages/staff/StaffSmartView';
 
 // Public Pages
