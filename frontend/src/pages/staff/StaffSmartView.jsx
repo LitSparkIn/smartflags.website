@@ -365,19 +365,66 @@ export const StaffSmartView = () => {
 
         {/* Ungrouped Seats */}
         {ungroupedSeats.length > 0 && (
-          <div className="bg-white rounded-xl shadow-md overflow-hidden">
+          <div className="bg-white rounded-xl shadow-md overflow-visible">
             <div className="bg-gradient-to-r from-slate-500 to-slate-600 px-6 py-4">
               <h2 className="text-xl font-bold text-white">Ungrouped Seats</h2>
               <p className="text-slate-300 text-sm mt-1">{ungroupedSeats.length} seats</p>
             </div>
             <div className="p-6">
-              <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 lg:grid-cols-16 xl:grid-cols-20 gap-y-2 gap-x-4">
-                {ungroupedSeats.map(seat => {
-                  const { status, color, allocation, isCalling, callingDuration } = getSeatStatus(seat.id);
-                  const seatType = getSeatType(seat.seatTypeId);
-                  
-                  return (
-                    <div key={seat.id} className="group relative">
+              {(() => {
+                // Group ungrouped seats by allocation
+                const seatsWithAllocation = [];
+                const seatsWithoutAllocation = [];
+                
+                ungroupedSeats.forEach(seat => {
+                  const { allocation } = getSeatStatus(seat.id);
+                  if (allocation) {
+                    seatsWithAllocation.push({ seat, allocation });
+                  } else {
+                    seatsWithoutAllocation.push(seat);
+                  }
+                });
+                
+                // Group by allocation ID
+                const allocationGroups = {};
+                seatsWithAllocation.forEach(({ seat, allocation }) => {
+                  if (!allocationGroups[allocation.id]) {
+                    allocationGroups[allocation.id] = {
+                      allocation,
+                      seats: []
+                    };
+                  }
+                  allocationGroups[allocation.id].seats.push(seat);
+                });
+                
+                return (
+                  <div className="flex flex-wrap gap-y-2 gap-x-4">
+                    {/* Allocated seats grouped by allocation */}
+                    {Object.values(allocationGroups).map(({ allocation, seats: allocSeats }) => (
+                      <div 
+                        key={allocation.id}
+                        className="border-2 border-dashed border-blue-400 bg-blue-50/30 rounded-lg p-2 cursor-pointer hover:bg-blue-50/50 transition-colors inline-flex flex-col gap-2 relative group"
+                        onClick={() => navigate(`/user/allocation/${allocation.id}`)}
+                      >
+                        <div className="flex items-center space-x-2 px-1">
+                          <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                          <span className="text-xs font-semibold text-slate-700">
+                            {allocation.guestName} - Room {allocation.roomNumber}
+                          </span>
+                          {allocation.guestCategory && (
+                            <span className="bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                              {allocation.guestCategory}
+                            </span>
+                          )}
+                        </div>
+                        
+                        <div className="flex flex-wrap gap-y-2 gap-x-4">
+                          {allocSeats.map(seat => {
+                            const { status, color, isCalling } = getSeatStatus(seat.id);
+                            const seatType = getSeatType(seat.seatTypeId);
+                            
+                            return (
+                              <div key={seat.id} className="relative">
                       {allocation && allocation.guestCategory && (
                         <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 z-10">
                           <span className="bg-amber-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full shadow-md whitespace-nowrap">
