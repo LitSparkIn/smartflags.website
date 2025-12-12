@@ -2054,6 +2054,21 @@ async def seed_initial_roles():
             await db.roles.insert_one(new_role)
             logger.info("Added Food and Beverages Server role")
         
+        # Check if role-7 (Pool And Beach Attendant) exists
+        role_7_exists = await db.roles.find_one({"id": "role-7"})
+        
+        # If role-7 doesn't exist, add it
+        if not role_7_exists:
+            new_role = {
+                "id": "role-7",
+                "name": "Pool And Beach Attendant",
+                "description": "Will be able to serve both pool and beach areas.",
+                "createdAt": datetime.now(timezone.utc).isoformat(),
+                "updatedAt": datetime.now(timezone.utc).isoformat()
+            }
+            await db.roles.insert_one(new_role)
+            logger.info("Added Pool And Beach Attendant role")
+        
         # Check if roles already exist
         existing_count = await db.roles.count_documents({})
         
