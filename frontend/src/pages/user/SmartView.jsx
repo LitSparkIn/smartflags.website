@@ -430,7 +430,7 @@ export const SmartView = () => {
                             return (
                               <div
                                 key={seat.id}
-                                className="section relative"
+                                className="group relative"
                               >
                                 <div
                                   className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg cursor-default flex flex-col items-center justify-center h-[88px] w-[60px]`}
@@ -630,7 +630,7 @@ export const SmartView = () => {
                           return (
                             <div
                               key={seat.id}
-                              className="section relative"
+                              className="group relative"
                             >
                               <div
                                 className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg cursor-default flex flex-col items-center justify-center h-[88px] w-[60px]`}
