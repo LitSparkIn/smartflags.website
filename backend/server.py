@@ -2039,13 +2039,28 @@ async def get_role_by_id(role_id: str):
 async def seed_initial_roles():
     """Seed initial roles if database is empty"""
     try:
+        # Check if role-6 (Food and Beverages Server) exists
+        role_6_exists = await db.roles.find_one({"id": "role-6"})
+        
+        # If role-6 doesn't exist, add it
+        if not role_6_exists:
+            new_role = {
+                "id": "role-6",
+                "name": "Food and Beverages Server",
+                "description": "Will be able to serve food and beverages to guests.",
+                "createdAt": datetime.now(timezone.utc).isoformat(),
+                "updatedAt": datetime.now(timezone.utc).isoformat()
+            }
+            await db.roles.insert_one(new_role)
+            logger.info("Added Food and Beverages Server role")
+        
         # Check if roles already exist
         existing_count = await db.roles.count_documents({})
         
         if existing_count > 0:
             return {
                 "success": True, 
-                "message": f"Roles already exist ({existing_count} roles). No seeding needed.",
+                "message": f"Roles exist ({existing_count} roles). Added missing roles if any.",
                 "roles": await db.roles.find({}, {"_id": 0}).to_list(1000)
             }
         
