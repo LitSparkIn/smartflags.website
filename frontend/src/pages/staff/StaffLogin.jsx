@@ -65,8 +65,7 @@ export const StaffLogin = () => {
         
         // Roles that require group selection
         const rolesRequiringGroupSelection = [
-          'Pool Attendant',
-          'Beach Attendant',
+          'Pool And Beach Attendant',
           'Food and Beverages Server'
         ];
         
