@@ -23,7 +23,7 @@ import { useToast } from '../../hooks/use-toast';
 export const SeatDialog = ({ open, onOpenChange, seat, onSave, propertyId, seatTypes, groups }) => {
   const [formData, setFormData] = useState({
     seatTypeId: '',
-    groupId: '',
+    sectionId: '',
     prefix: '',
     suffix: '',
     startNumber: '',
@@ -39,7 +39,7 @@ export const SeatDialog = ({ open, onOpenChange, seat, onSave, propertyId, seatT
       // Edit mode
       setFormData({
         seatTypeId: seat.seatTypeId,
-        groupId: seat.groupId || '',
+        sectionId: seat.sectionId || '',
         seatNumber: seat.seatNumber,
         prefix: '',
         suffix: '',
@@ -51,7 +51,7 @@ export const SeatDialog = ({ open, onOpenChange, seat, onSave, propertyId, seatT
       // Add mode
       setFormData({
         seatTypeId: '',
-        groupId: '',
+        sectionId: '',
         prefix: '',
         suffix: '',
         startNumber: '',

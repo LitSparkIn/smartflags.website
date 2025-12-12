@@ -177,7 +177,7 @@ export const SmartView = () => {
 
   // Group seats by group
   const groupedSeats = groups.map(group => {
-    const groupSeats = seats.filter(seat => seat.groupId === group.id);
+    const groupSeats = seats.filter(seat => seat.sectionId === group.id);
     return {
       ...group,
       seats: groupSeats
@@ -185,7 +185,7 @@ export const SmartView = () => {
   });
 
   // Seats without a group
-  const ungroupedSeats = seats.filter(seat => !seat.groupId);
+  const ungroupedSeats = seats.filter(seat => !seat.sectionId);
 
   // Get seat type info
   const getSeatType = (seatTypeId) => {

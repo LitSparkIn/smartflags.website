@@ -46,7 +46,7 @@ export const StaffSmartView = () => {
         const allSeats = seatsRes.data.seats;
         if (selectedGroupId) {
           // Staff has selected a group - show only that group's seats
-          const filteredSeats = allSeats.filter(seat => seat.groupId === selectedGroupId);
+          const filteredSeats = allSeats.filter(seat => seat.sectionId === selectedGroupId);
           setSeats(filteredSeats);
         } else {
           // No group selected (e.g., Pool and Beach Manager) - show all seats
@@ -129,14 +129,14 @@ export const StaffSmartView = () => {
   };
 
   const groupedSeats = groups.map(group => {
-    const groupSeats = seats.filter(seat => seat.groupId === group.id);
+    const groupSeats = seats.filter(seat => seat.sectionId === group.id);
     return {
       ...group,
       seats: groupSeats
     };
   });
 
-  const ungroupedSeats = seats.filter(seat => !seat.groupId);
+  const ungroupedSeats = seats.filter(seat => !seat.sectionId);
 
   const totalSeats = seats.length;
   const occupiedSeats = allocations.filter(a => a.status !== 'Complete').length;

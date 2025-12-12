@@ -117,13 +117,13 @@ export const Groups = () => {
     setIsDialogOpen(true);
   };
 
-  const handleDelete = async (groupId) => {
+  const handleDelete = async (sectionId) => {
     if (!window.confirm('Are you sure you want to delete this group?')) {
       return;
     }
 
     try {
-      const response = await axios.delete(`${BACKEND_URL}/api/sections/${groupId}`);
+      const response = await axios.delete(`${BACKEND_URL}/api/sections/${sectionId}`);
       
       if (response.data.success) {
         toast({
