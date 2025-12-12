@@ -260,7 +260,7 @@ class DeviceUpdate(BaseModel):
     enabled: Optional[bool] = None
 
 # Group Models
-class Group(BaseModel):
+class Section(BaseModel):
     model_config = ConfigDict(extra="ignore")
     
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -270,12 +270,12 @@ class Group(BaseModel):
     createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updatedAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-class GroupCreate(BaseModel):
+class SectionCreate(BaseModel):
     propertyId: str
     name: str
     seatIds: List[str] = []
 
-class GroupUpdate(BaseModel):
+class SectionUpdate(BaseModel):
     name: Optional[str] = None
     seatIds: Optional[List[str]] = None
 
