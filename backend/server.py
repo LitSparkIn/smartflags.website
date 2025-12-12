@@ -1792,9 +1792,9 @@ async def delete_device(device_id: str):
 # Group CRUD Endpoints
 @api_router.post("/sections")
 async def create_section(section: SectionCreate):
-    """Create a new group"""
+    """Create a new section"""
     try:
-        group_obj = Group(**group.model_dump())
+        group_obj = Group(**section.model_dump())
         
         # Convert to dict and serialize datetime
         doc = group_obj.model_dump()
@@ -1803,7 +1803,7 @@ async def create_section(section: SectionCreate):
         
         await db.sections.insert_one(doc)
         
-        # Update seats with this group ID
+        # Update seats with this section ID
         if group_obj.seatIds:
             await db.seats.update_many(
                 {"id": {"$in": group_obj.seatIds}},
@@ -1812,32 +1812,32 @@ async def create_section(section: SectionCreate):
             logger.info(f"Updated {len(group_obj.seatIds)} seats with sectionId: {group_obj.id}")
         
         logger.info(f"Group created: {group_obj.id}")
-        return {"success": True, "group": group_obj}
+        return {"success": True, "section": group_obj}
         
     except Exception as e:
-        logger.error(f"Error creating group: {str(e)}")
+        logger.error(f"Error creating section: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @api_router.get("/sections/{property_id}")
 async def get_sections(property_id: str):
-    """Get all groups for a property"""
+    """Get all sections for a property"""
     try:
-        groups = await db.sections.find(
+        sections = await db.sections.find(
             {"propertyId": property_id},
             {"_id": 0}
         ).to_list(1000)
         
-        return {"success": True, "groups": groups}
+        return {"success": True, "sections": sections}
         
     except Exception as e:
-        logger.error(f"Error fetching groups: {str(e)}")
+        logger.error(f"Error fetching sections: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @api_router.put("/sections/{group_id}")
 async def update_section(section_id: str, update_data: GroupUpdate):
-    """Update a group"""
+    """Update a section"""
     try:
-        # Get the old group to compare seat assignments
+        # Get the old section to compare seat assignments
         old_group = await db.sections.find_one({"id": group_id}, {"_id": 0})
         if not old_group:
             raise HTTPException(status_code=404, detail="Group not found")
@@ -1859,7 +1859,7 @@ async def update_section(section_id: str, update_data: GroupUpdate):
             new_seat_ids = update_dict['seatIds']
             old_seat_ids = old_group.get('seatIds', [])
             
-            # Remove sectionId from seats that are no longer in this group
+            # Remove sectionId from seats that are no longer in this section
             removed_seats = [sid for sid in old_seat_ids if sid not in new_seat_ids]
             if removed_seats:
                 await db.seats.update_many(
@@ -1877,21 +1877,21 @@ async def update_section(section_id: str, update_data: GroupUpdate):
                 )
                 logger.info(f"Added sectionId to {len(added_seats)} seats")
         
-        # Get updated group
+        # Get updated section
         updated_group = await db.sections.find_one({"id": group_id}, {"_id": 0})
         
         logger.info(f"Group updated: {group_id}")
-        return {"success": True, "group": updated_group}
+        return {"success": True, "section": updated_group}
         
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error updating group: {str(e)}")
+        logger.error(f"Error updating section: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @api_router.delete("/sections/{group_id}")
 async def delete_section(section_id: str):
-    """Delete a group"""
+    """Delete a section"""
     try:
         result = await db.sections.delete_one({"id": group_id})
         
@@ -1904,7 +1904,7 @@ async def delete_section(section_id: str):
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error deleting group: {str(e)}")
+        logger.error(f"Error deleting section: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 # Staff CRUD Endpoints
@@ -3076,14 +3076,14 @@ async def create_allocation(allocation: AllocationCreate):
                 detail=f"The following seats are already allocated: {', '.join(seat_numbers)}. Currently allocated to: {conflict_details}"
             )
         
-        # Determine which groups the allocated seats belong to
+        # Determine which sections the allocated seats belong to
         seat_groups = set()
         for seat_id in allocation.seatIds:
             seat = await db.seats.find_one({"id": seat_id}, {"_id": 0})
             if seat and seat.get('sectionId'):
                 seat_groups.add(seat.get('sectionId'))
         
-        # Find Pool And Beach Attendants and Food and Beverages Servers for these groups
+        # Find Pool And Beach Attendants and Food and Beverages Servers for these sections
         # Get role IDs for the roles we need
         pool_beach_attendant_role = await db.roles.find_one({"name": "Pool And Beach Attendant"}, {"_id": 0})
         fb_server_role = await db.roles.find_one({"name": "Food and Beverages Server"}, {"_id": 0})
@@ -3092,7 +3092,7 @@ async def create_allocation(allocation: AllocationCreate):
         fb_server_ids = []
         
         # Note: We're checking all staff with these roles
-        # In a real system, you might want to track which staff are currently "on duty" for each group
+        # In a real system, you might want to track which staff are currently "on duty" for each section
         if pool_beach_attendant_role:
             attendants = await db.staff.find(
                 {
@@ -3467,7 +3467,7 @@ async def clear_all_data():
             'organisations',
             'properties',
             'seats',
-            'groups',
+            'sections',
             'seat_types',
             'staff',
             'roles',
