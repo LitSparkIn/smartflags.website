@@ -308,7 +308,7 @@ export const StaffSmartView = () => {
                           </div>
                           
                           {/* Allocation Hover Tooltip */}
-                          <div className="absolute bottom-full left-0 mb-2 opacity-0 section-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
+                          <div className="absolute bottom-full left-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
                             <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl min-w-[200px]">
                               <p className="font-bold text-sm mb-1">{allocation.guestName}</p>
                               <p className="text-slate-300 mb-2">Room {allocation.roomNumber}</p>
@@ -335,7 +335,7 @@ export const StaffSmartView = () => {
                         const seatType = getSeatType(seat.seatTypeId);
                         
                         return (
-                          <div key={seat.id} className="section relative">
+                          <div key={seat.id} className="group relative">
                             <div
                               className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg cursor-default flex flex-col items-center justify-center h-[88px] w-[60px]`}
                             >
@@ -354,7 +354,7 @@ export const StaffSmartView = () => {
                             </div>
                             
                             {/* Tooltip */}
-                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 section-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
                               <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl min-w-[180px]">
                                 <p className="font-bold text-sm mb-1">{seat.seatNumber}</p>
                                 <p className="text-slate-300 mb-2">{seatType.name}</p>
@@ -460,7 +460,7 @@ export const StaffSmartView = () => {
                         </div>
                         
                         {/* Allocation Hover Tooltip */}
-                        <div className="absolute bottom-full left-0 mb-2 opacity-0 section-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
+                        <div className="absolute bottom-full left-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
                           <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl min-w-[200px]">
                             <p className="font-bold text-sm mb-1">{allocation.guestName}</p>
                             <p className="text-slate-300 mb-2">Room {allocation.roomNumber}</p>
@@ -487,7 +487,7 @@ export const StaffSmartView = () => {
                       const seatType = getSeatType(seat.seatTypeId);
                       
                       return (
-                        <div key={seat.id} className="section relative">
+                        <div key={seat.id} className="group relative">
                           <div
                             className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg cursor-default flex flex-col items-center justify-center h-[88px] w-[60px]`}
                           >
@@ -506,7 +506,7 @@ export const StaffSmartView = () => {
                           </div>
                           
                           {/* Tooltip */}
-                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 section-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
+                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
                             <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl min-w-[180px]">
                               <p className="font-bold text-sm mb-1">{seat.seatNumber}</p>
                               <p className="text-slate-300 mb-2">{seatType.name}</p>
