@@ -393,7 +393,7 @@ export const SmartView = () => {
                               </div>
                               
                               {/* Allocation Hover Tooltip */}
-                              <div className="absolute bottom-full left-0 mb-2 opacity-0 section-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
+                              <div className="absolute bottom-full left-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
                                 <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl min-w-[200px]">
                                   <p className="font-bold text-sm mb-1">{allocation.guestName}</p>
                                   <p className="text-slate-300 mb-2">Room {allocation.roomNumber}</p>
@@ -450,7 +450,7 @@ export const SmartView = () => {
                                 </div>
                                 
                                 {/* Tooltip */}
-                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 section-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
+                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
                                   <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl min-w-[180px]">
                                     <p className="font-bold text-sm mb-1">{seat.seatNumber}</p>
                                     <p className="text-slate-300 mb-2">{seatType.name}</p>
@@ -593,7 +593,7 @@ export const SmartView = () => {
                             </div>
                             
                             {/* Allocation Hover Tooltip */}
-                            <div className="absolute bottom-full left-0 mb-2 opacity-0 section-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
+                            <div className="absolute bottom-full left-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
                               <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl min-w-[200px]">
                                 <p className="font-bold text-sm mb-1">{allocation.guestName}</p>
                                 <p className="text-slate-300 mb-2">Room {allocation.roomNumber}</p>
@@ -650,7 +650,7 @@ export const SmartView = () => {
                               </div>
                               
                               {/* Tooltip */}
-                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 section-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
+                              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
                                 <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl min-w-[180px]">
                                   <p className="font-bold text-sm mb-1">{seat.seatNumber}</p>
                                   <p className="text-slate-300 mb-2">{seatType.name}</p>

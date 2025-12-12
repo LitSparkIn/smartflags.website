@@ -50,7 +50,7 @@ export const HowItWorks = () => {
 
                     {/* Icon */}
                     <div className="mb-6 mt-4">
-                      <div className="w-16 h-16 bg-gradient-to-br from-teal-100 to-cyan-100 rounded-xl flex items-center justify-center section-hover:scale-110 transition-transform duration-300">
+                      <div className="w-16 h-16 bg-gradient-to-br from-teal-100 to-cyan-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                         {IconComponent && <IconComponent className="w-8 h-8 text-teal-600" />}
                       </div>
                     </div>

@@ -255,7 +255,7 @@ export const OrganisationDetails = () => {
                       <Home className="w-5 h-5 text-white" />
                     </div>
                   </div>
-                  <h3 className="font-bold text-slate-900 mb-1 section-hover:text-cyan-600 transition-colors">
+                  <h3 className="font-bold text-slate-900 mb-1 group-hover:text-cyan-600 transition-colors">
                     {property.name}
                   </h3>
                   <p className="text-sm text-slate-600">{property.email}</p>

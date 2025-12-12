@@ -409,7 +409,7 @@ export const Seats = () => {
                   </div>
                   
                   {/* Hover Actions */}
-                  <div className="absolute inset-0 bg-slate-900/90 rounded-lg opacity-0 section-hover:opacity-100 transition-opacity flex flex-col items-center justify-center space-y-2 p-2">
+                  <div className="absolute inset-0 bg-slate-900/90 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center space-y-2 p-2">
                     <div className="flex space-x-2">
                       <Button
                         size="sm"

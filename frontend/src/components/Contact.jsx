@@ -189,7 +189,7 @@ export const Contact = () => {
                 type="submit"
                 className="w-full bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all section"
               >
-                <Send className="mr-2 w-5 h-5 section-hover:translate-x-1 transition-transform" />
+                <Send className="mr-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 Request Demo
               </Button>
 

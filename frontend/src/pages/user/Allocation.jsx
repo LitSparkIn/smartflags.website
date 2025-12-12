@@ -474,7 +474,7 @@ export const Allocation = () => {
                       <div className={`w-3 h-3 rounded-full ${getStatusColor(allocation.status)}`}></div>
                       <span className="text-sm font-semibold text-slate-700">{allocation.status}</span>
                     </div>
-                    <Activity className="w-4 h-4 text-slate-400 section-hover:text-slate-600" />
+                    <Activity className="w-4 h-4 text-slate-400 group-hover:text-slate-600" />
                   </button>
                 </div>
 

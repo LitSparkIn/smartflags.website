@@ -196,7 +196,7 @@ export const Organisations = () => {
 
                   {/* Content */}
                   <div className="p-6">
-                    <h3 className="text-xl font-bold text-slate-900 mb-4 section-hover:text-teal-600 transition-colors">
+                    <h3 className="text-xl font-bold text-slate-900 mb-4 group-hover:text-teal-600 transition-colors">
                       {org.name}
                     </h3>
                     
@@ -219,9 +219,9 @@ export const Organisations = () => {
 
                     {/* View Details Link */}
                     <div className="mt-6 pt-4 border-t border-slate-100">
-                      <div className="flex items-center justify-between text-teal-600 section-hover:text-teal-700">
+                      <div className="flex items-center justify-between text-teal-600 group-hover:text-teal-700">
                         <span className="text-sm font-medium">View Details</span>
-                        <Eye className="w-4 h-4 section-hover:translate-x-1 transition-transform" />
+                        <Eye className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </div>
                   </div>

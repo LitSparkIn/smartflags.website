@@ -56,14 +56,14 @@ export const Hero = () => {
               className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white px-8 py-6 text-lg shadow-2xl hover:shadow-teal-500/50 transition-all hover:scale-105 section"
             >
               {heroData.cta}
-              <ArrowRight className="ml-2 w-5 h-5 section-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button
               size="lg"
               variant="outline"
               className="bg-white/10 backdrop-blur-md border-2 border-white/30 text-white hover:bg-white/20 px-8 py-6 text-lg transition-all hover:scale-105 section"
             >
-              <Play className="mr-2 w-5 h-5 section-hover:scale-110 transition-transform" />
+              <Play className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform" />
               {heroData.secondaryCta}
             </Button>
           </div>
