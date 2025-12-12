@@ -109,7 +109,11 @@ export const StaffGroupSelection = () => {
             <h2 className="text-xl font-bold text-slate-900 mb-1">
               Welcome, {staffData?.name}!
             </h2>
-            <p className="text-slate-600 text-sm">Select your service area below</p>
+            <p className="text-slate-600 text-sm">
+              {staffData?.selectedGroupId 
+                ? `Currently serving: ${staffData?.selectedGroupName || 'Unknown'}` 
+                : 'Select your service area below'}
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
