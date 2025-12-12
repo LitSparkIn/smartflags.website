@@ -29,7 +29,7 @@ import { Staff } from './pages/user/Staff';
 import { Roles as UserRoles } from './pages/user/Roles';
 import { SeatTypes } from './pages/user/SeatTypes';
 import { Seats } from './pages/user/Seats';
-import { Sections } from './Sections';
+import { Sections } from './pages/user/Sections';
 import { Devices } from './pages/user/Devices';
 import { MenuCategories } from './pages/user/MenuCategories';
 import { MenuTags } from './pages/user/MenuTags';
