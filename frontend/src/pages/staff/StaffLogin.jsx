@@ -59,11 +59,26 @@ export const StaffLogin = () => {
           entityId: response.data.propertyId
         };
         
-        localStorage.setItem('userData', JSON.stringify(staffData));
-        login(staffData);
+        // Fetch role details to check if group selection is needed
+        const roleResponse = await axios.get(`${BACKEND_URL}/api/roles/${response.data.staff.roleId}`);
+        const roleName = roleResponse.data.role?.name || '';
         
-        // Navigate to staff dashboard
-        navigate('/staff/smartview');
+        // Roles that require group selection
+        const rolesRequiringGroupSelection = [
+          'Pool Attendant',
+          'Beach Attendant',
+          'Food and Beverages Server'
+        ];
+        
+        if (rolesRequiringGroupSelection.includes(roleName)) {
+          // Navigate to group selection page with staff data
+          navigate('/staff/group-selection', { state: { staffData } });
+        } else {
+          // For other roles (like Pool and Beach Manager), go directly to dashboard
+          localStorage.setItem('userData', JSON.stringify(staffData));
+          login(staffData);
+          navigate('/staff/smartview');
+        }
       }
     } catch (error) {
       console.error('Login error:', error);
