@@ -33,7 +33,7 @@ export const SmartView = () => {
       }
 
       // Fetch groups
-      const groupsResponse = await axios.get(`${BACKEND_URL}/api/groups/${propertyId}`);
+      const groupsResponse = await axios.get(`${BACKEND_URL}/api/sections/${propertyId}`);
       if (groupsResponse.data.success) {
         setGroups(groupsResponse.data.groups);
       }

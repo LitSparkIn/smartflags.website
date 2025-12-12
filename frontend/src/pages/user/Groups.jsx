@@ -42,7 +42,7 @@ export const Groups = () => {
 
   const fetchGroups = async (propertyId) => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/groups/${propertyId}`);
+      const response = await axios.get(`${BACKEND_URL}/api/sections/${propertyId}`);
       if (response.data.success) {
         setGroups(response.data.groups);
         setFilteredGroups(response.data.groups);
@@ -76,7 +76,7 @@ export const Groups = () => {
       if (selectedGroup) {
         // Update existing
         const response = await axios.put(
-          `${BACKEND_URL}/api/groups/${selectedGroup.id}`,
+          `${BACKEND_URL}/api/sections/${selectedGroup.id}`,
           { name: data.name, seatIds: data.seatIds }
         );
         
@@ -89,7 +89,7 @@ export const Groups = () => {
         }
       } else {
         // Create new
-        const response = await axios.post(`${BACKEND_URL}/api/groups`, data);
+        const response = await axios.post(`${BACKEND_URL}/api/sections`, data);
         
         if (response.data.success) {
           toast({
@@ -123,7 +123,7 @@ export const Groups = () => {
     }
 
     try {
-      const response = await axios.delete(`${BACKEND_URL}/api/groups/${groupId}`);
+      const response = await axios.delete(`${BACKEND_URL}/api/sections/${groupId}`);
       
       if (response.data.success) {
         toast({

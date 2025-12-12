@@ -57,7 +57,7 @@ export const Seats = () => {
 
   const fetchGroups = async (propertyId) => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/api/groups/${propertyId}`);
+      const response = await axios.get(`${BACKEND_URL}/api/sections/${propertyId}`);
       if (response.data.success) {
         setGroups(response.data.groups);
       }

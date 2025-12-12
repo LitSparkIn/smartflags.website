@@ -36,7 +36,7 @@ export const StaffSmartView = () => {
 
       const [seatsRes, groupsRes, typesRes, allocsRes] = await Promise.all([
         axios.get(`${BACKEND_URL}/api/seats/${propertyId}`),
-        axios.get(`${BACKEND_URL}/api/groups/${propertyId}`),
+        axios.get(`${BACKEND_URL}/api/sections/${propertyId}`),
         axios.get(`${BACKEND_URL}/api/seat-types/${propertyId}`),
         axios.get(`${BACKEND_URL}/api/allocations/${propertyId}`)
       ]);

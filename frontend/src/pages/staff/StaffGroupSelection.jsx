@@ -38,7 +38,7 @@ export const StaffGroupSelection = () => {
   const fetchGroups = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${BACKEND_URL}/api/groups/${staffData.propertyId}`);
+      const response = await axios.get(`${BACKEND_URL}/api/sections/${staffData.propertyId}`);
       
       if (response.data.success) {
         setGroups(response.data.groups || []);
