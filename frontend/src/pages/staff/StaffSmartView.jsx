@@ -267,67 +267,97 @@ export const StaffSmartView = () => {
                           
                           <div className="flex flex-wrap gap-y-2 gap-x-4">
                             {allocSeats.map(seat => {
-                    const { status, color, allocation, isCalling, callingDuration } = getSeatStatus(seat.id);
-                    const seatType = getSeatType(seat.seatTypeId);
-                    
-                    return (
-                      <div key={seat.id} className="group relative">
-                        {allocation && allocation.guestCategory && (
-                          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 z-10">
-                            <span className="bg-amber-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full shadow-md whitespace-nowrap">
-                              {allocation.guestCategory}
-                            </span>
+                              const { status, color, isCalling } = getSeatStatus(seat.id);
+                              const seatType = getSeatType(seat.seatTypeId);
+                              
+                              return (
+                                <div key={seat.id} className="relative">
+                                  <div
+                                    className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg cursor-pointer flex flex-col items-center justify-center h-[88px] w-[60px] ${
+                                      isCalling ? 'animate-pulse ring-4 ring-red-500 ring-offset-2 shadow-xl shadow-red-500/50' : ''
+                                    }`}
+                                  >
+                                    {seatType.icon ? (
+                                      <img 
+                                        src={seatType.icon} 
+                                        alt={seatType.name}
+                                        className="w-6 h-6 object-contain mb-1 brightness-0 invert"
+                                      />
+                                    ) : (
+                                      <Armchair className="w-5 h-5 mb-1 text-white" />
+                                    )}
+                                    <span className="text-[11px] font-semibold text-white">
+                                      {seat.seatNumber}
+                                    </span>
+                                  </div>
+                                </div>
+                              );
+                            })}
                           </div>
-                        )}
-                        
-                        <div
-                          className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg cursor-default flex flex-col items-center justify-center h-[88px] w-[60px] ${
-                            isCalling ? 'animate-pulse ring-4 ring-red-500 ring-offset-2 shadow-xl shadow-red-500/50' : ''
-                          }`}
-                        >
-                          {seatType.icon ? (
-                            <img 
-                              src={seatType.icon} 
-                              alt={seatType.name}
-                              className={`w-6 h-6 object-contain mb-1 ${
-                                status === 'Free' ? '' : 'brightness-0 invert'
-                              }`}
-                            />
-                          ) : (
-                            <Armchair className={`w-5 h-5 mb-1 ${
-                              status === 'Free' ? 'text-slate-400' : 'text-white'
-                            }`} />
-                          )}
-                          <span className={`text-[11px] font-semibold ${
-                            status === 'Free' ? 'text-slate-700' : 'text-white'
-                          }`}>
-                            {seat.seatNumber}
-                          </span>
-                          {isCalling && (
-                            <span className="text-[8px] font-bold text-white mt-0.5">
-                              {callingDuration}s
-                            </span>
-                          )}
-                        </div>
-
-                        {allocation && (
-                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
-                            <div className="bg-slate-900 text-white text-xs rounded-lg p-3 shadow-xl whitespace-nowrap">
-                              <p className="font-bold mb-1">{allocation.guestName}</p>
-                              <p className="text-slate-300">Room: {allocation.roomNumber}</p>
-                              <p className="text-slate-300">Status: {allocation.status}</p>
-                              {isCalling && (
-                                <p className="text-red-400 font-bold mt-1">
-                                  🔔 Calling for {callingDuration}s
+                          
+                          {/* Allocation Hover Tooltip */}
+                          <div className="absolute bottom-full left-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
+                            <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl min-w-[200px]">
+                              <p className="font-bold text-sm mb-1">{allocation.guestName}</p>
+                              <p className="text-slate-300 mb-2">Room {allocation.roomNumber}</p>
+                              <div className="border-t border-slate-700 pt-2 space-y-1">
+                                <p className="font-semibold text-teal-400">Status: {allocation.status}</p>
+                                {allocation.guestCategory && (
+                                  <p className="text-amber-400">
+                                    <span className="text-slate-400">Category:</span> {allocation.guestCategory}
+                                  </p>
+                                )}
+                                <p className="text-slate-200 text-[10px] mt-1">
+                                  <span className="text-slate-400">Seats:</span> {allocSeats.map(s => s.seatNumber).join(', ')}
                                 </p>
+                              </div>
+                            </div>
+                            <div className="absolute top-full left-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-slate-900"></div>
+                          </div>
+                        </div>
+                      ))}
+                      
+                      {/* Free seats (not allocated) */}
+                      {seatsWithoutAllocation.map(seat => {
+                        const { status, color } = getSeatStatus(seat.id);
+                        const seatType = getSeatType(seat.seatTypeId);
+                        
+                        return (
+                          <div key={seat.id} className="group relative">
+                            <div
+                              className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg cursor-default flex flex-col items-center justify-center h-[88px] w-[60px]`}
+                            >
+                              {seatType.icon ? (
+                                <img 
+                                  src={seatType.icon} 
+                                  alt={seatType.name}
+                                  className="w-6 h-6 object-contain mb-1"
+                                />
+                              ) : (
+                                <Armchair className="w-5 h-5 mb-1 text-slate-400" />
                               )}
+                              <span className="text-[11px] font-semibold text-slate-700">
+                                {seat.seatNumber}
+                              </span>
+                            </div>
+                            
+                            {/* Tooltip */}
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
+                              <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl min-w-[180px]">
+                                <p className="font-bold text-sm mb-1">{seat.seatNumber}</p>
+                                <p className="text-slate-300 mb-2">{seatType.name}</p>
+                                <div className="border-t border-slate-700 pt-2">
+                                  <p className="text-slate-300 italic">Available</p>
+                                </div>
+                              </div>
+                              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-slate-900"></div>
                             </div>
                           </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })()}
               </div>
             </div>
           )
