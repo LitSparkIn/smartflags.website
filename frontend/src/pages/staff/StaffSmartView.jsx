@@ -30,6 +30,7 @@ export const StaffSmartView = () => {
 
       const parsedUser = JSON.parse(userData);
       const propertyId = parsedUser.entityId;
+      const selectedGroupId = parsedUser.selectedGroupId; // Get selected group from staff data
 
       const [seatsRes, groupsRes, typesRes, allocsRes] = await Promise.all([
         axios.get(`${BACKEND_URL}/api/seats/${propertyId}`),
@@ -38,8 +39,32 @@ export const StaffSmartView = () => {
         axios.get(`${BACKEND_URL}/api/allocations/${propertyId}`)
       ]);
 
-      if (seatsRes.data.success) setSeats(seatsRes.data.seats);
-      if (groupsRes.data.success) setGroups(groupsRes.data.groups);
+      // Filter seats to only show those from the selected group
+      if (seatsRes.data.success) {
+        const allSeats = seatsRes.data.seats;
+        if (selectedGroupId) {
+          // Staff has selected a group - show only that group's seats
+          const filteredSeats = allSeats.filter(seat => seat.groupId === selectedGroupId);
+          setSeats(filteredSeats);
+        } else {
+          // No group selected (e.g., Pool and Beach Manager) - show all seats
+          setSeats(allSeats);
+        }
+      }
+      
+      // Filter groups to only show the selected group
+      if (groupsRes.data.success) {
+        const allGroups = groupsRes.data.groups;
+        if (selectedGroupId) {
+          // Show only the selected group
+          const filteredGroups = allGroups.filter(group => group.id === selectedGroupId);
+          setGroups(filteredGroups);
+        } else {
+          // Show all groups
+          setGroups(allGroups);
+        }
+      }
+      
       if (typesRes.data.success) setSeatTypes(typesRes.data.seatTypes);
       if (allocsRes.data.success) setAllocations(allocsRes.data.allocations);
     } catch (error) {
