@@ -1791,7 +1791,7 @@ async def delete_device(device_id: str):
 
 # Group CRUD Endpoints
 @api_router.post("/sections")
-async def create_section(group: GroupCreate):
+async def create_section(section: SectionCreate):
     """Create a new group"""
     try:
         group_obj = Group(**group.model_dump())
@@ -1834,7 +1834,7 @@ async def get_sections(property_id: str):
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @api_router.put("/sections/{group_id}")
-async def update_section(group_id: str, update_data: GroupUpdate):
+async def update_section(section_id: str, update_data: GroupUpdate):
     """Update a group"""
     try:
         # Get the old group to compare seat assignments
@@ -1890,7 +1890,7 @@ async def update_section(group_id: str, update_data: GroupUpdate):
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @api_router.delete("/sections/{group_id}")
-async def delete_section(group_id: str):
+async def delete_section(section_id: str):
     """Delete a group"""
     try:
         result = await db.sections.delete_one({"id": group_id})
