@@ -3,7 +3,7 @@ import { UserLayout } from '../../components/user/UserLayout';
 import { Button } from '../../components/ui/button';
 import { Plus, UsersRound, Search, Pencil, Trash2, Armchair } from 'lucide-react';
 import { Input } from '../../components/ui/input';
-import { GroupDialog } from '../../components/user/GroupDialog';
+import { SectionDialog } from '../../components/user/SectionDialog';
 import axios from 'axios';
 import { useToast } from '../../hooks/use-toast';
 
@@ -291,7 +291,7 @@ export const Groups = () => {
       </div>
 
       {/* Dialog */}
-      <GroupDialog
+      <SectionDialog
         open={isDialogOpen}
         onOpenChange={(open) => {
           setIsDialogOpen(open);

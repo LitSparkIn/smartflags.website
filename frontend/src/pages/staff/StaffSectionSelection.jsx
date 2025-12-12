@@ -7,7 +7,7 @@ import { useAuth } from '../../context/AuthContext';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
-export const StaffGroupSelection = () => {
+export const StaffSectionSelection = () => {
   const [sections, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState('');
   const [loading, setLoading] = useState(true);

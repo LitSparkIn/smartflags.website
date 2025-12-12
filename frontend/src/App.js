@@ -40,7 +40,7 @@ import { Configuration } from './pages/user/Configuration';
 
 // Staff Pages
 import { StaffLogin } from './pages/staff/StaffLogin';
-import { StaffGroupSelection } from './pages/staff/StaffGroupSelection';
+import { StaffSectionSelection } from './pages/staff/StaffSectionSelection';
 import { StaffSmartView } from './pages/staff/StaffSmartView';
 
 // Public Pages
@@ -168,7 +168,7 @@ function App() {
             <Route path="/user" element={<Navigate to="/user/dashboard" replace />} />
             
             {/* Staff Routes */}
-            <Route path="/staff/section-selection" element={<StaffGroupSelection />} />
+            <Route path="/staff/section-selection" element={<StaffSectionSelection />} />
             <Route path="/staff/smartview" element={<StaffSmartView />} />
             
             {/* Redirect /staff to smartview */}

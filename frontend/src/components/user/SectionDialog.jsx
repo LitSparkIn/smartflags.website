@@ -13,7 +13,7 @@ import { Label } from '../ui/label';
 import { UsersRound, Check } from 'lucide-react';
 import { useToast } from '../../hooks/use-toast';
 
-export const GroupDialog = ({ open, onOpenChange, section, onSave, propertyId, seats }) => {
+export const SectionDialog = ({ open, onOpenChange, section, onSave, propertyId, seats }) => {
   const [formData, setFormData] = useState({
     name: '',
     seatIds: []
