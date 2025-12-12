@@ -98,7 +98,7 @@ export const AdminLoginDialog = ({ open, onOpenChange, entityType, entityName, e
               <p className="text-xs text-blue-600 mt-2">
                 {entityType === 'organisation' 
                   ? '✓ Can manage all properties under this organisation'
-                  : '✓ Can manage staff, seats, and groups for this property'}
+                  : '✓ Can manage staff, seats, and sections for this property'}
               </p>
             </div>
 

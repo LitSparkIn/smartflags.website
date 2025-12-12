@@ -10,7 +10,7 @@ export const SmartView = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [seats, setSeats] = useState([]);
-  const [groups, setGroups] = useState([]);
+  const [sections, setGroups] = useState([]);
   const [seatTypes, setSeatTypes] = useState([]);
   const [allocations, setAllocations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,10 +50,10 @@ export const SmartView = () => {
         setSeats(seatsResponse.data.seats);
       }
 
-      // Fetch groups
+      // Fetch sections
       const groupsResponse = await axios.get(`${BACKEND_URL}/api/sections/${propertyId}`);
       if (groupsResponse.data.success) {
-        setGroups(groupsResponse.data.groups);
+        setGroups(groupsResponse.data.sections);
       }
 
       // Fetch seat types
@@ -176,7 +176,7 @@ export const SmartView = () => {
   };
 
   // Group seats by group
-  const groupedSeats = groups.map(group => {
+  const groupedSeats = sections.map(group => {
     const groupSeats = seats.filter(seat => seat.sectionId === group.id);
     return {
       ...group,
@@ -482,7 +482,7 @@ export const SmartView = () => {
                 {/* Info Message */}
                 <div className="bg-amber-50 border-l-4 border-amber-500 p-4 mx-6 mt-6">
                   <p className="text-sm text-amber-800">
-                    💡 <strong>Tip:</strong> These seats are not assigned to any group. Edit seats in the Seats page to assign them to groups like "Pool Area" or "Beach Zone" for better organization.
+                    💡 <strong>Tip:</strong> These seats are not assigned to any group. Edit seats in the Seats page to assign them to sections like "Pool Area" or "Beach Zone" for better organization.
                   </p>
                 </div>
                 

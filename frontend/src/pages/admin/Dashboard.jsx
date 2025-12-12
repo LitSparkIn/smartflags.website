@@ -204,7 +204,7 @@ export const Dashboard = () => {
             <div className="flex-1">
               <h2 className="text-xl font-bold text-red-900 mb-2">Danger Zone</h2>
               <p className="text-red-700 mb-4">
-                Clear all data from the database. This action cannot be undone and will permanently delete all organisations, properties, admin accounts, seats, groups, staff, menu data, and master data (countries, states, cities).
+                Clear all data from the database. This action cannot be undone and will permanently delete all organisations, properties, admin accounts, seats, sections, staff, menu data, and master data (countries, states, cities).
               </p>
               <button
                 onClick={() => setShowClearDialog(true)}

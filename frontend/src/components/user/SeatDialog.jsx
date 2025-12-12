@@ -20,7 +20,7 @@ import {
 import { Armchair, AlertCircle } from 'lucide-react';
 import { useToast } from '../../hooks/use-toast';
 
-export const SeatDialog = ({ open, onOpenChange, seat, onSave, propertyId, seatTypes, groups }) => {
+export const SeatDialog = ({ open, onOpenChange, seat, onSave, propertyId, seatTypes, sections }) => {
   const [formData, setFormData] = useState({
     seatTypeId: '',
     sectionId: '',
@@ -226,7 +226,7 @@ export const SeatDialog = ({ open, onOpenChange, seat, onSave, propertyId, seatT
               </Select>
             </div>
 
-            {/* Group assignment removed - assign seats to groups via Groups page */}
+            {/* Group assignment removed - assign seats to sections via Groups page */}
 
             {seat ? (
               // Edit mode - single seat number

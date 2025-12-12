@@ -10,7 +10,7 @@ import { useToast } from '../../hooks/use-toast';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
 export const Groups = () => {
-  const [groups, setGroups] = useState([]);
+  const [sections, setGroups] = useState([]);
   const [seats, setSeats] = useState([]);
   const [filteredGroups, setFilteredGroups] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,14 +44,14 @@ export const Groups = () => {
     try {
       const response = await axios.get(`${BACKEND_URL}/api/sections/${propertyId}`);
       if (response.data.success) {
-        setGroups(response.data.groups);
-        setFilteredGroups(response.data.groups);
+        setGroups(response.data.sections);
+        setFilteredGroups(response.data.sections);
       }
     } catch (error) {
-      console.error('Error fetching groups:', error);
+      console.error('Error fetching sections:', error);
       toast({
         title: "Error",
-        description: "Failed to fetch groups",
+        description: "Failed to fetch sections",
         variant: "destructive"
       });
     }
@@ -62,9 +62,9 @@ export const Groups = () => {
     setSearchTerm(term);
     
     if (term === '') {
-      setFilteredGroups(groups);
+      setFilteredGroups(sections);
     } else {
-      const filtered = groups.filter(group => 
+      const filtered = sections.filter(group => 
         group.name.toLowerCase().includes(term)
       );
       setFilteredGroups(filtered);
@@ -159,7 +159,7 @@ export const Groups = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-slate-800">Groups</h1>
-            <p className="text-slate-600 mt-1">Organize seats into manageable groups</p>
+            <p className="text-slate-600 mt-1">Organize seats into manageable sections</p>
           </div>
           <Button 
             onClick={handleAddNew}
@@ -175,19 +175,19 @@ export const Groups = () => {
         {seats.length === 0 && (
           <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
             <p className="text-sm text-orange-800">
-              ⚠️ Please add seats before creating groups.
+              ⚠️ Please add seats before creating sections.
             </p>
           </div>
         )}
 
         {/* Search Bar */}
-        {groups.length > 0 && (
+        {sections.length > 0 && (
           <div className="bg-white rounded-xl shadow-md p-6">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
               <Input
                 type="text"
-                placeholder="Search groups..."
+                placeholder="Search sections..."
                 className="pl-10"
                 value={searchTerm}
                 onChange={handleSearch}
@@ -204,12 +204,12 @@ export const Groups = () => {
                 <UsersRound className="w-12 h-12 text-slate-400" />
               </div>
               <h2 className="text-xl font-semibold text-slate-800 mb-2">
-                {searchTerm ? 'No groups found' : 'No groups yet'}
+                {searchTerm ? 'No sections found' : 'No sections yet'}
               </h2>
               <p className="text-slate-600 mb-6">
                 {searchTerm 
                   ? 'Try adjusting your search terms'
-                  : 'Create groups to organize seats by area, section, or any other criteria. Groups help in better crowd management.'}
+                  : 'Create sections to organize seats by area, section, or any other criteria. Groups help in better crowd management.'}
               </p>
               {!searchTerm && seats.length > 0 && (
                 <Button 

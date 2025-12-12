@@ -9,7 +9,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
 export const StaffSmartView = () => {
   const [seats, setSeats] = useState([]);
-  const [groups, setGroups] = useState([]);
+  const [sections, setGroups] = useState([]);
   const [seatTypes, setSeatTypes] = useState([]);
   const [allocations, setAllocations] = useState([]);
   const [currentTime, setCurrentTime] = useState(Date.now());
@@ -54,15 +54,15 @@ export const StaffSmartView = () => {
         }
       }
       
-      // Filter groups to only show the selected group
+      // Filter sections to only show the selected group
       if (groupsRes.data.success) {
-        const allGroups = groupsRes.data.groups;
+        const allGroups = groupsRes.data.sections;
         if (selectedGroupId) {
           // Show only the selected group
           const filteredGroups = allGroups.filter(group => group.id === selectedGroupId);
           setGroups(filteredGroups);
         } else {
-          // Show all groups
+          // Show all sections
           setGroups(allGroups);
         }
       }
@@ -128,7 +128,7 @@ export const StaffSmartView = () => {
     };
   };
 
-  const groupedSeats = groups.map(group => {
+  const groupedSeats = sections.map(group => {
     const groupSeats = seats.filter(seat => seat.sectionId === group.id);
     return {
       ...group,

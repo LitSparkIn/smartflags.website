@@ -8,7 +8,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001'
 export const SmartView = () => {
   const [user, setUser] = useState(null);
   const [seats, setSeats] = useState([]);
-  const [groups, setGroups] = useState([]);
+  const [sections, setGroups] = useState([]);
   const [seatTypes, setSeatTypes] = useState([]);
   const [allocations, setAllocations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,10 +32,10 @@ export const SmartView = () => {
         setSeats(seatsResponse.data.seats);
       }
 
-      // Fetch groups
+      // Fetch sections
       const groupsResponse = await axios.get(`${BACKEND_URL}/api/sections/${propertyId}`);
       if (groupsResponse.data.success) {
-        setGroups(groupsResponse.data.groups);
+        setGroups(groupsResponse.data.sections);
       }
 
       // Fetch seat types

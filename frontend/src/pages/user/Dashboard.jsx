@@ -100,7 +100,7 @@ export const Dashboard = () => {
               <p className="text-teal-50">
                 {user.entityType === 'organisation' 
                   ? 'Manage your properties and monitor performance across your organization.'
-                  : 'Manage your staff, seats, and groups for optimal pool and beach operations.'}
+                  : 'Manage your staff, seats, and sections for optimal pool and beach operations.'}
               </p>
             </div>
             
@@ -190,7 +190,7 @@ export const Dashboard = () => {
                   <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0">3</div>
                   <div>
                     <h3 className="font-semibold text-slate-800">Create Seats & Groups</h3>
-                    <p className="text-sm text-slate-600">Add individual seats and organize them into groups for better management.</p>
+                    <p className="text-sm text-slate-600">Add individual seats and organize them into sections for better management.</p>
                   </div>
                 </div>
               </>

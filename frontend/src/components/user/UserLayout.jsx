@@ -51,7 +51,7 @@ export const UserLayout = ({ children }) => {
               <h2 className="text-xl font-semibold text-slate-800">
                 {user.entityType === 'organisation' ? 'Organisation Management' : 'Property Management'}
               </h2>
-              <p className="text-sm text-slate-500">Manage your {user.entityType === 'organisation' ? 'properties and settings' : 'staff, seats, and groups'}</p>
+              <p className="text-sm text-slate-500">Manage your {user.entityType === 'organisation' ? 'properties and settings' : 'staff, seats, and sections'}</p>
             </div>
             <Button
               onClick={handleLogout}

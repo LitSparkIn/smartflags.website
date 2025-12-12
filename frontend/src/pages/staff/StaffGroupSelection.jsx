@@ -8,7 +8,7 @@ import { useAuth } from '../../context/AuthContext';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 
 export const StaffGroupSelection = () => {
-  const [groups, setGroups] = useState([]);
+  const [sections, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -41,11 +41,11 @@ export const StaffGroupSelection = () => {
       const response = await axios.get(`${BACKEND_URL}/api/sections/${staffData.propertyId}`);
       
       if (response.data.success) {
-        setGroups(response.data.groups || []);
+        setGroups(response.data.sections || []);
       }
     } catch (error) {
-      console.error('Error fetching groups:', error);
-      setError('Failed to load groups. Please try again.');
+      console.error('Error fetching sections:', error);
+      setError('Failed to load sections. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -63,7 +63,7 @@ export const StaffGroupSelection = () => {
     const updatedStaffData = {
       ...staffData,
       selectedGroupId: selectedGroup,
-      selectedGroupName: groups.find(g => g.id === selectedGroup)?.name
+      selectedGroupName: sections.find(g => g.id === selectedGroup)?.name
     };
 
     // Store in localStorage and login
@@ -79,7 +79,7 @@ export const StaffGroupSelection = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading groups...</p>
+          <p className="text-slate-600">Loading sections...</p>
         </div>
       </div>
     );
@@ -118,14 +118,14 @@ export const StaffGroupSelection = () => {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Groups Selection */}
-            {groups.length === 0 ? (
+            {sections.length === 0 ? (
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-center">
                 <Users className="w-8 h-8 text-amber-500 mx-auto mb-2" />
-                <p className="text-sm text-amber-800">No groups available at this property</p>
+                <p className="text-sm text-amber-800">No sections available at this property</p>
               </div>
             ) : (
               <div className="space-y-3">
-                {groups.map((group) => (
+                {sections.map((group) => (
                   <button
                     key={group.id}
                     type="button"
@@ -181,7 +181,7 @@ export const StaffGroupSelection = () => {
             <Button
               type="submit"
               className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white h-12 text-base font-semibold"
-              disabled={groups.length === 0}
+              disabled={sections.length === 0}
             >
               Continue to Dashboard
             </Button>

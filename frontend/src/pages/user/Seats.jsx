@@ -20,7 +20,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || window.location.origin;
 export const Seats = () => {
   const [seats, setSeats] = useState([]);
   const [seatTypes, setSeatTypes] = useState([]);
-  const [groups, setGroups] = useState([]);
+  const [sections, setGroups] = useState([]);
   const [devices, setDevices] = useState([]);
   const [filteredSeats, setFilteredSeats] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -59,10 +59,10 @@ export const Seats = () => {
     try {
       const response = await axios.get(`${BACKEND_URL}/api/sections/${propertyId}`);
       if (response.data.success) {
-        setGroups(response.data.groups);
+        setGroups(response.data.sections);
       }
     } catch (error) {
-      console.error('Error fetching groups:', error);
+      console.error('Error fetching sections:', error);
     }
   };
 
@@ -471,7 +471,7 @@ export const Seats = () => {
         onSave={handleSave}
         propertyId={user?.entityId}
         seatTypes={seatTypes}
-        groups={groups}
+        sections={sections}
       />
 
       <AssignDeviceDialog

@@ -26,7 +26,7 @@ export const UserSidebar = ({ user }) => {
     { name: 'Roles', path: '/user/roles', icon: Shield },
     { name: 'Seat Types', path: '/user/seat-types', icon: Grid3x3 },
     { name: 'Seats', path: '/user/seats', icon: Armchair },
-    { name: 'Groups', path: '/user/groups', icon: UsersRound },
+    { name: 'Groups', path: '/user/sections', icon: UsersRound },
     { name: 'Configuration', path: '/user/configuration', icon: Settings }
   ];
 

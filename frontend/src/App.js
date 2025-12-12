@@ -156,7 +156,7 @@ function App() {
             <Route path="/user/roles" element={<UserRoles />} />
             <Route path="/user/seat-types" element={<SeatTypes />} />
             <Route path="/user/seats" element={<Seats />} />
-            <Route path="/user/groups" element={<Groups />} />
+            <Route path="/user/sections" element={<Groups />} />
             <Route path="/user/menu/categories" element={<MenuCategories />} />
             <Route path="/user/menu/tags" element={<MenuTags />} />
             <Route path="/user/menu/dietary" element={<DietaryRestrictions />} />
