@@ -233,7 +233,7 @@ class SeatBulkCreate(BaseModel):
 class SeatUpdate(BaseModel):
     seatTypeId: Optional[str] = None
     seatNumber: Optional[str] = None
-    groupId: Optional[str] = None
+    sectionId: Optional[str] = None
     staticDeviceId: Optional[str] = None
     status: Optional[str] = None
 
@@ -1505,7 +1505,7 @@ async def create_seats_bulk(seat_data: SeatBulkCreate):
                 propertyId=seat_data.propertyId,
                 seatTypeId=seat_data.seatTypeId,
                 seatNumber=seat_number,
-                groupId=seat_data.groupId
+                sectionId=seat_data.sectionId
             )
             
             # Convert to dict and serialize datetime
@@ -1807,9 +1807,9 @@ async def create_section(section: SectionCreate):
         if group_obj.seatIds:
             await db.seats.update_many(
                 {"id": {"$in": group_obj.seatIds}},
-                {"$set": {"groupId": group_obj.id}}
+                {"$set": {"sectionId": group_obj.id}}
             )
-            logger.info(f"Updated {len(group_obj.seatIds)} seats with groupId: {group_obj.id}")
+            logger.info(f"Updated {len(group_obj.seatIds)} seats with sectionId: {group_obj.id}")
         
         logger.info(f"Group created: {group_obj.id}")
         return {"success": True, "group": group_obj}
@@ -1859,23 +1859,23 @@ async def update_section(section_id: str, update_data: GroupUpdate):
             new_seat_ids = update_dict['seatIds']
             old_seat_ids = old_group.get('seatIds', [])
             
-            # Remove groupId from seats that are no longer in this group
+            # Remove sectionId from seats that are no longer in this group
             removed_seats = [sid for sid in old_seat_ids if sid not in new_seat_ids]
             if removed_seats:
                 await db.seats.update_many(
-                    {"id": {"$in": removed_seats}, "groupId": group_id},
-                    {"$set": {"groupId": ""}}
+                    {"id": {"$in": removed_seats}, "sectionId": group_id},
+                    {"$set": {"sectionId": ""}}
                 )
-                logger.info(f"Removed groupId from {len(removed_seats)} seats")
+                logger.info(f"Removed sectionId from {len(removed_seats)} seats")
             
-            # Add groupId to new seats
+            # Add sectionId to new seats
             added_seats = [sid for sid in new_seat_ids if sid not in old_seat_ids]
             if added_seats:
                 await db.seats.update_many(
                     {"id": {"$in": added_seats}},
-                    {"$set": {"groupId": group_id}}
+                    {"$set": {"sectionId": group_id}}
                 )
-                logger.info(f"Added groupId to {len(added_seats)} seats")
+                logger.info(f"Added sectionId to {len(added_seats)} seats")
         
         # Get updated group
         updated_group = await db.sections.find_one({"id": group_id}, {"_id": 0})
@@ -3080,8 +3080,8 @@ async def create_allocation(allocation: AllocationCreate):
         seat_groups = set()
         for seat_id in allocation.seatIds:
             seat = await db.seats.find_one({"id": seat_id}, {"_id": 0})
-            if seat and seat.get('groupId'):
-                seat_groups.add(seat.get('groupId'))
+            if seat and seat.get('sectionId'):
+                seat_groups.add(seat.get('sectionId'))
         
         # Find Pool And Beach Attendants and Food and Beverages Servers for these groups
         # Get role IDs for the roles we need
