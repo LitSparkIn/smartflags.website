@@ -93,8 +93,14 @@ export const StaffGroupSelection = () => {
           <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl">
             <MapPin className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Select Your Group</h1>
-          <p className="text-slate-600">Choose which area you'll be serving today</p>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">
+            {staffData?.selectedGroupId ? 'Switch Your Group' : 'Select Your Group'}
+          </h1>
+          <p className="text-slate-600">
+            {staffData?.selectedGroupId 
+              ? 'Choose a different area to serve' 
+              : 'Choose which area you\'ll be serving today'}
+          </p>
         </div>
 
         {/* Selection Card */}
