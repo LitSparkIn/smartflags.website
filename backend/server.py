@@ -259,7 +259,7 @@ class DeviceUpdate(BaseModel):
     deviceId: Optional[str] = None
     enabled: Optional[bool] = None
 
-# Group Models
+# Section Models
 class Section(BaseModel):
     model_config = ConfigDict(extra="ignore")
     
@@ -1789,12 +1789,12 @@ async def delete_device(device_id: str):
         logger.error(f"Error deleting device: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
-# Group CRUD Endpoints
+# Section CRUD Endpoints
 @api_router.post("/sections")
 async def create_section(section: SectionCreate):
     """Create a new section"""
     try:
-        group_obj = Group(**section.model_dump())
+        group_obj = Section(**section.model_dump())
         
         # Convert to dict and serialize datetime
         doc = group_obj.model_dump()
@@ -1811,7 +1811,7 @@ async def create_section(section: SectionCreate):
             )
             logger.info(f"Updated {len(group_obj.seatIds)} seats with sectionId: {group_obj.id}")
         
-        logger.info(f"Group created: {group_obj.id}")
+        logger.info(f"Section created: {group_obj.id}")
         return {"success": True, "section": group_obj}
         
     except Exception as e:
@@ -1834,13 +1834,13 @@ async def get_sections(property_id: str):
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @api_router.put("/sections/{group_id}")
-async def update_section(section_id: str, update_data: GroupUpdate):
+async def update_section(section_id: str, update_data: SectionUpdate):
     """Update a section"""
     try:
         # Get the old section to compare seat assignments
         old_group = await db.sections.find_one({"id": group_id}, {"_id": 0})
         if not old_group:
-            raise HTTPException(status_code=404, detail="Group not found")
+            raise HTTPException(status_code=404, detail="Section not found")
         
         update_dict = {k: v for k, v in update_data.model_dump().items() if v is not None}
         
@@ -1880,7 +1880,7 @@ async def update_section(section_id: str, update_data: GroupUpdate):
         # Get updated section
         updated_group = await db.sections.find_one({"id": group_id}, {"_id": 0})
         
-        logger.info(f"Group updated: {group_id}")
+        logger.info(f"Section updated: {group_id}")
         return {"success": True, "section": updated_group}
         
     except HTTPException:
@@ -1896,10 +1896,10 @@ async def delete_section(section_id: str):
         result = await db.sections.delete_one({"id": group_id})
         
         if result.deleted_count == 0:
-            raise HTTPException(status_code=404, detail="Group not found")
+            raise HTTPException(status_code=404, detail="Section not found")
         
-        logger.info(f"Group deleted: {group_id}")
-        return {"success": True, "message": "Group deleted successfully"}
+        logger.info(f"Section deleted: {group_id}")
+        return {"success": True, "message": "Section deleted successfully"}
         
     except HTTPException:
         raise
@@ -3511,7 +3511,7 @@ async def get_all_users():
         # Get Organisation and Property Admins from admin_otps
         admin_otps = await db.admin_otps.find({}, {"_id": 0}).to_list(10000)
         
-        # Group by email to get unique admins (avoid duplicates from multiple OTPs)
+        # Section by email to get unique admins (avoid duplicates from multiple OTPs)
         admins_by_email = {}
         for otp in admin_otps:
             email = otp.get('email')
