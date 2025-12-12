@@ -14,6 +14,7 @@ export const StaffSmartView = () => {
   const [allocations, setAllocations] = useState([]);
   const [currentTime, setCurrentTime] = useState(Date.now());
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
