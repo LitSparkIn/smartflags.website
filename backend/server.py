@@ -2107,6 +2107,13 @@ async def seed_initial_roles():
                 "description": "Will be able to serve food and beverages to guests.",
                 "createdAt": datetime.now(timezone.utc).isoformat(),
                 "updatedAt": datetime.now(timezone.utc).isoformat()
+            },
+            {
+                "id": "role-7",
+                "name": "Pool And Beach Attendant",
+                "description": "Will be able to serve both pool and beach areas.",
+                "createdAt": datetime.now(timezone.utc).isoformat(),
+                "updatedAt": datetime.now(timezone.utc).isoformat()
             }
         ]
         
