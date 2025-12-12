@@ -215,6 +215,26 @@ export const AllocationDetails = () => {
     return manager ? manager.name : 'N/A';
   };
 
+  const getPoolBeachAttendantNames = () => {
+    if (!allocation || !staff.length || !allocation.poolBeachAttendantIds?.length) return [];
+    return allocation.poolBeachAttendantIds
+      .map(id => {
+        const attendant = staff.find(s => s.id === id);
+        return attendant ? attendant.name : null;
+      })
+      .filter(name => name !== null);
+  };
+
+  const getFBServerNames = () => {
+    if (!allocation || !staff.length || !allocation.fbServerIds?.length) return [];
+    return allocation.fbServerIds
+      .map(id => {
+        const server = staff.find(s => s.id === id);
+        return server ? server.name : null;
+      })
+      .filter(name => name !== null);
+  };
+
   if (loading) {
     return (
       <UserLayout>
