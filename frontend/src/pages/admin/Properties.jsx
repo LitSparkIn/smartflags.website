@@ -201,7 +201,7 @@ export const Properties = () => {
                   <div
                     key={property.id}
                     onClick={() => handleView(property.id)}
-                    className="bg-white rounded-xl shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer group overflow-hidden"
+                    className="bg-white rounded-xl shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer section overflow-hidden"
                   >
                     {/* Header with Icon */}
                     <div className="bg-gradient-to-br from-cyan-500 to-blue-600 p-6">
@@ -231,7 +231,7 @@ export const Properties = () => {
 
                     {/* Content */}
                     <div className="p-6">
-                      <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-cyan-600 transition-colors">
+                      <h3 className="text-xl font-bold text-slate-900 mb-2 section-hover:text-cyan-600 transition-colors">
                         {property.name}
                       </h3>
                       
@@ -260,9 +260,9 @@ export const Properties = () => {
 
                       {/* View Details Link */}
                       <div className="mt-6 pt-4 border-t border-slate-100">
-                        <div className="flex items-center justify-between text-cyan-600 group-hover:text-cyan-700">
+                        <div className="flex items-center justify-between text-cyan-600 section-hover:text-cyan-700">
                           <span className="text-sm font-medium">View Details</span>
-                          <Eye className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          <Eye className="w-4 h-4 section-hover:translate-x-1 transition-transform" />
                         </div>
                       </div>
                     </div>

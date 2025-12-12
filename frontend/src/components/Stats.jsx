@@ -25,17 +25,17 @@ export const Stats = () => {
             return (
               <div
                 key={index}
-                className="text-center group"
+                className="text-center section"
               >
                 {/* Icon */}
                 <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center section-hover:scale-110 transition-transform duration-300">
                     {IconComponent && <IconComponent className="w-8 h-8 text-white" />}
                   </div>
                 </div>
 
                 {/* Value */}
-                <div className="text-4xl md:text-5xl font-bold text-white mb-2 group-hover:scale-110 transition-transform">
+                <div className="text-4xl md:text-5xl font-bold text-white mb-2 section-hover:scale-110 transition-transform">
                   {stat.value}
                 </div>
 

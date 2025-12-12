@@ -25,10 +25,10 @@ export const Testimonials = () => {
           {testimonials.map((testimonial) => (
             <div
               key={testimonial.id}
-              className="bg-gradient-to-br from-slate-50 to-cyan-50 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 relative overflow-hidden group"
+              className="bg-gradient-to-br from-slate-50 to-cyan-50 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 relative overflow-hidden section"
             >
               {/* Quote Icon Background */}
-              <div className="absolute top-4 right-4 opacity-5 group-hover:opacity-10 transition-opacity">
+              <div className="absolute top-4 right-4 opacity-5 section-hover:opacity-10 transition-opacity">
                 <Quote className="w-24 h-24 text-teal-600" />
               </div>
 
@@ -59,7 +59,7 @@ export const Testimonials = () => {
               </div>
 
               {/* Decorative Border */}
-              <div className="absolute inset-0 rounded-2xl border-2 border-teal-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <div className="absolute inset-0 rounded-2xl border-2 border-teal-500 opacity-0 section-hover:opacity-100 transition-opacity"></div>
             </div>
           ))}
         </div>

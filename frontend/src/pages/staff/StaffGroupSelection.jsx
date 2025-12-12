@@ -55,11 +55,11 @@ export const StaffGroupSelection = () => {
     e.preventDefault();
     
     if (!selectedGroup) {
-      setError('Please select a group');
+      setError('Please select a section');
       return;
     }
 
-    // Add selected group to staff data
+    // Add selected section to staff data
     const updatedStaffData = {
       ...staffData,
       selectedGroupId: selectedGroup,
@@ -125,16 +125,16 @@ export const StaffGroupSelection = () => {
               </div>
             ) : (
               <div className="space-y-3">
-                {sections.map((group) => (
+                {sections.map((section) => (
                   <button
-                    key={group.id}
+                    key={section.id}
                     type="button"
                     onClick={() => {
-                      setSelectedGroup(group.id);
+                      setSelectedGroup(section.id);
                       setError('');
                     }}
                     className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
-                      selectedGroup === group.id
+                      selectedGroup === section.id
                         ? 'border-blue-500 bg-blue-50'
                         : 'border-slate-200 hover:border-slate-300 bg-white'
                     }`}
@@ -142,22 +142,22 @@ export const StaffGroupSelection = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          selectedGroup === group.id
+                          selectedGroup === section.id
                             ? 'bg-blue-500'
                             : 'bg-slate-100'
                         }`}>
                           <MapPin className={`w-5 h-5 ${
-                            selectedGroup === group.id ? 'text-white' : 'text-slate-600'
+                            selectedGroup === section.id ? 'text-white' : 'text-slate-600'
                           }`} />
                         </div>
                         <div>
-                          <h3 className="font-semibold text-slate-900">{group.name}</h3>
-                          {group.description && (
-                            <p className="text-sm text-slate-500">{group.description}</p>
+                          <h3 className="font-semibold text-slate-900">{section.name}</h3>
+                          {section.description && (
+                            <p className="text-sm text-slate-500">{section.description}</p>
                           )}
                         </div>
                       </div>
-                      {selectedGroup === group.id && (
+                      {selectedGroup === section.id && (
                         <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
                           <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

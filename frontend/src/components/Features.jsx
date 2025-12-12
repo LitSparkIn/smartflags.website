@@ -39,19 +39,19 @@ export const Features = () => {
             return (
               <div
                 key={feature.id}
-                className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-slate-100"
+                className="section relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-slate-100"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Icon */}
                 <div className="relative mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg section-hover:scale-110 transition-transform duration-300">
                     {IconComponent && <IconComponent className="w-8 h-8 text-white" />}
                   </div>
-                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-coral-500 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-coral-500 rounded-full blur-xl opacity-0 section-hover:opacity-100 transition-opacity"></div>
                 </div>
 
                 {/* Content */}
-                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-teal-600 transition-colors">
+                <h3 className="text-xl font-bold text-slate-900 mb-3 section-hover:text-teal-600 transition-colors">
                   {feature.title}
                 </h3>
                 <p className="text-slate-600 leading-relaxed">
@@ -59,7 +59,7 @@ export const Features = () => {
                 </p>
 
                 {/* Hover Effect Border */}
-                <div className="absolute inset-0 rounded-2xl border-2 border-teal-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="absolute inset-0 rounded-2xl border-2 border-teal-500 opacity-0 section-hover:opacity-100 transition-opacity"></div>
               </div>
             );
           })}

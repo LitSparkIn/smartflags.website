@@ -42,7 +42,7 @@ export const HowItWorks = () => {
               return (
                 <div key={step.step} className="relative">
                   {/* Card */}
-                  <div className="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-slate-100 hover:border-teal-300 group">
+                  <div className="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-slate-100 hover:border-teal-300 section">
                     {/* Step Number */}
                     <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-full flex items-center justify-center shadow-lg">
                       <span className="text-white font-bold text-lg">{step.step}</span>
@@ -50,7 +50,7 @@ export const HowItWorks = () => {
 
                     {/* Icon */}
                     <div className="mb-6 mt-4">
-                      <div className="w-16 h-16 bg-gradient-to-br from-teal-100 to-cyan-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <div className="w-16 h-16 bg-gradient-to-br from-teal-100 to-cyan-100 rounded-xl flex items-center justify-center section-hover:scale-110 transition-transform duration-300">
                         {IconComponent && <IconComponent className="w-8 h-8 text-teal-600" />}
                       </div>
                     </div>

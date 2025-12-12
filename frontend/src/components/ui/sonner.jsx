@@ -9,16 +9,16 @@ const Toaster = ({
   return (
     <Sonner
       theme={theme}
-      className="toaster group"
+      className="toaster section"
       toastOptions={{
         classNames: {
           toast:
-            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
-          description: "group-[.toast]:text-muted-foreground",
+            "section toast section-[.toaster]:bg-background section-[.toaster]:text-foreground section-[.toaster]:border-border section-[.toaster]:shadow-lg",
+          description: "section-[.toast]:text-muted-foreground",
           actionButton:
-            "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
+            "section-[.toast]:bg-primary section-[.toast]:text-primary-foreground",
           cancelButton:
-            "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
+            "section-[.toast]:bg-muted section-[.toast]:text-muted-foreground",
         },
       }}
       {...props} />

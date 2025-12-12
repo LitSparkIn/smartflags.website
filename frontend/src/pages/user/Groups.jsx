@@ -64,8 +64,8 @@ export const Groups = () => {
     if (term === '') {
       setFilteredGroups(sections);
     } else {
-      const filtered = sections.filter(group => 
-        group.name.toLowerCase().includes(term)
+      const filtered = sections.filter(section => 
+        section.name.toLowerCase().includes(term)
       );
       setFilteredGroups(filtered);
     }
@@ -103,22 +103,22 @@ export const Groups = () => {
       setIsDialogOpen(false);
       setSelectedGroup(null);
     } catch (error) {
-      console.error('Error saving group:', error);
+      console.error('Error saving section:', error);
       toast({
         title: "Error",
-        description: error.response?.data?.detail || "Failed to save group",
+        description: error.response?.data?.detail || "Failed to save section",
         variant: "destructive"
       });
     }
   };
 
-  const handleEdit = (group) => {
-    setSelectedGroup(group);
+  const handleEdit = (section) => {
+    setSelectedGroup(section);
     setIsDialogOpen(true);
   };
 
   const handleDelete = async (sectionId) => {
-    if (!window.confirm('Are you sure you want to delete this group?')) {
+    if (!window.confirm('Are you sure you want to delete this section?')) {
       return;
     }
 
@@ -133,10 +133,10 @@ export const Groups = () => {
         fetchGroups(user.entityId);
       }
     } catch (error) {
-      console.error('Error deleting group:', error);
+      console.error('Error deleting section:', error);
       toast({
         title: "Error",
-        description: "Failed to delete group",
+        description: "Failed to delete section",
         variant: "destructive"
       });
     }
@@ -224,9 +224,9 @@ export const Groups = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredGroups.map((group) => (
+            {filteredGroups.map((section) => (
               <div
-                key={group.id}
+                key={section.id}
                 className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-6 border border-slate-200"
               >
                 <div className="flex items-start justify-between mb-4">
@@ -235,9 +235,9 @@ export const Groups = () => {
                       <UsersRound className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-slate-900">{group.name}</h3>
+                      <h3 className="text-lg font-bold text-slate-900">{section.name}</h3>
                       <p className="text-sm text-slate-600">
-                        {group.seatIds?.length || 0} seats
+                        {section.seatIds?.length || 0} seats
                       </p>
                     </div>
                   </div>
@@ -245,7 +245,7 @@ export const Groups = () => {
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => handleEdit(group)}
+                      onClick={() => handleEdit(section)}
                     >
                       <Pencil className="w-4 h-4" />
                     </Button>
@@ -253,7 +253,7 @@ export const Groups = () => {
                       size="sm"
                       variant="outline"
                       className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                      onClick={() => handleDelete(group.id)}
+                      onClick={() => handleDelete(section.id)}
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -261,14 +261,14 @@ export const Groups = () => {
                 </div>
                 
                 {/* Seat List Preview */}
-                {group.seatIds && group.seatIds.length > 0 && (
+                {section.seatIds && section.seatIds.length > 0 && (
                   <div className="mt-4 pt-4 border-t border-slate-200">
                     <div className="flex items-center space-x-2 mb-2">
                       <Armchair className="w-4 h-4 text-slate-400" />
                       <span className="text-sm font-medium text-slate-700">Seats:</span>
                     </div>
                     <div className="flex flex-wrap gap-1">
-                      {group.seatIds.slice(0, 10).map((seatId) => (
+                      {section.seatIds.slice(0, 10).map((seatId) => (
                         <span
                           key={seatId}
                           className="bg-orange-50 text-orange-700 text-xs px-2 py-1 rounded border border-orange-200"
@@ -276,9 +276,9 @@ export const Groups = () => {
                           {getSeatNumber(seatId)}
                         </span>
                       ))}
-                      {group.seatIds.length > 10 && (
+                      {section.seatIds.length > 10 && (
                         <span className="text-xs text-slate-500 px-2 py-1">
-                          +{group.seatIds.length - 10} more
+                          +{section.seatIds.length - 10} more
                         </span>
                       )}
                     </div>
@@ -297,7 +297,7 @@ export const Groups = () => {
           setIsDialogOpen(open);
           if (!open) setSelectedGroup(null);
         }}
-        group={selectedGroup}
+        section={selectedGroup}
         onSave={handleSave}
         propertyId={user?.entityId}
         seats={seats}

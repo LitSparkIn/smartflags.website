@@ -13,7 +13,7 @@ import { Label } from '../ui/label';
 import { UsersRound, Check } from 'lucide-react';
 import { useToast } from '../../hooks/use-toast';
 
-export const GroupDialog = ({ open, onOpenChange, group, onSave, propertyId, seats }) => {
+export const GroupDialog = ({ open, onOpenChange, section, onSave, propertyId, seats }) => {
   const [formData, setFormData] = useState({
     name: '',
     seatIds: []
@@ -23,16 +23,16 @@ export const GroupDialog = ({ open, onOpenChange, group, onSave, propertyId, sea
   const { toast } = useToast();
 
   useEffect(() => {
-    if (group) {
+    if (section) {
       setFormData({
-        name: group.name,
-        seatIds: group.seatIds || []
+        name: section.name,
+        seatIds: section.seatIds || []
       });
     } else {
       setFormData({ name: '', seatIds: [] });
     }
     setSearchTerm('');
-  }, [group, open]);
+  }, [section, open]);
 
   const handleChange = (e) => {
     setFormData({
@@ -112,9 +112,9 @@ export const GroupDialog = ({ open, onOpenChange, group, onSave, propertyId, sea
               <UsersRound className="w-6 h-6 text-white" />
             </div>
             <div>
-              <DialogTitle>{group ? 'Edit Group' : 'Add Group'}</DialogTitle>
+              <DialogTitle>{section ? 'Edit Group' : 'Add Group'}</DialogTitle>
               <DialogDescription>
-                {group ? 'Update group details and seats' : 'Create a new group and assign seats'}
+                {section ? 'Update section details and seats' : 'Create a new section and assign seats'}
               </DialogDescription>
             </div>
           </div>
@@ -234,7 +234,7 @@ export const GroupDialog = ({ open, onOpenChange, group, onSave, propertyId, sea
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
                   Saving...
                 </>
-              ) : group ? (
+              ) : section ? (
                 'Update'
               ) : (
                 'Create Group'

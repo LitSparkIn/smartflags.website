@@ -248,14 +248,14 @@ export const OrganisationDetails = () => {
                 <div
                   key={property.id}
                   onClick={() => navigate(`/admin/properties/${property.id}`)}
-                  className="bg-slate-50 hover:bg-slate-100 rounded-lg p-4 cursor-pointer transition-colors group"
+                  className="bg-slate-50 hover:bg-slate-100 rounded-lg p-4 cursor-pointer transition-colors section"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
                       <Home className="w-5 h-5 text-white" />
                     </div>
                   </div>
-                  <h3 className="font-bold text-slate-900 mb-1 group-hover:text-cyan-600 transition-colors">
+                  <h3 className="font-bold text-slate-900 mb-1 section-hover:text-cyan-600 transition-colors">
                     {property.name}
                   </h3>
                   <p className="text-sm text-slate-600">{property.email}</p>

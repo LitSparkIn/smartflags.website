@@ -361,7 +361,7 @@ export const Seats = () => {
               <p className="text-slate-600 mb-6">
                 {searchTerm || filterSeatType !== 'all'
                   ? 'Try adjusting your search or filter criteria'
-                  : 'Add individual seats to your property. Each seat can be assigned to a group and monitored for occupancy.'}
+                  : 'Add individual seats to your property. Each seat can be assigned to a section and monitored for occupancy.'}
               </p>
               {!searchTerm && filterSeatType === 'all' && seatTypes.length > 0 && (
                 <Button 
@@ -380,7 +380,7 @@ export const Seats = () => {
               {filteredSeats.map((seat) => (
                 <div
                   key={seat.id}
-                  className="group relative bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg p-4 border border-purple-200 hover:shadow-md transition-all"
+                  className="section relative bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg p-4 border border-purple-200 hover:shadow-md transition-all"
                 >
                   <div className="flex flex-col items-center space-y-2">
                     {getSeatTypeIcon(seat.seatTypeId) && (
@@ -409,7 +409,7 @@ export const Seats = () => {
                   </div>
                   
                   {/* Hover Actions */}
-                  <div className="absolute inset-0 bg-slate-900/90 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center space-y-2 p-2">
+                  <div className="absolute inset-0 bg-slate-900/90 rounded-lg opacity-0 section-hover:opacity-100 transition-opacity flex flex-col items-center justify-center space-y-2 p-2">
                     <div className="flex space-x-2">
                       <Button
                         size="sm"

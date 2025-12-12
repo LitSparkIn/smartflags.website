@@ -37,22 +37,22 @@ export const Benefits = () => {
             return (
               <div
                 key={benefit.id}
-                className="group relative bg-white rounded-2xl p-10 shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
+                className="section relative bg-white rounded-2xl p-10 shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden"
               >
                 {/* Background Gradient on Hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-cyan-500/5 opacity-0 section-hover:opacity-100 transition-opacity"></div>
 
                 <div className="relative z-10 flex items-start space-x-6">
                   {/* Icon */}
                   <div className="flex-shrink-0">
-                    <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg section-hover:scale-110 transition-transform duration-300">
                       {IconComponent && <IconComponent className="w-8 h-8 text-white" />}
                     </div>
                   </div>
 
                   {/* Content */}
                   <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-slate-900 mb-3 group-hover:text-teal-600 transition-colors">
+                    <h3 className="text-2xl font-bold text-slate-900 mb-3 section-hover:text-teal-600 transition-colors">
                       {benefit.title}
                     </h3>
                     <p className="text-slate-600 mb-6 leading-relaxed">
@@ -72,7 +72,7 @@ export const Benefits = () => {
                 </div>
 
                 {/* Decorative Element */}
-                <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-gradient-to-br from-teal-500/10 to-cyan-500/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
+                <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-gradient-to-br from-teal-500/10 to-cyan-500/10 rounded-full blur-2xl section-hover:scale-150 transition-transform duration-500"></div>
               </div>
             );
           })}

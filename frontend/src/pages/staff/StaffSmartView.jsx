@@ -32,7 +32,7 @@ export const StaffSmartView = () => {
 
       const parsedUser = JSON.parse(userData);
       const propertyId = parsedUser.entityId;
-      const selectedGroupId = parsedUser.selectedGroupId; // Get selected group from staff data
+      const selectedGroupId = parsedUser.selectedGroupId; // Get selected section from staff data
 
       const [seatsRes, groupsRes, typesRes, allocsRes] = await Promise.all([
         axios.get(`${BACKEND_URL}/api/seats/${propertyId}`),
@@ -41,25 +41,25 @@ export const StaffSmartView = () => {
         axios.get(`${BACKEND_URL}/api/allocations/${propertyId}`)
       ]);
 
-      // Filter seats to only show those from the selected group
+      // Filter seats to only show those from the selected section
       if (seatsRes.data.success) {
         const allSeats = seatsRes.data.seats;
         if (selectedGroupId) {
-          // Staff has selected a group - show only that group's seats
+          // Staff has selected a section - show only that section's seats
           const filteredSeats = allSeats.filter(seat => seat.sectionId === selectedGroupId);
           setSeats(filteredSeats);
         } else {
-          // No group selected (e.g., Pool and Beach Manager) - show all seats
+          // No section selected (e.g., Pool and Beach Manager) - show all seats
           setSeats(allSeats);
         }
       }
       
-      // Filter sections to only show the selected group
+      // Filter sections to only show the selected section
       if (groupsRes.data.success) {
         const allGroups = groupsRes.data.sections;
         if (selectedGroupId) {
-          // Show only the selected group
-          const filteredGroups = allGroups.filter(group => group.id === selectedGroupId);
+          // Show only the selected section
+          const filteredGroups = allGroups.filter(section => section.id === selectedGroupId);
           setGroups(filteredGroups);
         } else {
           // Show all sections
@@ -128,10 +128,10 @@ export const StaffSmartView = () => {
     };
   };
 
-  const groupedSeats = sections.map(group => {
-    const groupSeats = seats.filter(seat => seat.sectionId === group.id);
+  const groupedSeats = sections.map(section => {
+    const groupSeats = seats.filter(seat => seat.sectionId === section.id);
     return {
-      ...group,
+      ...section,
       seats: groupSeats
     };
   });
@@ -155,7 +155,7 @@ export const StaffSmartView = () => {
     );
   }
 
-  // Get selected group info
+  // Get selected section info
   const userData = JSON.parse(localStorage.getItem('userData') || '{}');
   const selectedGroupName = userData.selectedGroupName;
 
@@ -173,7 +173,7 @@ export const StaffSmartView = () => {
           <div className="flex items-center space-x-3">
             {selectedGroupName && (
               <Button 
-                onClick={() => navigate('/staff/group-selection', { state: { staffData: userData } })}
+                onClick={() => navigate('/staff/section-selection', { state: { staffData: userData } })}
                 variant="outline"
                 className="border-blue-500 text-blue-600 hover:bg-blue-50"
               >
@@ -222,12 +222,12 @@ export const StaffSmartView = () => {
         </div>
 
         {/* Grouped Seats */}
-        {groupedSeats.map(group => (
-          group.seats.length > 0 && (
-            <div key={group.id} className="bg-white rounded-xl shadow-md overflow-visible">
+        {groupedSeats.map(section => (
+          section.seats.length > 0 && (
+            <div key={section.id} className="bg-white rounded-xl shadow-md overflow-visible">
               <div className="bg-gradient-to-r from-slate-700 to-slate-800 px-6 py-4">
-                <h2 className="text-xl font-bold text-white">{group.name}</h2>
-                <p className="text-slate-300 text-sm mt-1">{group.seats.length} seats</p>
+                <h2 className="text-xl font-bold text-white">{section.name}</h2>
+                <p className="text-slate-300 text-sm mt-1">{section.seats.length} seats</p>
               </div>
               <div className="p-6">
                 {(() => {
@@ -235,7 +235,7 @@ export const StaffSmartView = () => {
                   const seatsWithAllocation = [];
                   const seatsWithoutAllocation = [];
                   
-                  group.seats.forEach(seat => {
+                  section.seats.forEach(seat => {
                     const { allocation } = getSeatStatus(seat.id);
                     if (allocation) {
                       seatsWithAllocation.push({ seat, allocation });
@@ -262,7 +262,7 @@ export const StaffSmartView = () => {
                       {Object.values(allocationGroups).map(({ allocation, seats: allocSeats }) => (
                         <div 
                           key={allocation.id}
-                          className="border-2 border-dashed border-blue-400 bg-blue-50/30 rounded-lg p-2 cursor-pointer hover:bg-blue-50/50 transition-colors inline-flex flex-col gap-2 relative group"
+                          className="border-2 border-dashed border-blue-400 bg-blue-50/30 rounded-lg p-2 cursor-pointer hover:bg-blue-50/50 transition-colors inline-flex flex-col gap-2 relative section"
                           onClick={() => navigate(`/user/allocation/${allocation.id}`)}
                         >
                           <div className="flex items-center space-x-2 px-1">
@@ -308,7 +308,7 @@ export const StaffSmartView = () => {
                           </div>
                           
                           {/* Allocation Hover Tooltip */}
-                          <div className="absolute bottom-full left-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
+                          <div className="absolute bottom-full left-0 mb-2 opacity-0 section-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
                             <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl min-w-[200px]">
                               <p className="font-bold text-sm mb-1">{allocation.guestName}</p>
                               <p className="text-slate-300 mb-2">Room {allocation.roomNumber}</p>
@@ -335,7 +335,7 @@ export const StaffSmartView = () => {
                         const seatType = getSeatType(seat.seatTypeId);
                         
                         return (
-                          <div key={seat.id} className="group relative">
+                          <div key={seat.id} className="section relative">
                             <div
                               className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg cursor-default flex flex-col items-center justify-center h-[88px] w-[60px]`}
                             >
@@ -354,7 +354,7 @@ export const StaffSmartView = () => {
                             </div>
                             
                             {/* Tooltip */}
-                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 section-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
                               <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl min-w-[180px]">
                                 <p className="font-bold text-sm mb-1">{seat.seatNumber}</p>
                                 <p className="text-slate-300 mb-2">{seatType.name}</p>
@@ -415,7 +415,7 @@ export const StaffSmartView = () => {
                     {Object.values(allocationGroups).map(({ allocation, seats: allocSeats }) => (
                       <div 
                         key={allocation.id}
-                        className="border-2 border-dashed border-blue-400 bg-blue-50/30 rounded-lg p-2 cursor-pointer hover:bg-blue-50/50 transition-colors inline-flex flex-col gap-2 relative group"
+                        className="border-2 border-dashed border-blue-400 bg-blue-50/30 rounded-lg p-2 cursor-pointer hover:bg-blue-50/50 transition-colors inline-flex flex-col gap-2 relative section"
                         onClick={() => navigate(`/user/allocation/${allocation.id}`)}
                       >
                         <div className="flex items-center space-x-2 px-1">
@@ -460,7 +460,7 @@ export const StaffSmartView = () => {
                         </div>
                         
                         {/* Allocation Hover Tooltip */}
-                        <div className="absolute bottom-full left-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
+                        <div className="absolute bottom-full left-0 mb-2 opacity-0 section-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
                           <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl min-w-[200px]">
                             <p className="font-bold text-sm mb-1">{allocation.guestName}</p>
                             <p className="text-slate-300 mb-2">Room {allocation.roomNumber}</p>
@@ -487,7 +487,7 @@ export const StaffSmartView = () => {
                       const seatType = getSeatType(seat.seatTypeId);
                       
                       return (
-                        <div key={seat.id} className="group relative">
+                        <div key={seat.id} className="section relative">
                           <div
                             className={`${color} rounded-lg border-2 p-2 transition-all hover:scale-105 hover:shadow-lg cursor-default flex flex-col items-center justify-center h-[88px] w-[60px]`}
                           >
@@ -506,7 +506,7 @@ export const StaffSmartView = () => {
                           </div>
                           
                           {/* Tooltip */}
-                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
+                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 section-hover:opacity-100 transition-opacity pointer-events-none z-[100]">
                             <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl min-w-[180px]">
                               <p className="font-bold text-sm mb-1">{seat.seatNumber}</p>
                               <p className="text-slate-300 mb-2">{seatType.name}</p>

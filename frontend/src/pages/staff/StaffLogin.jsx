@@ -59,22 +59,22 @@ export const StaffLogin = () => {
           entityId: response.data.propertyId
         };
         
-        // Fetch role details to check if group selection is needed
+        // Fetch role details to check if section selection is needed
         const roleResponse = await axios.get(`${BACKEND_URL}/api/roles/${response.data.staff.roleId}`);
         const roleName = roleResponse.data.role?.name || '';
         
-        // Roles that require group selection
+        // Roles that require section selection
         const rolesRequiringGroupSelection = [
           'Pool And Beach Attendant',
           'Food and Beverages Server'
         ];
         
         console.log('Staff role name:', roleName);
-        console.log('Requires group selection:', rolesRequiringGroupSelection.includes(roleName));
+        console.log('Requires section selection:', rolesRequiringGroupSelection.includes(roleName));
         
         if (rolesRequiringGroupSelection.includes(roleName)) {
-          // Navigate to group selection page with staff data
-          navigate('/staff/group-selection', { state: { staffData } });
+          // Navigate to section selection page with staff data
+          navigate('/staff/section-selection', { state: { staffData } });
         } else {
           // For other roles (like Pool and Beach Manager), go directly to dashboard
           localStorage.setItem('userData', JSON.stringify(staffData));

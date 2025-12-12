@@ -262,7 +262,7 @@ export const SmartView = () => {
               {mockSeats.map((seat) => (
                 <div
                   key={seat.id}
-                  className="absolute group cursor-pointer transition-transform hover:scale-110"
+                  className="absolute section cursor-pointer transition-transform hover:scale-110"
                   style={{ 
                     left: `${seat.x}%`, 
                     top: `${seat.y}%`,
@@ -283,7 +283,7 @@ export const SmartView = () => {
                   </div>
                   
                   {/* Tooltip on Hover */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 section-hover:opacity-100 transition-opacity pointer-events-none z-50">
                     <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap shadow-xl">
                       <p className="font-bold">{seat.number}</p>
                       <p className="text-slate-300">{seat.seatType.name}</p>

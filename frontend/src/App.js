@@ -168,7 +168,7 @@ function App() {
             <Route path="/user" element={<Navigate to="/user/dashboard" replace />} />
             
             {/* Staff Routes */}
-            <Route path="/staff/group-selection" element={<StaffGroupSelection />} />
+            <Route path="/staff/section-selection" element={<StaffGroupSelection />} />
             <Route path="/staff/smartview" element={<StaffSmartView />} />
             
             {/* Redirect /staff to smartview */}
