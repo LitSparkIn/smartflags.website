@@ -59,8 +59,9 @@ export const StaffGroupSelection = () => {
       selectedGroupName: groups.find(g => g.id === selectedGroup)?.name
     };
 
-    // Store in localStorage
+    // Store in localStorage and login
     localStorage.setItem('userData', JSON.stringify(updatedStaffData));
+    login(updatedStaffData);
     
     // Navigate to staff dashboard
     navigate('/staff/smartview');
