@@ -14,6 +14,7 @@ export const StaffGroupSelection = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
+  const { login } = useAuth();
   
   const staffData = location.state?.staffData;
 
