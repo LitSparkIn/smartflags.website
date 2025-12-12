@@ -215,7 +215,7 @@ class Seat(BaseModel):
     propertyId: str
     seatTypeId: str
     seatNumber: str
-    groupId: Optional[str] = None  # Group assignment
+    sectionId: Optional[str] = None  # Section assignment
     staticDeviceId: Optional[str] = None  # Static device assigned to seat
     status: str = "Free"  # Free, Allocated, Blocked
     createdAt: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -224,7 +224,7 @@ class Seat(BaseModel):
 class SeatBulkCreate(BaseModel):
     propertyId: str
     seatTypeId: str
-    groupId: Optional[str] = None
+    sectionId: Optional[str] = None
     prefix: Optional[str] = ""
     suffix: Optional[str] = ""
     startNumber: int
