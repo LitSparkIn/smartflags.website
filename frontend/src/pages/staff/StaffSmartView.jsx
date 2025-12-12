@@ -153,6 +153,10 @@ export const StaffSmartView = () => {
     );
   }
 
+  // Get selected group info
+  const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+  const selectedGroupName = userData.selectedGroupName;
+
   return (
     <StaffLayout>
       <div className="space-y-6">
@@ -160,7 +164,9 @@ export const StaffSmartView = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-slate-800">SmartView Dashboard</h1>
-            <p className="text-slate-600 mt-1">Real-time seat allocation overview</p>
+            <p className="text-slate-600 mt-1">
+              {selectedGroupName ? `Viewing: ${selectedGroupName}` : 'Real-time seat allocation overview'}
+            </p>
           </div>
           <Button onClick={fetchData} variant="outline">
             <RefreshCw className="w-4 h-4 mr-2" />
