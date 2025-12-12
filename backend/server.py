@@ -2085,6 +2085,13 @@ async def seed_initial_roles():
                 "description": "Will be able to see the people on a seat and actions like check-in and check-out.",
                 "createdAt": datetime.now(timezone.utc).isoformat(),
                 "updatedAt": datetime.now(timezone.utc).isoformat()
+            },
+            {
+                "id": "role-6",
+                "name": "Food and Beverages Server",
+                "description": "Will be able to serve food and beverages to guests.",
+                "createdAt": datetime.now(timezone.utc).isoformat(),
+                "updatedAt": datetime.now(timezone.utc).isoformat()
             }
         ]
         
