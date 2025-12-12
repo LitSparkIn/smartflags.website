@@ -170,10 +170,22 @@ export const StaffSmartView = () => {
               {selectedGroupName ? `Viewing: ${selectedGroupName}` : 'Real-time seat allocation overview'}
             </p>
           </div>
-          <Button onClick={fetchData} variant="outline">
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh
-          </Button>
+          <div className="flex items-center space-x-3">
+            {selectedGroupName && (
+              <Button 
+                onClick={() => navigate('/staff/group-selection', { state: { staffData: userData } })}
+                variant="outline"
+                className="border-blue-500 text-blue-600 hover:bg-blue-50"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Switch Group
+              </Button>
+            )}
+            <Button onClick={fetchData} variant="outline">
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Refresh
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}
