@@ -16,7 +16,14 @@ export const StaffGroupSelection = () => {
   const location = useLocation();
   const { login } = useAuth();
   
-  const staffData = location.state?.staffData;
+  // Get staff data from location.state or localStorage
+  let staffData = location.state?.staffData;
+  if (!staffData) {
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+      staffData = JSON.parse(storedUserData);
+    }
+  }
 
   useEffect(() => {
     // If no staff data, redirect back to login
@@ -26,7 +33,7 @@ export const StaffGroupSelection = () => {
     }
     
     fetchGroups();
-  }, [staffData, navigate]);
+  }, []);
 
   const fetchGroups = async () => {
     try {
