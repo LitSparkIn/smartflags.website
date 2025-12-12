@@ -2019,6 +2019,22 @@ async def get_all_roles():
         logger.error(f"Error fetching roles: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
+@api_router.get("/roles/{role_id}")
+async def get_role_by_id(role_id: str):
+    """Get a specific role by ID"""
+    try:
+        role = await db.roles.find_one({"id": role_id}, {"_id": 0})
+        
+        if not role:
+            raise HTTPException(status_code=404, detail="Role not found")
+        
+        return {"success": True, "role": role}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching role: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
 @api_router.post("/roles/seed")
 async def seed_initial_roles():
     """Seed initial roles if database is empty"""
