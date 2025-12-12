@@ -387,43 +387,6 @@ export const SmartView = () => {
                                 </span>
                               </div>
                             )}
-                            
-                            {/* Enhanced Tooltip */}
-                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-                              <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl min-w-[180px]">
-                                <p className="font-bold text-sm mb-1">{seat.seatNumber}</p>
-                                <p className="text-slate-300 mb-2">{seatType.name}</p>
-                                <div className="border-t border-slate-700 pt-2 space-y-1">
-                                  <p className="font-semibold text-teal-400">Status: {status}</p>
-                                  {allocation ? (
-                                    <>
-                                      <p className="text-slate-200">
-                                        <span className="text-slate-400">Guest:</span> {allocation.guestName}
-                                      </p>
-                                      <p className="text-slate-200">
-                                        <span className="text-slate-400">Room:</span> {allocation.roomNumber}
-                                      </p>
-                                      {allocation.guestCategory && (
-                                        <p className="text-amber-400">
-                                          <span className="text-slate-400">Category:</span> {allocation.guestCategory}
-                                        </p>
-                                      )}
-                                      <p className="text-slate-200 text-[10px] mt-1">
-                                        <span className="text-slate-400">Time:</span> {new Date(allocation.createdAt).toLocaleString('en-US', {
-                                          month: 'short',
-                                          day: 'numeric',
-                                          hour: '2-digit',
-                                          minute: '2-digit'
-                                        })}
-                                      </p>
-                                    </>
-                                  ) : (
-                                    <p className="text-slate-300 italic">Available</p>
-                                  )}
-                                </div>
-                              </div>
-                              <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-slate-900"></div>
-                            </div>
                           </div>
                                   );
                                 })}
