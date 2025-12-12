@@ -70,6 +70,9 @@ export const StaffLogin = () => {
           'Food and Beverages Server'
         ];
         
+        console.log('Staff role name:', roleName);
+        console.log('Requires group selection:', rolesRequiringGroupSelection.includes(roleName));
+        
         if (rolesRequiringGroupSelection.includes(roleName)) {
           // Navigate to group selection page with staff data
           navigate('/staff/group-selection', { state: { staffData } });
